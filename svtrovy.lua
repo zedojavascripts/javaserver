@@ -528,7 +528,7 @@ local function executarProcessamentoDeSegurancaENuvem(modoSilencioso)
             registrarNotificacaoNoDiscord(nickDoCara, hwidDaMaquinaDoCliente, "Liberado no OT: " .. config.servidorSelecionado, "Afiliado / Cliente")
             print("[Brinque Scripts] Acesso confirmado! Injetando o Carregador Mestre em RAM...")
             
-            local URL_ARQUIVODOSMACROS = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/scripts/dwlload.lua"
+            local URL_ARQUIVODOSMACROS = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/scripts/dwlload.lua?token=GHSAT0AAAAAAEEYZWN6MLUQCCBEBWQMDIH42UM6JHQ"
             HTTP.get(URL_ARQUIVODOSMACROS .. "?nocache=" .. os.time(), function(macrosCont, errM)
                 if not errM and macrosCont then
                     local injetorMacros, sErr = loadstring(macrosCont)
