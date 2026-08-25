@@ -586,7 +586,7 @@ local MAPA_MACROS_GUILDA = {
     -- ==========================================
     -- MACROS EXTRAS (EXTRAS)
     -- ==========================================
-	{ nome = "FILTRO BATTLE BRQ",    key = "filtrobatleBRQ",     cat = "WAR",     url = "https://raw.githubusercontent.com/Brinquee/GUILDA_MOST_WANTED/refs/heads/main/scripts/Guilda/filtrobatleBRQ" },
+	{ nome = "FILTRO BATTLE BRQ",    key = "filtrobatleBRQ",     cat = "WAR",     url = "https://raw.githubusercontent.com/Brinquee/GUILDA_MOST_WANTED/refs/heads/main/scripts/Guilda/filtrobatleBRQ.lua" },
 	{ nome = "SKILLS BRQ",           key = "skillsBRQ",          cat = "EXTRAS", url = "https://raw.githubusercontent.com/Brinquee/GUILDA_MOST_WANTED/refs/heads/main/scripts/Guilda/skillsBRQ.lua" },
     { nome = "FPS BRQ",              key = "fpsBRQ",             cat = "EXTRAS",         url = "https://raw.githubusercontent.com/Brinquee/GUILDA_MOST_WANTED/refs/heads/main/scripts/Guilda/fpsBRQ.lua" },
 	{ nome = "FOLLOW ATTACK BRQ",              key = "followattackBRQ",             cat = "WAR",         url = "https://raw.githubusercontent.com/Brinquee/GUILDA_MOST_WANTED/refs/heads/main/scripts/Guilda/followattackBRQ.lua" },
