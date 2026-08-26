@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PRIVADA] ARQUIVO 2 MESTRE: CARREGADOR DE MACROS VIA VERCEL API
+-- [NUVEM PRIVADA] ARQUIVO 2 MESTRE: CARREGADOR DE MACROS VIA VERCEL API (dwlload.lua)
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -36,7 +36,7 @@ local SCRIPTS_DO_REPOSITORIO = {
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
 
 -- =============================================================================
--- [CONSTRUTOR DO PAINEL VERTICAL ESTÁVEL DE CHECKBOXES]
+-- [CONSTRUTOR DO PAINEL VERTICAL ESTÁVEL DE CHECKBOXES - MIRA NA JANELA B]
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelDeMacrosJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
@@ -83,7 +83,7 @@ if painelDeMacrosJanelaB and painelDeMacrosJanelaB.listaScroll then
 end
 
 -- =============================================================================
--- [ESTEIRA HTTP ASSÍNCRONA E REDIRECIONADA VIA VERCEL]
+-- [ESTEIRA HTTP ASSÍNCRONA E REDIRECIONADA VIA VERCEL PARA AS SUBPASTAS]
 -- =============================================================================
 local loteJaEstaSendoBaixado = false
 
@@ -104,17 +104,17 @@ local function executarFilaCustomizadaHTTP(indice)
         loteJaEstaSendoBaixado = false 
         
         -- 🎵 EFEITO SONORO C++ DE SUCESSO AO CONCLUIR
-        local somCustomizadoBrinque = "/vBot_configs/confg/sounds/som.ogg"
+        local somCustomizadoBrinque = "/sounds/sucesso.ogg"
         if g_resources.fileExists(somCustomizadoBrinque) then
             g_sound.play(somCustomizadoBrinque)
         else
-            g_sound.play("/vBot_configs/confg/sounds/som.ogg")
+            g_sound.play("/sounds/magnum.ogg")
         end
         return 
     end
     
     if configMestre.macrosMarcados[macroAlvo.key] == true then
-        -- ROTA DE SEGURANÇA: Solicita o arquivo privado intermediado pela Vercel
+        -- ROTA DE SEGURANÇA: Pede as scripts das subpastas mandando os parametros certos
         local urlScriptPrivadoVercel = URL_API_VERCEL_MESTRE 
             .. "?hwid=" .. tostring(hwidDaMaquinaDoCliente)
             .. "&servidor=" .. tostring(servidorAtivoNoMomento)
@@ -130,7 +130,7 @@ local function executarFilaCustomizadaHTTP(indice)
                     print("[Erro Script] Falha ao compilar slot: " .. tostring(macroAlvo.nome) .. " - Erro: " .. tostring(syntaxErr)) 
                 end
             end
-            -- Intervalo fixo anti-congelamento para carregar em escada suave
+            -- Intervalo de segurança anti-travamento de 200ms
             schedule(200, function() executarFilaCustomizadaHTTP(indice + 1) end)
         end)
     else
