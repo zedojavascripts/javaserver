@@ -26,7 +26,7 @@ local LINK_YOUTUBE   = "https://youtube.com"
 local pastaImg        = "/bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/"
 
 -- 🌐 URL DO SEU BANCO DE DADOS DE CLIENTES EM NUVEM (RAW GITHUB)
-local URL_BANCO_DADOS_NUVEM = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/bankdadps.lua"
+local URL_BANCO_DADOS_NUVEM = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/bankdadps.lua"
 
 -- 🧠 CÁLCULO DO HWID LOCAL INDIVIDUAL POR PASTA DO SERVIDOR CONECTADO
 local pastaEscritaParaValidar = tostring(g_resources.getWriteDir()):lower():trim()
@@ -528,7 +528,7 @@ local function executarProcessamentoDeSegurancaENuvem(modoSilencioso)
             registrarNotificacaoNoDiscord(nickDoCara, hwidDaMaquinaDoCliente, "Liberado no OT: " .. config.servidorSelecionado, "Afiliado / Cliente")
             print("[Brinque Scripts] Acesso confirmado! Injetando o Carregador Mestre em RAM...")
             
-            local URL_ARQUIVODOSMACROS = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/scripts/dwlload.lua"
+            local URL_ARQUIVODOSMACROS = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/dwlload.lua"
             HTTP.get(URL_ARQUIVODOSMACROS .. "?nocache=" .. os.time(), function(macrosCont, errM)
                 if not errM and macrosCont then
                     local injetorMacros, sErr = loadstring(macrosCont)
