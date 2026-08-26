@@ -90,7 +90,7 @@ module.exports = async (req, res) => {
         let caminhoRealDoArquivoNoGithub = '';
 
         // 🛠️ ALINHADO COM A FOTO: Se o bot pedir o carregador, aponta para scripts/dwlload.lua
-        if (script === 'carregador_macros.lua' || script === 'dwlload.lua') {
+        if (script === 'dwlload.lua' || script === 'dwlload.lua') {
             caminhoRealDoArquivoNoGithub = 'scripts/dwlload.lua';
         } else {
             let pastaDoServidor = 'sv_ilusion';
