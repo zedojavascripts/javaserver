@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- 🌐 REPLICAÇÃO DO SEU LINK OFICIAL DA VERCEL
-local URL_API_VERCEL_MESTRE = "customotserver.vercel.app"
+local URL_API_VERCEL_MESTRE = "https://customotserver.vercel.app"
 
 -- 📂 MAPEAMENTO EXATO DA SUA ÁRVORE DE PASTAS (APENAS O NOME DO ARQUIVO FINAL)
 local SCRIPTS_DO_REPOSITORIO = {
