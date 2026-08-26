@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- Links base apontando diretamente para a raiz da sua estrutura de pastas do GitHub
-local URL_BASE_REPOSITORIO = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/scripts/"
+local URL_BASE_REPOSITORIO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 -- 📂 MAPEAMENTO EXATO DE SUBPASTAS DO SEU REPOSITÓRIO (FOTO)
 local SCRIPTS_DO_REPOSITORIO = {
