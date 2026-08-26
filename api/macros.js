@@ -1,5 +1,5 @@
 // =============================================================================
-// [VERCEL API] CORRIGIDO: ACESSO DIRETO À ÁRVORE REAL DA BRINQUE SCRIPTS
+// [VERCEL API] VERSÃO PURE-TEXT: IMUNE A CARACTERES ESPECIAIS E TRAÇOS DUPLOS
 // =============================================================================
 
 const https = require('https');
@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
         return res.status(400).send('-- [Brinque API] Parametros de conexao ausentes. Acesso Negado. --');
     }
 
-    // 🛠️ ALINHADO COM A FOTO: Busca o banco_dados.lua direto na raiz da pasta scripts/
+    // Busca o seu banco_dados.lua direto na raiz da pasta scripts/
     const bancoTextoLua = await buscarArquivoNoGithubPrivado('scripts/banco_dados.lua');
     
     if (!bancoTextoLua) {
@@ -52,44 +52,62 @@ module.exports = async (req, res) => {
 
     let computadorEstaAutorizado = false;
 
-    // Remove qualquer espaço ou caractere invisível para cruzar os dados com segurança máxima
-    const hwidLimpo = hwid.trim();
+    // Padroniza e limpa as strings para eliminar qualquer conflito de espaco ou caractere invisivel
+    const hwidAlvo = hwid.trim();
+    const servidorAlvo = servidor.toLowerCase().trim();
 
-    // Varre a tabela capturando as permissões do ID de forma direta
-    if (bancoTextoLua.includes(hwidLimpo)) {
-        // Captura o bloco do dono desse ID para inspecionar o servidor e a data
-        const regexValidadorCompleto = new RegExp(`\\["([^"\\]]+)"\\]\\s*=\\s*\\{[^\\}]*?vence\\s*=\\s*"([^"]+)"[^\\}]*?\\s*servidores\\s*=\\s*\\{[^\\}]*?["']${hwidLimpo.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}["']\\s*=\\s*["']([^"']+)["']`, 's');
-        const correspondencia = bancoTextoLua.match(regexValidadorCompleto);
+    // 🧠 ENGENHARIA SUPREMA: Se o ID bruto do cliente constar no texto do banco, comeca a inspecionar as permissoes
+    if (bancoTextoLua.includes(hwidAlvo)) {
+        // Divide o banco de dados linha por linha para varrer o calendario sem bugar com caracteres especiais
+        const linhasDoBanco = bancoTextoLua.split('\n');
+        let dataVencimentoEncontrada = "Expirado";
+        let servidorAutorizadoEncontrado = "";
+        let encontrouBlocoDoCliente = false;
 
-        if (correspondencia) {
-            const dataVence = correspondencia[2];
-            const servidorCadastradoParaEsseID = correspondencia[3];
+        // Limpa e varre o arquivo testando a correspondencia direta de palavras chave
+        for (let i = 0; i < linhasDoBanco.length; i++) {
+            let linhaLimpa = linhasDoBanco[i].replace(/\s+/g, '');
 
-            if (servidorCadastradoParaEsseID.toLowerCase().trim() === servidor.toLowerCase().trim()) {
-                if (dataVence === "ilimitado") {
-                    computadorEstaAutorizado = true;
-                } else {
-                    const partesData = dataVence.split('/');
-                    if (partesData.length === 3) {
-                        const dia = parseInt(partesData[0], 10);
-                        const mes = parseInt(partesData[1], 10) - 1;
-                        const ano = parseInt(partesData[2], 10);
-                        
-                        const timestampVencimento = new Date(ano, mes, dia, 23, 59, 59).getTime();
-                        if (timestampVencimento - Date.now() > 0) {
-                            computadorEstaAutorizado = true;
-                        }
+            if (linhaLimpa.includes(`vence=`)) {
+                let extraiData = linhasDoBanco[i].match(/vence\s*=\s*"([^"]+)"/);
+                if (extraiData) dataVencimentoEncontrada = extraiData[1];
+            }
+
+            // Testa se a linha contem o casamento perfeito do HWID e captura o servidor associado na frente
+            if (linhaLimpa.includes(`["${hwidAlvo}"]=`) || linhaLimpa.includes(`['${hwidAlvo}']=`)) {
+                let extraiServidor = linhasDoBanco[i].match(/=\s*["']([^"']+)["']/);
+                if (extraiServidor) {
+                    servidorAutorizadoEncontrado = extraiServidor[1].toLowerCase().trim();
+                    encontrouBlocoDoCliente = true;
+                    break;
+                }
+            }
+        }
+
+        // Se a Vercel localizou o ID e o servidor bater com a escolha do ComboBox, confere a folha de validade
+        if (encontrouBlocoDoCliente && servidorAutorizadoEncontrado === servidorAlvo) {
+            if (dataVencimentoEncontrada === "ilimitado") {
+                computadorEstaAutorizado = true;
+            } else {
+                const partesData = dataVencimentoEncontrada.split('/');
+                if (partesData.length === 3) {
+                    const dia = parseInt(partesData[10], 10);
+                    const mes = parseInt(partesData[10], 10) - 1;
+                    const ano = parseInt(partesData[10], 10);
+                    
+                    const timestampVencimento = new Date(ano, mes, dia, 23, 59, 59).getTime();
+                    if (timestampVencimento - Date.now() > 0) {
+                        computadorEstaAutorizado = true;
                     }
                 }
             }
         }
     }
 
-    // 3. DIRECIONAMENTO DE ACESSO AOS ARQUIVOS PRIVADOS
+    // ROTEAMENTO E ENTREGA SEGURA DE SCRIPTS
     if (computadorEstaAutorizado) {
         let caminhoRealDoArquivoNoGithub = '';
 
-        // 🛠️ ALINHADO COM A FOTO: Se o bot pedir o carregador, aponta para scripts/dwlload.lua
         if (script === 'dwlload.lua' || script === 'dwlload.lua') {
             caminhoRealDoArquivoNoGithub = 'scripts/dwlload.lua';
         } else {
