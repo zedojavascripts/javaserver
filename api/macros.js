@@ -97,8 +97,8 @@ module.exports = async (req, res) => {
     if (computadorEstaAutorizado) {
         let caminhoRealDoArquivoNoGithub = '';
 
-        if (script === 'carregador_macros.lua') {
-            caminhoRealDoArquivoNoGithub = 'scripts/Guilda/carregador_macros.lua';
+        if (script === 'dwlload.lua') {
+            caminhoRealDoArquivoNoGithub = 'scripts/dwlload.lua';
         } else {
             // Roteador dinâmico de subpastas por ID de Servidor (sv_)
             let pastaDoServidor = 'sv_ilusion';
