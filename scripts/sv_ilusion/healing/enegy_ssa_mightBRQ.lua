@@ -1,3 +1,7 @@
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V2.0] - DEFESA MASTER PRO: PARTE 1 DE 3
+-- =============================================================================
+
 setDefaultTab("hp")
 UI.Separator()
 
@@ -52,6 +56,7 @@ DefMasterBPTitle < UIWidget
   font: verdana-11px-rounded
 
 DefMasterBPWindow < MainWindow
+  id: janelaMestreDefesaBPs
   !text: tr('Defesa Master - Universal BP Settings')
   padding: 25
 
@@ -122,8 +127,8 @@ if not storage[panelName] or not storage[panelName].bpConfigs then
         ringBagId = 0,
         ssaBagId = 0,
         energyBagId = 0,
-        hpEquip = 50,
-        hpMight = 75,
+        hpEquip = 50,    -- HP maximo para colocar o Energy Ring
+        mpMight = 75,    -- Mana maxima para colocar o Might Ring (Sua Regra!)
         hpSSA = 60,
         useSSA = false,
         bpConfigs = {
@@ -137,7 +142,6 @@ local s = storage[panelName]
 
 local defMasterCooldowns = {}
 
--- Funcao auxiliar para achar o item dentro de uma BP especifica
 local function findItemInContainer(itemId, containerId)
     if itemId <= 0 then return nil end
     for _, container in pairs(g_game.getContainers()) do
@@ -152,7 +156,6 @@ local function findItemInContainer(itemId, containerId)
     return nil
 end
 
--- Funcao auxiliar para obter o objeto do container pelo ID do item da BP
 local function getContainerByItemId(bagId)
     if bagId <= 0 then return nil end
     for _, container in pairs(g_game.getContainers()) do
@@ -165,8 +168,9 @@ local function getContainerByItemId(bagId)
 end
 
 -- =================================================================
---  3. INTERFACE PRINCIPAL (Painel Lateral)
+--  3. INTERFACE PRINCIPAL (Painel Lateral da Home/HP)
 -- =================================================================
+local widgetRaizDoJogo = g_ui.getRootWidget()
 local ui = setupUI([[
 Panel
   height: 40
@@ -181,7 +185,7 @@ Panel
 
   Button
     id: edit
-    anchors.top: prev.top
+    anchors.top: parent.top
     anchors.left: prev.right
     anchors.right: parent.right
     margin-left: 3
@@ -198,15 +202,18 @@ Panel
     text: BP Settings
     color: #FFA500
 ]], parent)
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V2.0] - DEFESA MASTER PRO: PARTE 2 DE 3
+-- =============================================================================
 
--- Janela de Configuracoes Principal (HP / Itens)
+-- Janela de Configuracoes Principal (HP / MP / Itens) - Ordem Fixada de Ancora
 local configWindow = setupUI([[
 MainWindow
+  id: janelaConfiguracoesDefesaMaster
   text: Configuracoes de Defesa
   size: 540 340
   @onEscape: self:hide()
 
-  -- COLUNA ESQUERDA: ANEIS
   Label
     id: t1
     text: --- ANEIS ---
@@ -218,7 +225,7 @@ MainWindow
 
   Panel
     id: rSlots
-    anchors.top: prev.bottom
+    anchors.top: t1.bottom
     anchors.left: parent.left
     height: 36
     width: 240
@@ -242,7 +249,7 @@ MainWindow
 
   HorizontalScrollBar
     id: scrollE
-    anchors.top: prev.bottom
+    anchors.top: lblE.bottom
     anchors.left: parent.left
     width: 240
     margin-top: 2
@@ -252,14 +259,14 @@ MainWindow
 
   Label
     id: lblM
-    text: HP Might: 75
+    text: MP Might: 75
     anchors.top: scrollE.bottom
     anchors.left: parent.left
     margin-top: 8
 
   HorizontalScrollBar
     id: scrollM
-    anchors.top: prev.bottom
+    anchors.top: lblM.bottom
     anchors.left: parent.left
     width: 240
     margin-top: 2
@@ -267,7 +274,6 @@ MainWindow
     maximum: 100
     step: 1
 
-  -- COLUNA DIREITA: AMULETOS
   Label
     id: t2
     text: --- AMULETOS ---
@@ -279,7 +285,7 @@ MainWindow
 
   Panel
     id: sSlots
-    anchors.top: prev.bottom
+    anchors.top: t2.bottom
     anchors.right: parent.right
     height: 36
     width: 240
@@ -303,13 +309,13 @@ MainWindow
   Label
     id: lblS
     text: HP SSA: 60
-    anchors.top: prev.bottom
+    anchors.top: toggleSSA.bottom
     anchors.left: sSlots.left
     margin-top: 5
 
   HorizontalScrollBar
     id: scrollS
-    anchors.top: prev.bottom
+    anchors.top: lblS.bottom
     anchors.left: sSlots.left
     width: 240
     margin-top: 2
@@ -317,7 +323,6 @@ MainWindow
     maximum: 100
     step: 1
 
-  -- SECAO INFERIOR: BACKPACKS
   Label
     id: t3
     text: --- CONFIGURACAO DE BAGS ---
@@ -330,7 +335,7 @@ MainWindow
 
   Panel
     id: bagPanel
-    anchors.top: prev.bottom
+    anchors.top: t3.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     height: 36
@@ -398,19 +403,24 @@ MainWindow
     anchors.horizontalCenter: parent.horizontalCenter
     width: 120
     height: 22
-]], g_ui.getRootWidget())
+]], widgetRaizDoJogo)
 configWindow:hide()
 
-local bpSettingsWindow = UI.createWindow('DefMasterBPWindow', rootWidget)
-bpSettingsWindow:hide()
-bpSettingsWindow.closeButton.onClick = function(widget)
-    bpSettingsWindow:hide()
+-- Coletor de lixo preventivo para abas antigas de BPs
+for _, child in pairs(widgetRaizDoJogo:getChildren()) do
+    if child:getId() == "janelaMestreDefesaBPs" and child ~= bpSettingsWindow then
+        pcall(function() child:destroy() end)
+    end
 end
+
+local bpSettingsWindow = UI.createWindow('DefMasterBPWindow', widgetRaizDoJogo)
+bpSettingsWindow:hide()
+bpSettingsWindow.closeButton.onClick = function() bpSettingsWindow:hide() end
 bpSettingsWindow:setHeight(450)
 bpSettingsWindow:setWidth(400)
 
 -- =================================================================
---  4. MONTAGEM DINAMICA DO PAINEL
+--  4. MONTAGEM DINAMICA DO PAINEL DE MOCHILAS
 -- =================================================================
 local leftPanel = bpSettingsWindow.content.left
 
@@ -430,7 +440,7 @@ local addSwitch = function(id, title, defaultValue, dest, configField)
     
     updateButtonState(defaultValue)
     
-    widget.switch.onClick = function(button)
+    widget.switch.onClick = function()
         local currentState = s.bpConfigs[id][configField]
         local newState = not currentState
         s.bpConfigs[id][configField] = newState
@@ -455,16 +465,19 @@ for i = 1, 3 do
     addSwitch(i, "Manter Slot Livre", bpData.keepSlotFree, leftPanel, "keepSlotFree")
     addItemEdit(i, "Item para Monitorar/Drop", bpData.targetItem, leftPanel, "targetItem")
 end
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V2.0] - DEFESA MASTER PRO: PARTE 3 DE 3 (SCROLLBAR FIX)
+-- =============================================================================
 
--- =================================================================
---  5. EXECUCAO DO MACRO E CONDICIONAIS INTEGRADAS
--- =================================================================
+-- 5. EXECUÇÃO DO MACRO E CONDICIONAIS RECALIBRADAS (HP/MP FIX)
 macro(100, "Defesa Master", function()
     if not s.enabled then return end
+    
     local hp = hppercent()
+    local mp = manapercent() -- Coleta a porcentagem real de Mana do boneco
     local now = os.time()
 
-    -- Trava Anti-Spam de abertura inicial
+    -- Trava Anti-Spam de abertura de bolsas
     local function checkAndOpenBag(bagId, itemId)
         if bagId and bagId > 0 then
             if getContainerByItemId(bagId) then return end
@@ -506,7 +519,7 @@ macro(100, "Defesa Master", function()
         if actualBagId and actualBagId > 0 and bpRule.targetItem > 0 then
             local container = getContainerByItemId(actualBagId)
             if container then
-                -- CORRECAO INFALIVEL: Abre a proxima mochila e FECHA a janela vazia antiga no mesmo instante
+                -- Abre a proxima mochila e fecha a janela vazia antiga
                 if bpRule.autoOpen then
                     local itemCount = 0
                     for _, item in pairs(container:getItems()) do
@@ -519,11 +532,8 @@ macro(100, "Defesa Master", function()
                             if item:isContainer() then
                                 local internalId = item:getId()
                                 if not defMasterCooldowns[internalId] or (now - defMasterCooldowns[internalId] >= 2) then
-                                    -- 1. Abre a mochila de refil interna
                                     g_game.use(item)
-                                    -- 2. Fecha o container velho que ficou vazio para nao acumular abas na tela
                                     g_game.close(container)
-                                    
                                     defMasterCooldowns[internalId] = now
                                     delay(600)
                                 end
@@ -548,7 +558,7 @@ macro(100, "Defesa Master", function()
         end
     end
 
-    -- FUNCAO DE AUTO-ORGANIZACAO
+    -- FUNÇÃO DE AUTO-ORGANIZAÇÃO DE ITENS NAS MOCHILAS CORRETAS
     local function organizeItems(itemId, targetBagId)
         if itemId <= 0 or s.mainBagId <= 0 then return end
         
@@ -598,7 +608,7 @@ macro(100, "Defesa Master", function()
     organizeItems(s.ringEquipId, s.energyBagId) 
     organizeItems(s.ssaId, s.ssaBagId)         
 
-    -- LOGICA DE EQUIPAR AMULETOS DIRETO DE SUAS RESPECTIVAS BPs
+    -- LOGICA DE EQUIPAR AMULETOS (BASEADO ESTREITAMENTE NA VIDA)
     local currentNeck = getNeck()
     if s.useSSA and hp <= s.hpSSA then
         if not currentNeck or currentNeck:getId() ~= s.ssaId then
@@ -612,15 +622,17 @@ macro(100, "Defesa Master", function()
         end
     end
 
-    -- LOGICA DE EQUIPAR ANEIS DIRETO DE SUAS RESPECTIVAS BPs
+    -- RECALIBRAÇÃO MESTRE DOS ANÉIS: Separação cirúrgica entre HP (Energy) e MP (Might)
     local currentRing = getFinger()
-    local targetRing = s.ringDeffId
+    local targetRing = s.ringDeffId 
     local targetBag = s.mainBagId 
 
-    if hp <= s.hpEquip then
+    -- Se a VIDA (hp) cair abaixo do "HP Energy", bota o Energy Ring
+    if hp <= (s.hpEquip or 50) then
         targetRing = s.ringEquipId
         targetBag = s.energyBagId 
-    elseif hp <= s.hpMight then
+    -- Se a MANA (mp) cair abaixo do "MP Might", bota o Might Ring
+    elseif mp <= (s.mpMight or 75) then
         targetRing = s.ringMightId
         targetBag = s.ringBagId 
     end
@@ -632,7 +644,7 @@ macro(100, "Defesa Master", function()
 end)
 
 -- =================================================================
---  6. CONEXOES DE ACIONAMENTO DA UI
+--  6. CONEXOES DE ACIONAMENTO DA INTERFACE VISUAL (SETUP)
 -- =================================================================
 ui.title:setOn(s.enabled)
 ui.title.onClick = function(w)
@@ -641,15 +653,11 @@ ui.title.onClick = function(w)
 end
 
 ui.edit.onClick = function()
-    configWindow:show()
-    configWindow:raise()
-    configWindow:focus()
+    configWindow:show() configWindow:raise() configWindow:focus()
 end
 
 ui.bpSettings.onClick = function()
-    bpSettingsWindow:show()
-    bpSettingsWindow:raise()
-    bpSettingsWindow:focus()
+    bpSettingsWindow:show() bpSettingsWindow:raise() bpSettingsWindow:focus()
 end
 
 configWindow.rSlots.r1:setItemId(s.ringEquipId)
@@ -673,34 +681,38 @@ configWindow.bagPanel.energyBagPanel.eBag.onItemChange = function(w) s.energyBag
 configWindow.bagPanel.rightBagPanel.sBag:setItemId(s.ssaBagId)
 configWindow.bagPanel.rightBagPanel.sBag.onItemChange = function(w) s.ssaBagId = w:getItemId() end
 
+-- CORREÇÃO INDEPENDENTE DE ASSINATURA: Aplica as declarações de escopo de forma isolada
 configWindow.scrollE.onValueChange = function(w, v)
-    s.hpEquip = v
-    configWindow.lblE:setText("HP Energy: " .. v)
+    s.hpEquip = tonumber(v) or 50
+    configWindow.lblE:setText("HP Energy: " .. s.hpEquip)
 end
-configWindow.scrollE:setValue(s.hpEquip)
 
 configWindow.scrollM.onValueChange = function(w, v)
-    s.hpMight = v
-    configWindow.lblM:setText("HP Might: " .. v)
+    s.mpMight = tonumber(v) or 75
+    configWindow.lblM:setText("MP Might: " .. s.mpMight)
 end
-configWindow.scrollM:setValue(s.hpMight)
+
+configWindow.scrollS.onValueChange = function(w, v)
+    s.hpSSA = tonumber(v) or 60
+    configWindow.lblS:setText("HP SSA: " .. s.hpSSA)
+end
+
+-- Atribuição de valores travada após os construtores de eventos estarem definidos na RAM
+configWindow.scrollE:setValue(tonumber(s.hpEquip) or 50)
+configWindow.scrollM:setValue(tonumber(s.mpMight) or 75)
+configWindow.scrollS:setValue(tonumber(s.hpSSA) or 60)
 
 configWindow.sSlots.ssa:setItemId(s.ssaId)
 configWindow.sSlots.ssa.onItemChange = function(w) s.ssaId = w:getItemId() end
 
 configWindow.sSlots.amu:setItemId(s.normalAmuletId)
-configWindow.sSlots.amu.onItemChange = function(w) s.normalAmuletId = w:getItemId() end
+configWindow.sSlots.amu.onItemChange = function(w) s.normalAmuletId = w:getItemId() 
+end
 
-configWindow.toggleSSA:setChecked(s.useSSA)
+configWindow.toggleSSA:setChecked(s.useSSA == true)
 configWindow.toggleSSA.onCheckChange = function(w, c) s.useSSA = c end
 
-configWindow.scrollS.onValueChange = function(w, v)
-    s.hpSSA = v
-    configWindow.lblS:setText("HP SSA: " .. v)
-end
-configWindow.scrollS:setValue(s.hpSSA)
-
 configWindow.close.onClick = function()
-    configWindow:hide()
+configWindow:hide()
 end
 UI.Separator()
