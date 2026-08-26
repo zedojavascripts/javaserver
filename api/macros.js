@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     // 🧪 CAMINHO ULTRA-SIMPLES: Busca o banco solto na pasta scripts
     const configuracaoRequest = {
         hostname: '://github.com',
-        path: `/repos/brinquescriptsgamer-bot/customotserver/contents/scripts/banco_dados.lua`,
+        path: `/repos/brinquescriptsgamer-bot/customotserver/banco_dados.lua`,
         headers: {
             'Authorization': `token ${tokenOculto}`,
             'User-Agent': 'Vercel-Testing',
