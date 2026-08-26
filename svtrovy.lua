@@ -1,5 +1,5 @@
 -- =============================================================================
--- [BRINQUE SCRIPTS] ARQUIVO 1 LOCAL: CONEXÃO VERCEL SUPREMA - PARTE 1 DE 4
+-- [BRINQUE SCRIPTS] ARQUIVO 1 MESTRE: SEGURANÇA E DIRETÓRIOS - PARTE 1 DE 4
 -- =============================================================================
 setDefaultTab("main")
 
@@ -17,7 +17,7 @@ if not config.macrosMarcados or type(config.macrosMarcados) ~= "table" then
     config.macrosMarcados = {} 
 end
 
--- 🌐 DIRETÓRIOS E LINKS DE ATENDIMENTO REAIS
+-- 🌐 DIRETÓRIOS E LINKS DE ATENDIMENTO ORIGINAIS
 local LINK_RENOVACAO  = "https://wa.me/qr/QHQWPAJNPYRDJ1"
 local LINK_INSTAGRAM = "https://www.instagram.com/brinquescriptsgamer?igsh=dXhhN2MxNWhxMm9m"
 local LINK_WHATSAPP  = "https://chat.whatsapp.com/D4WHVuAy41t6uQ6QZ3ibtR"
@@ -25,11 +25,8 @@ local LINK_DISCORD   = "https://discord.gg/BRNzJ7cZjq"
 local LINK_YOUTUBE   = "https://youtube.com"
 local pastaImg        = "/bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/"
 
--- =============================================================================
--- 🌐 SUA NOVA PONTE DE SEGURANÇA EXCLUSIVA NA VERCEL (REPOSÍTÓRIO PRIVADO)
--- Repare que o bot NÃO SABE o link do seu GitHub! Ele só conversa com a Vercel.
--- =============================================================================
-local URL_API_VERCEL_MESTRE = "https://customotserver.vercel.app"
+-- 🌐 URL DO SEU BANCO DE DADOS DE CLIENTES EM NUVEM (RAW GITHUB)
+local URL_BANCO_DADOS_NUVEM = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/bankdadps.lua"
 
 -- 🧠 CÁLCULO DO HWID LOCAL INDIVIDUAL POR PASTA DO SERVIDOR CONECTADO
 local pastaEscritaParaValidar = tostring(g_resources.getWriteDir()):lower():trim()
@@ -40,12 +37,12 @@ end
 
 hwidDaMaquinaDoCliente = "CELESTIAL-HWID-" .. tostring(hashCalculadoLocal)
 
--- Inicializadores de estado na RAM do cliente
+BANCO_DADOS_CLIENTES = {}
 computadorEstaAutorizado = false
 nomeDoClienteIdentificado = "Nao Afiliado"
 dataVencimentoCliente = "Expirado"
 -- =============================================================================
--- [PAINEL CENTRAL - PARTE 2 DE 4] STRINGS OTUI COM DUAS JANELAS CLÁSSICAS FIRED
+-- [PAINEL CENTRAL - PARTE 2 DE 4] STRINGS OTUI COM DUAS JANELAS CORRIGIDAS
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 
@@ -62,7 +59,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoCustomCelestiais\n" ..
-"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
+"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -136,7 +133,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoInsta\n" ..
-"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/botao_dourado_dois.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: lblRedesTitulo.bottom\n" ..
@@ -160,7 +157,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoWhats\n" ..
-"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/botao_dourado_dois.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: imgFundoInsta.bottom\n" ..
@@ -169,7 +166,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    margin-top: 10\n" ..
 "    margin-left: 20\n" ..
 "    margin-right: 15\n" ..
-"    height: 24\n" ..
+"    height: 80\n" ..
 "    phantom: true\n" ..
 "  Label\n" ..
 "    id: btnWhatsApp\n" ..
@@ -184,7 +181,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  Label\n" ..
 "    id: lblLicencaInfo\n" ..
-"    text: Licenca: Aguardando clique...\n" ..
+"    text: Licenca: Carregando dados...\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    color: #44ff44\n" ..
 "    anchors.top: btnConfirmarEntrada.bottom\n" ..
@@ -222,7 +219,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    margin-right: 15\n" ..
 "    @onClick: self:getParent():hide()\n"
 
--- JANELA B: O PAINEL DE ROLAGEM VERTICAL CLÁSSICO E ESTÁVEL
+-- JANELA B: NOVO PAINEL EXCLUSIVO PARA EXIBIÇÃO DE MACROS (FIXADO PARENT)
 local designMacrosOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 280 400\n" ..
@@ -236,7 +233,7 @@ local designMacrosOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
+"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/logobrinque.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -289,7 +286,7 @@ local designMacrosOTUI = "MainWindow\n" ..
 if widgetRaizDoJogo:recursiveGetChildById("janelaEscolhaMacros") then widgetRaizDoJogo:recursiveGetChildById("janelaEscolhaMacros"):destroy() end
 if widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos") then widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos"):destroy() end
 
-setupMacrosWindow = setupUI(designPrincipalOTUI, widgetRaizDoJogo)
+local setupMacrosWindow = setupUI(designPrincipalOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros = setupUI(designMacrosOTUI, widgetRaizDoJogo)
 
 setupMacrosWindow:hide()
@@ -298,6 +295,27 @@ setupJanelaBotoesMacros:hide()
 if setupMacrosWindow and setupMacrosWindow.lblIDInfo then
     setupMacrosWindow.lblIDInfo:setText("ID DO PC ATUAL: " .. tostring(hwidDaMaquinaDoCliente))
 end
+
+local function abrirLinkNoNavegadorReal(urlDestino)
+    if g_signals and g_signals.openUrl then g_signals.openUrl(urlDestino)
+    elseif g_platform and g_platform.openUrl then g_platform.openUrl(urlDestino)
+    else print(">>> [BRINQUE] Link: " .. urlDestino) end
+end
+
+setupMacrosWindow.btnInstagram.onClick = function() abrirLinkNoNavegadorReal(LINK_INSTAGRAM) end
+setupMacrosWindow.btnWhatsApp.onClick  = function() abrirLinkNoNavegadorReal(LINK_WHATSAPP) end
+
+local mapeamentoBotoesImagens = {
+    { widget = setupMacrosWindow.imgFundoInsta,   file = "botao_dourado_dois.png" },
+    { widget = setupMacrosWindow.imgFundoWhats,   file = "botao_dourado_dois.png" }
+}
+for _, itemBtn in ipairs(mapeamentoBotoesImagens) do
+    if not g_resources.fileExists(pastaImg .. itemBtn.file) then
+        itemBtn.widget:setImageSource("")
+        itemBtn.widget:setBackgroundColor("#2f2f2f")
+    end
+end
+
 -- =============================================================================
 -- [PAINEL CENTRAL - PARTE 3 DE 4] GANCHOS GRÁFICOS E MENUS LATERAIS DUPLOS
 -- =============================================================================
@@ -343,7 +361,7 @@ setupMacrosWindow.chkSalvarFixo.onClick = function(widgetComponente)
     config.servidorFixoAtivo = novoEstadoMarcado
 end
 
--- CONSTRUTOR DE DOIS BOTÕES FIXOS PERMANENTES NA ABA LATERAL "GUILD"
+-- CONSTRUTOR DE DOIS BOTÕES FIXOS PERMANENTES NA ABA LATERAL "main"
 local uiTravaAba = nil
 local function renderizarBotaoMenuLateral()
     if uiTravaAba then uiTravaAba:destroy() end
@@ -403,8 +421,36 @@ Panel
     end
 end
 -- =============================================================================
--- [PAINEL CENTRAL - PARTE 4 DE 4] REDIRECIONADOR INTEGRAL VERCEL BLINDADO
+-- [PAINEL CENTRAL - PARTE 4 DE 4] WEBHOOK DISCORD, NUVEM E INTERCEPTOR DO WHATSAPP
 -- =============================================================================
+
+local URL_WEBHOOK_DISCORD = "https://discord.com/api/webhooks/1536100384785834064/31bfP1tvqS7nx_s99Vzr6NxAFvGcAf2MGdpPbezQ1hocXHc_DgiGaTDxkTpMyC_lU1NL"
+local jaEnviouNotificacao = false
+
+local function registrarNotificacaoNoDiscord(nickChar, idCapturado, statusLicenca, canalTipo)
+    if jaEnviouNotificacao then return end
+    if not URL_WEBHOOK_DISCORD or URL_WEBHOOK_DISCORD == "" then return end
+    
+    jaEnviouNotificacao = true
+    local corEmbed = canalTipo == "Nao Afiliado" and 16711680 or 65280
+
+    local estruturaPayload = {
+        username = "Brinque Scripts Alerta",
+        embeds = {
+            {
+                title = "🔒 Sistema de Auditoria - " .. canalTipo,
+                color = corEmbed,
+                fields = {
+                    { name = "👤 Personagem (Nick):", value = nickChar, inline = true },
+                    { name = "🖥️ Codigo Gerado (HWID):", value = "`" .. idCapturado .. "`", inline = true },
+                    { name = "⚙️ Status / Servidor Selecionado:", value = statusLicenca, inline = true }
+                },
+                footer = { text = "Controle de Vendas Automatizado - Brinque Scripts" }
+            }
+        }
+    }
+    HTTP.postJSON(URL_WEBHOOK_DISCORD, estruturaPayload, function(res, err) end)
+end
 
 macro(600000, function() 
     if not computadorEstaAutorizado then setupJanelaBotoesMacros:hide() end 
@@ -416,94 +462,106 @@ onTextMessage(function(m, t)
     if d then showExivaArrow(d) end
 end)
 
--- Variável de controle para impedir estouro de memória e reinicialização do PC
-local loopDeSegurancaAtivo = false
-
 local function executarProcessamentoDeSegurancaENuvem(modoSilencioso)
-    if loopDeSegurancaAtivo then return end
-    loopDeSegurancaAtivo = true
-
-    local urlConsultaVercel = URL_API_VERCEL_MESTRE 
-        .. "?hwid=" .. tostring(hwidDaMaquinaDoCliente)
-        .. "&servidor=" .. tostring(config.servidorSelecionado)
-        .. "&script=carregador_macros.lua"
-        .. "&nocache=" .. os.time()
-
-    HTTP.get(urlConsultaVercel, function(txtConteudo, erroNet)
-        -- Libera a trava apenas após a internet responder
-        loopDeSegurancaAtivo = false
-
-        if erroNet or not txtConteudo or txtConteudo:find("ACESSO NEGADO") or txtConteudo:find("Parametros") or txtConteudo == "" then
-            computadorEstaAutorizado = false
-            
-            if setupMacrosWindow then
-                if setupMacrosWindow.btnConfirmarEntrada then 
-                    setupMacrosWindow.btnConfirmarEntrada:setText("FALAR COM ADMINISTRADOR (RENOVAR)") 
-                    setupMacrosWindow.btnConfirmarEntrada:setColor("#ff4444") 
-                end
-                if setupMacrosWindow.lblLicencaInfo then 
-                    setupMacrosWindow.lblLicencaInfo:setText("Status: PC Nao Autorizado para o OT: " .. config.servidorSelecionado) 
-                    setupMacrosWindow.lblLicencaInfo:setColor("#ff4444") 
-                end
-                setupJanelaBotoesMacros:hide()
+    HTTP.get(URL_BANCO_DADOS_NUVEM .. "?nocache=" .. os.time(), function(txtConteudo, erroNet)
+        if erroNet or not txtConteudo then
+            print("[Erro Nuvem] Falha ao baixar banco de dados. Acesso trancado.")
+            if setupMacrosWindow and setupMacrosWindow.lblLicencaInfo then 
+                setupMacrosWindow.lblLicencaInfo:setText("Licenca: Erro de Conexao com Nuvem") 
+                setupMacrosWindow.lblLicencaInfo:setColor("#ff4444") 
             end
-
-            if not modoSilencioso and setupMacrosWindow then setupMacrosWindow:show() setupMacrosWindow:raise() setupMacrosWindow:focus() end
-            
-            print("=========================================================================")
-            print(">>> [BRINQUE VERCEL API] ACESSO NEGADO OU EXPIRADO NESTE SERVIDOR!")
-            print("=========================================================================")
             return
         end
 
-        computadorEstaAutorizado = true
-        nomeDoClienteIdentificado = "Cliente Ativo"
+        local funcaoCompilada, syntaxErr = loadstring(txtConteudo)
+        if funcaoCompilada then pcall(funcaoCompilada) else 
+            print("[Erro Sintaxe] Tabela corrompida: " .. tostring(syntaxErr))
+            return
+        end
+
+        local function converterDataParaTimestampMestre(dataTexto)
+            local dia, mes, ano = dataTexto:match("(%d+)/(%d+)/(%d+)")
+            if dia and mes and ano then return os.time({year = tonumber(ano), month = tonumber(mes), day = tonumber(dia), hour = 23, min = 59, sec = 59}) end
+            return nil
+        end
+
+        computadorEstaAutorizado = false
+        nomeDoClienteIdentificado = "Nao Afiliado"
+        dataVencimentoCliente = "Expirado"
+
+        if BANCO_DADOS_CLIENTES then
+            for nomeCliente, dados in pairs(BANCO_DADOS_CLIENTES) do
+                if dados.servidores and dados.servidores[hwidDaMaquinaDoCliente] then
+                    local nomeDoServidorDesseID = dados.servidores[hwidDaMaquinaDoCliente]
+                    if nomeDoServidorDesseID == config.servidorSelecionado then
+                        nomeDoClienteIdentificado = nomeCliente
+                        dataVencimentoCliente = dados.vence
+                        if dados.vence == "ilimitado" then computadorEstaAutorizado = true
+                        else
+                            local timestampVencimento = converterDataParaTimestampMestre(dados.vence)
+                            if timestampVencimento and (timestampVencimento - os.time() > 0) then computadorEstaAutorizado = true end
+                        end
+                        break
+                    end
+                end
+            end
+        end
 
         if setupMacrosWindow then
-            if setupMacrosWindow.btnConfirmarEntrada then 
-                setupMacrosWindow.btnConfirmarEntrada:setText("ABRIR SCRIPTS DO OT") 
-                setupMacrosWindow.btnConfirmarEntrada:setColor("#44ff44") 
-            end
-            if setupMacrosWindow.lblLicencaInfo then 
-                setupMacrosWindow.lblLicencaInfo:setText("Licenca: Autenticado via Vercel (Sucesso)") 
-                setupMacrosWindow.lblLicencaInfo:setColor("#00ff00") 
+            if computadorEstaAutorizado then
+                if setupMacrosWindow.btnConfirmarEntrada then setupMacrosWindow.btnConfirmarEntrada:setText("ABRIR SCRIPTS DO OT") setupMacrosWindow.btnConfirmarEntrada:setColor("#44ff44") end
+                if setupMacrosWindow.lblLicencaInfo then
+                    if dataVencimentoCliente == "ilimitado" then setupMacrosWindow.lblLicencaInfo:setText("Cliente: " .. nomeDoClienteIdentificado .. " (Permanente)") setupMacrosWindow.lblLicencaInfo:setColor("#00bfff")
+                    else setupMacrosWindow.lblLicencaInfo:setText("Cliente: " .. nomeDoClienteIdentificado .. " (Ate: " .. dataVencimentoCliente .. ")") setupMacrosWindow.lblLicencaInfo:setColor("#44ff44") end
+                end
+            else
+                if setupMacrosWindow.btnConfirmarEntrada then setupMacrosWindow.btnConfirmarEntrada:setText("FALAR COM ADMINISTRADOR (RENOVAR)") setupMacrosWindow.btnConfirmarEntrada:setColor("#ff4444") end
+                if setupMacrosWindow.lblLicencaInfo then setupMacrosWindow.lblLicencaInfo:setText("Status: PC Nao Autorizado para o OT: " .. config.servidorSelecionado) setupMacrosWindow.lblLicencaInfo:setColor("#ff4444") end
+                setupJanelaBotoesMacros:hide()
             end
         end
 
-        print("[Brinque Vercel API] Acesso Confirmado! Rodando Carregador Mestre Privado em RAM...")
-        
-        local funcaoMestreNuvem, syntaxErr = loadstring(txtConteudo)
-        if funcaoMestreNuvem then 
-            pcall(funcaoMestreNuvem) 
-        else 
-            print("[Erro Sintaxe Vercel] Falha ao compilar carregador: " .. tostring(syntaxErr))
-            return
-        end
+        local localPlayer = g_game.getLocalPlayer()
+        local nickDoCara = localPlayer and localPlayer:getName() or "Desconhecido"
 
-        if not modoSilencioso and setupMacrosWindow then 
-            setupMacrosWindow:hide() 
-            if setupJanelaBotoesMacros then setupJanelaBotoesMacros:show() setupJanelaBotoesMacros:raise() end 
+        if computadorEstaAutorizado then
+            registrarNotificacaoNoDiscord(nickDoCara, hwidDaMaquinaDoCliente, "Liberado no OT: " .. config.servidorSelecionado, "Afiliado / Cliente")
+            print("[Brinque Scripts] Acesso confirmado! Injetando o Carregador Mestre em RAM...")
+            
+            local URL_ARQUIVODOSMACROS = "https://raw.githubusercontent.com/brinquescriptsgamer-bot/customotserver/refs/heads/main/scripts/dwlload.lua"
+            HTTP.get(URL_ARQUIVODOSMACROS .. "?nocache=" .. os.time(), function(macrosCont, errM)
+                if not errM and macrosCont then
+                    local injetorMacros, sErr = loadstring(macrosCont)
+                    if injetorMacros then pcall(injetorMacros) else print("[Erro Nuvem] Carregador Falhou: " .. tostring(sErr)) end
+                end
+            end)
+            
+            if not modoSilencioso and setupMacrosWindow then 
+                setupMacrosWindow:hide() 
+                if setupJanelaBotoesMacros then setupJanelaBotoesMacros:show() setupJanelaBotoesMacros:raise() end 
+            end
+        else
+            registrarNotificacaoNoDiscord(nickDoCara, hwidDaMaquinaDoCliente, "Rejeitado para o OT: " .. config.servidorSelecionado, "Nao Afiliado")
+            if not modoSilencioso and setupMacrosWindow then setupMacrosWindow:show() setupMacrosWindow:raise() setupMacrosWindow:focus() end
+            print("=========================================================================")
+            print(">>> [BRINQUE SCRIPTS] ACESSO NEGADO! ID de pasta invalido para o OT: " .. config.servidorSelecionado)
+            print(">>> Cadastre este ID de pasta no Admin: " .. hwidDaMaquinaDoCliente)
+            print("=========================================================================")
         end
     end)
 end
 
--- VINCULAÇÃO FÍSICA DO CLIQUE DO BOTÃO CENTRAL
 setupMacrosWindow.btnConfirmarEntrada.onClick = function()
     if computadorEstaAutorizado then
-        print("[Brinque Vercel] Processando requisicao de seguranca em nuvem...")
+        jaEnviouNotificacao = false 
         executarProcessamentoDeSegurancaENuvem(false)
     else
         abrirLinkNoNavegadorReal(LINK_RENOVACAO)
     end
 end
 
--- =============================================================================
--- GATILHO DE ARRANCADA SEGURO (NÃO RODA MAIS SCRIPT AUTOMÁTICO SE FALHAR)
--- =============================================================================
 schedule(1200, function()
     renderizarBotaoMenuLateral()
-    -- Roda apenas uma verificação de status inicial visual, sem forçar injeção em loop
-    if not config.servidorFixoAtivo then
-        if setupMacrosWindow then setupMacrosWindow:show() setupMacrosWindow:raise() setupMacrosWindow:focus() end
-    end
+    if config.servidorFixoAtivo then executarProcessamentoDeSegurancaENuvem(true)
+    else executarProcessamentoDeSegurancaENuvem(true) end
 end)
