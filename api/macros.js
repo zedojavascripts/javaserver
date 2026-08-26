@@ -1,5 +1,5 @@
 // =============================================================================
-// [VERCEL API] VERSÃO DIRECT-PATH: CORREÇÃO DE SUBPASTAS DA NUVEM
+// [VERCEL API] VERSÃO CERTIFICADA: CAMINHOS IDÊNTICOS À ÁRVORE REAL DO REPOSITÓRIO
 // =============================================================================
 
 const https = require('https');
@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
     const hwidAlvo = hwid.trim();
     const servidorAlvo = servidor.toLowerCase().trim();
 
-    // VALIDAÇÃO DIRETA DE ACESSO POR TEXTO
+    // VALIDAÇÃO DIRETA DE ACESSO POR TEXTO NO BANCO DE DADOS PRIVADO
     if (bancoTextoLua.includes(hwidAlvo)) {
         const linhasDoBanco = bancoTextoLua.split('\n');
         let dataVencimentoEncontrada = "Expirado";
@@ -85,9 +85,9 @@ module.exports = async (req, res) => {
             } else {
                 const partesData = dataVencimentoEncontrada.split('/');
                 if (partesData.length === 3) {
-                    const dia = parseInt(partesData, 10);
-                    const mes = parseInt(partesData, 10) - 1;
-                    const ano = parseInt(partesData, 10);
+                    const dia = parseInt(partesData[0], 10);
+                    const mes = parseInt(partesData[1], 10) - 1;
+                    const ano = parseInt(partesData[2], 10);
                     
                     const timestampVencimento = new Date(ano, mes, dia, 23, 59, 59).getTime();
                     if (timestampVencimento - Date.now() > 0) {
@@ -98,31 +98,36 @@ module.exports = async (req, res) => {
         }
     }
 
-    // 🛠️ ROTEAMENTO DE CAMINHOS CORRIGIDO:
-    // Se o script não for o dwlload, ele procura o macro baseado na pasta que você estruturou
+    // MAPEAMENTO RÍGIDO DE DIRETÓRIOS CONFORME A FOTO DO SEU REPOSITÓRIO
+    // Força o casamento perfeito com o nome real das suas pastas do GitHub
+    let pastaDoServidorReal = 'sv_ilusion'; 
+    const servMinusculo = servidor.toLowerCase().trim();
+    if (servMinusculo.includes('minimalist')) pastaDoServidorReal = 'sv_minimalist';
+    if (servMinusculo.includes('legedy') || servMinusculo.includes('legend')) pastaDoServidorReal = 'sv_legend';
+
+    // Se o pedido for do carregador principal, entrega o dwlload.lua direto da raiz de scripts/
     if (script === 'carregador_macros.lua' || script === 'dwlload.lua') {
-        return res.status(200).send(await buscarArquivoNoGithubPrivado('scripts/dwlload.lua'));
+        const conteudoDwlload = await buscarArquivoNoGithubPrivado('scripts/dwlload.lua');
+        if (conteudoDwlload) {
+            return res.status(200).send(conteudoDwlload);
+        } else {
+            return res.status(404).send('-- [Brinque API] Arquivo dwlload.lua nao localizado na raiz de scripts/. --');
+        }
     }
 
-    // Roteador inteligente de OTs com base no ComboBox
-    let pastaDoServidor = 'sv_ilusion';
-    if (servidor === 'Minimalist') pastaDoServidor = 'sv_minimalist';
-    if (servidor === 'Legedy') pastaDoServidor = 'sv_legend';
-
-    // 🚀 BUSCA DINÂMICA REFORÇADA: Testa encontrar o arquivo em todas as subpastas possiveis (Minusa/Maiuscula)
-    const subpastasParaTestar = ['healing', 'Healing', 'war', 'War', 'cave_target', 'Cave_target', 'extras', 'Extras'];
+    // BUSCA ROBUSTA EM ESCADA PARA AS SUBPASTAS DE SCRIPTS DE JOGO (.LUA)
+    const subpastasParaVarrer = ['healing', 'Healing', 'war', 'War', 'cave_target', 'Cave_target', 'extras', 'Extras'];
     let scriptConteudoOriginal = null;
 
-    // Varre as combinações até achar o seu arquivo físico no GitHub privado
-    for (let pastaCat of subpastasParaTestar) {
-        let caminhoTentativa = `scripts/${pastaDoServidor}/${pastaCat}/${script}`;
+    for (let pastaCat of subpastasParaVarrer) {
+        let caminhoTentativa = `scripts/${pastaDoServidorReal}/${pastaCat}/${script}`;
         scriptConteudoOriginal = await buscarArquivoNoGithubPrivado(caminhoTentativa);
-        if (scriptConteudoOriginal) break; // Se achou o arquivo, para o loop e entrega
+        if (scriptConteudoOriginal) break; 
     }
 
     if (scriptConteudoOriginal) {
         return res.status(200).send(scriptConteudoOriginal);
     } else {
-        return res.status(404).send(`-- [Brinque API] Arquivo ${script} nao localizado nas pastas privadas de: ${pastaDoServidor} --`);
+        return res.status(404).send(`-- [Brinque API] O arquivo ${script} nao foi encontrado dentro de scripts/${pastaDoServidorReal}/ --`);
     }
 };
