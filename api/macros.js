@@ -11,7 +11,7 @@ function buscarArquivoNoGithubPrivado(caminhoDoArquivo) {
         
         const configuracaoRequest = {
             hostname: '://github.com',
-            path: `/repos/brinquescriptsgamer-bot/customotserver/contents/${caminhoDoArquivo}`,
+            path: `/repos/brinquescriptsgamer-bot/customotserver/${caminhoDoArquivo}`,
             headers: {
                 'Authorization': `token ${tokenOculto}`,
                 'User-Agent': 'Vercel-Serverless-Function',
