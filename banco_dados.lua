@@ -7,14 +7,14 @@ BANCO_DADOS_CLIENTES = {
         vence = "ilimitado",
         servidores = {
             ["CELESTIAL-HWID-37646993"] = "Ilusion",
-            ["CELESTIAL-HWID-49966485"] = "Minimalist"
+            ["CELESTIAL-HWID-11111111"] = "Minimalist"
         }
     },
-    ["Dono NTBK Brinque"] = {
-        vence = "ilimitado",
+    ["Marcos"] = {
+        vence = "30/12/2026",
         servidores = {
-            ["CELESTIAL-HWID-0000000"] = "Ilusion",
-            ["CELESTIAL-HWID-4049913"] = "Minimalist"
+            ["CELESTIAL-HWID-45525429"] = "Ilusion",
+            ["CELESTIAL-HWID-99887766"] = "Minimalist"
         }
     },
     ["Wesley"] = {
