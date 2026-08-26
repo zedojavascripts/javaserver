@@ -1,7 +1,7 @@
 -- =============================================================================
 -- [BRINQUE SCRIPTS] ARQUIVO 1 LOCAL: CONEXÃO VERCEL SUPREMA - PARTE 1 DE 4
 -- =============================================================================
-setDefaultTab("GUILD")
+setDefaultTab("main")
 
 local panelName = "painelBrinqueMultiServidores"
 if type(storage[panelName]) ~= "table" then
@@ -29,7 +29,7 @@ local pastaImg        = "/bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/"
 -- 🌐 SUA NOVA PONTE DE SEGURANÇA EXCLUSIVA NA VERCEL (REPOSÍTÓRIO PRIVADO)
 -- Repare que o bot NÃO SABE o link do seu GitHub! Ele só conversa com a Vercel.
 -- =============================================================================
-local URL_API_VERCEL_MESTRE = "customotserver.vercel.app"
+local URL_API_VERCEL_MESTRE = "https://customotserver.vercel.app"
 
 -- 🧠 CÁLCULO DO HWID LOCAL INDIVIDUAL POR PASTA DO SERVIDOR CONECTADO
 local pastaEscritaParaValidar = tostring(g_resources.getWriteDir()):lower():trim()
@@ -369,7 +369,7 @@ Panel
     height: 17
     text: Meus Macros
     font: verdana-11px-rounded
-  ]], getTab("GUILD"))
+  ]], getTab("main"))
 
     -- Botão esquerdo: Sempre abre a janela de login e seleção de OTs
     uiTravaAba.btnMenuMestre.onClick = function()
