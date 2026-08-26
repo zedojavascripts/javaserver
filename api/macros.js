@@ -1,43 +1,31 @@
-// =============================================================================
-// [VERCEL API] TESTE ULTRA-EXTREMO: BUSCA BRUTA DIRETA SEM NENHUMA VALIDAÇÃO
-// =============================================================================
-
 const https = require('https');
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-
-    // Tenta pegar o Token oculto que salvamos no painel da Vercel
     const tokenOculto = process.env.GITHUB_TOKEN;
 
-    // 🧪 CAMINHO FIXO DIRETO DA FOTO DO REPOSITÓRIO:
-    // Se o arquivo healingBRQ.lua estiver exatamente nessa pasta, a Vercel vai achar!
-    const caminhoFixoDoTeste = "scripts/sv_ilusion/healing/healingBRQ.lua";
-
+    // 🧪 CAMINHO ULTRA-SIMPLES: Busca o banco solto na pasta scripts
     const configuracaoRequest = {
         hostname: '://github.com',
-        path: `/repos/brinquescriptsgamer-bot/customotserver/contents/${caminhoFixoDoTeste}`,
+        path: `/repos/brinquescriptsgamer-bot/customotserver/contents/scripts/banco_dados.lua`,
         headers: {
             'Authorization': `token ${tokenOculto}`,
-            'User-Agent': 'Vercel-Serverless-Function',
+            'User-Agent': 'Vercel-Testing',
             'Accept': 'application/vnd.github.v3.raw'
         }
     };
 
-    // Faz a chamada crua e direta para o GitHub Privado
     https.get(configuracaoRequest, (resposta) => {
-        let dadosAcumulados = '';
-        resposta.on('data', (pedaco) => { dadosAcumulados += pedaco; });
+        let dados = '';
+        resposta.on('data', (p) => { dados += p; });
         resposta.on('end', () => {
             if (resposta.statusCode === 200) {
-                // Se o GitHub aceitou o Token e achou o arquivo, cospe o código Lua de volta!
-                return res.status(200).send(dadosAcumulados);
+                return res.status(200).send(dados); // Devolve o texto do banco se achar
             } else {
-                // Se deu erro, avisa qual foi o código de erro do GitHub (Ex: 404 ou 401)
-                return res.status(resposta.statusCode).send(`-- [Erro GitHub] O servidor do GitHub recusou o pedido com o status: ${resposta.statusCode} --`);
+                return res.status(resposta.statusCode).send(`ERRO_GITHUB_STATUS_${resposta.statusCode}`);
             }
         });
-    }).on('error', (erroNet) => {
-        return res.status(500).send(`-- [Erro Net] Falha fisica de conexao na nuvem --`);
+    }).on('error', () => {
+        return res.status(500).send("ERRO_CONEXAO_FISICA");
     });
 };
