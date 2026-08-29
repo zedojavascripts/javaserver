@@ -1,40 +1,41 @@
 -- =============================================================================
--- [SOULE PUSH SYSTEMS V5.0] - AUTO PUSH MOUSE ISOLADO: PARTE 1 DE 3
+-- [SOULE PUSH SYSTEMS V5.1] - AUTO PUSH MOUSE ISOLADO: PARTE 1 DE 4 (FIX CONFLICT)
 -- =============================================================================
 
 local widgetRaizDoJogo = g_ui.getRootWidget()
-local STORAGE_MOUSE = "push_mouse_puro_config"
+-- 🧠 FIX EXCLUSIVO: Nova chave de storage única para nunca trombar com a versão antiga
+local STORAGE_MOUSE_ISOLADO = "push_mouse_isolado_v2_storage"
 
--- 1. Inicializacao Segura do Storage focado estritamente no Mouse Livre
-if not storage[STORAGE_MOUSE] then
-  storage[STORAGE_MOUSE] = {
+if not storage[STORAGE_MOUSE_ISOLADO] then
+  storage[STORAGE_MOUSE_ISOLADO] = {
     enabled = false,
-    pushDelay = 200,       -- delayMove (200ms padrão do seu exemplo)
+    pushDelay = 200,       
     maxDistance = 7,
-    toggleKey = "F8",      -- Hotkey para Ligar/Desligar o macro do Mouse
+    toggleKey = "F8",      
     cleanLixo = true,
     autoFirePee = true,
-    runeId = 3188,         -- ID da Runa de Push/Fire editavel
-    destroyRuneId = 3148   -- ID do Destroy Field editavel
+    runeId = 3188,         
+    destroyRuneId = 3148   
   }
 end
 
--- Trava de seguranca contra nils no C++
-if storage[STORAGE_MOUSE].enabled == nil then storage[STORAGE_MOUSE].enabled = false end
-if not storage[STORAGE_MOUSE].pushDelay then storage[STORAGE_MOUSE].pushDelay = 200 end
-if not storage[STORAGE_MOUSE].maxDistance then storage[STORAGE_MOUSE].maxDistance = 7 end
-if not storage[STORAGE_MOUSE].toggleKey then storage[STORAGE_MOUSE].toggleKey = "F8" end
-if not storage[STORAGE_MOUSE].runeId then storage[STORAGE_MOUSE].runeId = 3188 end
-if not storage[STORAGE_MOUSE].destroyRuneId then storage[STORAGE_MOUSE].destroyRuneId = 3148 end
-if storage[STORAGE_MOUSE].cleanLixo == nil then storage[STORAGE_MOUSE].cleanLixo = true end
-if storage[STORAGE_MOUSE].autoFirePee == nil then storage[STORAGE_MOUSE].autoFirePee = true end
+-- Sanitização forçada contra nils
+if storage[STORAGE_MOUSE_ISOLADO].enabled == nil then storage[STORAGE_MOUSE_ISOLADO].enabled = false end
+if not storage[STORAGE_MOUSE_ISOLADO].pushDelay then storage[STORAGE_MOUSE_ISOLADO].pushDelay = 200 end
+if not storage[STORAGE_MOUSE_ISOLADO].maxDistance then storage[STORAGE_MOUSE_ISOLADO].maxDistance = 7 end
+if not storage[STORAGE_MOUSE_ISOLADO].toggleKey then storage[STORAGE_MOUSE_ISOLADO].toggleKey = "F8" end
+if not storage[STORAGE_MOUSE_ISOLADO].runeId then storage[STORAGE_MOUSE_ISOLADO].runeId = 3188 end
+if not storage[STORAGE_MOUSE_ISOLADO].destroyRuneId then storage[STORAGE_MOUSE_ISOLADO].destroyRuneId = 3148 end
+if storage[STORAGE_MOUSE_ISOLADO].cleanLixo == nil then storage[STORAGE_MOUSE_ISOLADO].cleanLixo = true end
+if storage[STORAGE_MOUSE_ISOLADO].autoFirePee == nil then storage[STORAGE_MOUSE_ISOLADO].autoFirePee = true end
 
-configMouse = storage[STORAGE_MOUSE]
+-- 🧠 FIX EXCLUSIVO: Variável local restrita para não clonar dados na RAM
+local configMouseIsolado = storage[STORAGE_MOUSE_ISOLADO]
 
--- 2. Janela Flutuante Limpa (Removido o botao de Hotkey de Marcação Fixa)
+-- 🧠 FIX EXCLUSIVO: Modificado IDs de todos os elementos OTUI para isolar o layout
 local designPrincipalOTUI = "MainWindow\n" ..
-"  id: janelaAutoPushMousePuro\n" ..
-"  !text: tr('Auto Push Mouse PRO - Soule')\n" ..
+"  id: janelaAutoPushMousePuro_IsoladoV2\n" ..
+"  !text: tr('Auto Push Mouse PRO v2 - Isolado')\n" ..
 "  size: 500 240\n" ..
 "  @onEscape: self:hide()\n" ..
 "  Label\n" ..
@@ -126,10 +127,13 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
 "    margin-right: 4\n" ..
 "    height: 22\n"
+-- =============================================================================
+-- [SOULE PUSH SYSTEMS V5.1] - AUTO PUSH MOUSE ISOLADO: PARTE 2 DE 4 (PANEL & UI)
+-- =============================================================================
 
 local designPopUpOTUI = "MainWindow\n" ..
-"  id: janelaConfigChasePop\n" ..
-"  !text: tr('Editar Campo')\n" ..
+"  id: janelaConfigChasePop_IsoladoV2\n" ..
+"  !text: tr('Editar Campo Isolado')\n" ..
 "  size: 260 130\n" ..
 "  anchors.centerIn: parent\n" ..
 "  @onEscape: self:hide()\n" ..
@@ -161,28 +165,31 @@ local designPopUpOTUI = "MainWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    margin-left: 4\n"
 
-if widgetRaizDoJogo:getChildById("janelaAutoPushMousePuro") then widgetRaizDoJogo:getChildById("janelaAutoPushMousePuro"):destroy() end
-if widgetRaizDoJogo:getChildById("janelaConfigChasePop") then widgetRaizDoJogo:getChildById("janelaConfigChasePop"):destroy() end
+-- Limpeza cirúrgica de instâncias duplicadas restritas a esta versão
+if widgetRaizDoJogo:getChildById("janelaAutoPushMousePuro_IsoladoV2") then 
+    widgetRaizDoJogo:getChildById("janelaAutoPushMousePuro_IsoladoV2"):destroy() 
+end
+if widgetRaizDoJogo:getChildById("janelaConfigChasePop_IsoladoV2") then 
+    widgetRaizDoJogo:getChildById("janelaConfigChasePop_IsoladoV2"):destroy() 
+end
 
-principalWindow = setupUI(designPrincipalOTUI, widgetRaizDoJogo)
-popUpWindow = setupUI(designPopUpOTUI, widgetRaizDoJogo)
+-- 🧠 FIX EXCLUSIVO: Janelas instanciadas localmente para blindar o cache da RAM
+local principalWindow = setupUI(designPrincipalOTUI, widgetRaizDoJogo)
+local popUpWindow = setupUI(designPopUpOTUI, widgetRaizDoJogo)
 principalWindow:hide()
 popUpWindow:hide()
--- =============================================================================
--- [SOULE PUSH SYSTEMS V5.0] - AUTO PUSH MOUSE ISOLADO: PARTE 2 DE 3
--- =============================================================================
 
 setDefaultTab("main")
 
 local painelAbasNativas = getTab("main")
-if painelAbasNativas:recursiveGetChildById("panelPushMousePuroIsolado") then
-    painelAbasNativas:recursiveGetChildById("panelPushMousePuroIsolado"):destroy()
+if painelAbasNativas:recursiveGetChildById("panelPushMousePuroIsoladoV2") then
+    painelAbasNativas:recursiveGetChildById("panelPushMousePuroIsoladoV2"):destroy()
 end
 
--- Painel Compacto Clássico na main com BotSwitch para herdar a luz nativa
+-- Painel Compacto com ID modificado para não chocar com a versão anterior
 local botoesLateraisUI = setupUI([[
 Panel
-  id: panelPushMousePuroIsolado
+  id: panelPushMousePuroIsoladoV2
   height: 18
   margin-top: 5
   layout:
@@ -191,7 +198,7 @@ Panel
 
   BotSwitch
     id: btnLigaMacro
-    text: Push Mouse
+    text: Push Mouse v2
     width: 125
 
   Button
@@ -199,80 +206,92 @@ Panel
     text: Setup
     width: 45
 ]], painelAbasNativas)
+-- =============================================================================
+-- [SOULE PUSH SYSTEMS V5.1] - AUTO PUSH MOUSE ISOLADO: PARTE 3 DE 4 (CLICKS & VARS)
+-- =============================================================================
 
-function atualizarTextoDosBotoesPainel()
+-- 🧠 FIX EXCLUSIVO: Função local isolada que atualiza apenas o layout desta janela
+local function atualizarTextoDosBotoesPainelIsolado()
     if not principalWindow or not botoesLateraisUI then return end
     
-    principalWindow.btnDelayMouse:setText("Delay Push: " .. configMouse.pushDelay .. "ms")
-    principalWindow.btnDistMouse:setText("Distancia Max: " .. configMouse.maxDistance)
-    principalWindow.btnToggleKey:setText("Tecla ON/OFF: [ " .. configMouse.toggleKey .. " ]")
-    principalWindow.btnRuneIdSlot:setText("Runa Push ID: " .. configMouse.runeId)
-    principalWindow.btnDestroyIdSlot:setText("Destroy Field ID: " .. configMouse.destroyRuneId)
+    principalWindow.btnDelayMouse:setText("Delay Push: " .. configMouseIsolado.pushDelay .. "ms")
+    principalWindow.btnDistMouse:setText("Distancia Max: " .. configMouseIsolado.maxDistance)
+    principalWindow.btnToggleKey:setText("Tecla ON/OFF: [ " .. configMouseIsolado.toggleKey .. " ]")
+    principalWindow.btnRuneIdSlot:setText("Runa Push ID: " .. configMouseIsolado.runeId)
+    principalWindow.btnDestroyIdSlot:setText("Destroy Field ID: " .. configMouseIsolado.destroyRuneId)
     
-    principalWindow.swLixoMouse:setOn(configMouse.cleanLixo)
-    principalWindow.swLixoMouse:setText(configMouse.cleanLixo and "Limpar Caminho: ON" or "Limpar Caminho: OFF")
-    principalWindow.swFireMouse:setOn(configMouse.autoFirePee)
-    principalWindow.swFireMouse:setText(configMouse.autoFirePee and "Queimar Destino: ON" or "Queimar Destino: OFF")
+    principalWindow.swLixoMouse:setOn(configMouseIsolado.cleanLixo)
+    principalWindow.swLixoMouse:setText(configMouseIsolado.cleanLixo and "Limpar Caminho: ON" or "Limpar Caminho: OFF")
+    principalWindow.swFireMouse:setOn(configMouseIsolado.autoFirePee)
+    principalWindow.swFireMouse:setText(configMouseIsolado.autoFirePee and "Queimar Destino: ON" or "Queimar Destino: OFF")
     
-    botoesLateraisUI.btnLigaMacro:setOn(configMouse.enabled)
-    botoesLateraisUI.btnLigaMacro:setText(configMouse.enabled and "Mouse: ON" or "Mouse: OFF")
+    botoesLateraisUI.btnLigaMacro:setOn(configMouseIsolado.enabled)
+    botoesLateraisUI.btnLigaMacro:setText(configMouseIsolado.enabled and "Mouse v2: ON" or "Mouse v2: OFF")
 end
 
 botoesLateraisUI.btnLigaMacro.onClick = function(w)
-    configMouse.enabled = not configMouse.enabled
-    if not configMouse.enabled then resetDataMouse() end
-    atualizarTextoDosBotoesPainel()
+    configMouseIsolado.enabled = not configMouseIsolado.enabled
+    if not configMouseIsolado.enabled then resetDataMouseIsolado() end
+    atualizarTextoDosBotoesPainelIsolado()
 end
 
 botoesLateraisUI.setup.onClick = function()
     principalWindow:show() principalWindow:raise() principalWindow:focus()
-    atualizarTextoDosBotoesPainel()
+    atualizarTextoDosBotoesPainelIsolado()
 end
 
-principalWindow.btnDelayMouse.onClick = function() dispararAberturaPopUpSeguro("pushDelay", "Push Mouse Delay") end
-principalWindow.btnDistMouse.onClick = function() dispararAberturaPopUpSeguro("maxDistance", "Distancia Maxima Mouse") end
-principalWindow.btnToggleKey.onClick = function() dispararAberturaPopUpSeguro("toggleKey", "Tecla Ligar/Desligar Macro") end
-principalWindow.btnRuneIdSlot.onClick = function() dispararAberturaPopUpSeguro("runeId", "Runa Push/Fire ID") end
-principalWindow.btnDestroyIdSlot.onClick = function() dispararAberturaPopUpSeguro("destroyRuneId", "Destroy Field ID") end
-
-principalWindow.swLixoMouse.onClick = function() configMouse.cleanLixo = not configMouse.cleanLixo atualizarTextoDosBotoesPainel() end
-principalWindow.swFireMouse.onClick = function() configMouse.autoFirePee = not configMouse.autoFirePee atualizarTextoDosBotoesPainel() end
-principalWindow.closeBtn.onClick = function() principalWindow:hide() end
-
+-- Variável local de controle do pop-up
 local campoModeloEditandoVal = ""
-function dispararAberturaPopUpSeguro(chaveStorage, nomeDoCampoNoMenu)
+
+-- 🧠 FIX EXCLUSIVO: Abertura de pop-up local sem risco de colisões na memória
+local function dispararAberturaPopUpIsolado(chaveStorage, nomeDoCampoNoMenu)
     campoModeloEditandoVal = chaveStorage
     popUpWindow:setText("Editar: " .. nomeDoCampoNoMenu)
     popUpWindow.lblInfo:setText("Digite o novo valor para " .. nomeDoCampoNoMenu .. ":")
-    popUpWindow.txtEntrada:setText(tostring(configMouse[chaveStorage] or ""))
+    popUpWindow.txtEntrada:setText(tostring(configMouseIsolado[chaveStorage] or ""))
     popUpWindow:show() popUpWindow:raise() popUpWindow:focus() popUpWindow.txtEntrada:focus()
 end
+
+principalWindow.btnDelayMouse.onClick = function() dispararAberturaPopUpIsolado("pushDelay", "Push Mouse Delay") end
+principalWindow.btnDistMouse.onClick = function() dispararAberturaPopUpIsolado("maxDistance", "Distancia Maxima Mouse") end
+principalWindow.btnToggleKey.onClick = function() dispararAberturaPopUpIsolado("toggleKey", "Tecla Ligar/Desligar Macro") end
+principalWindow.btnRuneIdSlot.onClick = function() dispararAberturaPopUpIsolado("runeId", "Runa Push/Fire ID") end
+principalWindow.btnDestroyIdSlot.onClick = function() dispararAberturaPopUpIsolado("destroyRuneId", "Destroy Field ID") end
+
+principalWindow.swLixoMouse.onClick = function() configMouseIsolado.cleanLixo = not configMouseIsolado.cleanLixo atualizarTextoDosBotoesPainelIsolado() end
+principalWindow.swFireMouse.onClick = function() configMouseIsolado.autoFirePee = not configMouseIsolado.autoFirePee atualizarTextoDosBotoesPainelIsolado() end
+principalWindow.closeBtn.onClick = function() principalWindow:hide() end
 
 popUpWindow.btnCancelar.onClick = function() popUpWindow:hide() end
 popUpWindow.btnConfirmar.onClick = function()
     local entradaDigitada = popUpWindow.txtEntrada:getText()
     if campoModeloEditandoVal ~= "" and entradaDigitada ~= "" then
         if campoModeloEditandoVal == "toggleKey" then
-            configMouse[campoModeloEditandoVal] = entradaDigitada
-        else configMouse[campoModeloEditandoVal] = tonumber(entradaDigitada) or configMouse[campoModeloEditandoVal] end
+            configMouseIsolado[campoModeloEditandoVal] = entradaDigitada
+        else 
+            configMouseIsolado[campoModeloEditandoVal] = tonumber(entradaDigitada) or configMouseIsolado[campoModeloEditandoVal] 
+        end
     end
-    popUpWindow:hide() atualizarTextoDosBotoesPainel()
+    popUpWindow:hide() atualizarTextoDosBotoesPainelIsolado()
 end
 
 -- =============================================================================
--- TABELAS E VARIÁVEIS EXCLUSIVAS DO PUSH MOUSE ISOLADO
+-- TABELAS E VARIÁVEIS EXCLUSIVAS DO PUSH MOUSE ISOLADO (LOCAL V2)
 -- =============================================================================
 local fireFieldIds = {}
 fireFieldIds["2118"] = true fireFieldIds["2119"] = true fireFieldIds["2120"] = true
 fireFieldIds["2123"] = true fireFieldIds["2124"] = true fireFieldIds["2125"] = true
+fireFieldIds["2121"] = true fireFieldIds["2126"] = true fireFieldIds["2125"] = true
 
-mouse_pushTarget = nil
+-- 🧠 FIX EXCLUSIVO: Variáveis de combate isoladas localmente para rodar junto com a v1
+local mouse_pushTarget = nil
 local pushPriority = false
 local pushAttempts = 0
 local MAX_PUSH_PRIORITY = 8
 local tempoUltimoRecuo = 0
 
-function resetDataMouse()
+-- 🧠 FIX EXCLUSIVO: Função local que limpa o target sem desconfigurar o macro antigo
+function resetDataMouseIsolado()
   for _, tile in pairs(g_map.getTiles(posz())) do
     if tile:getText() == "TARGET" then tile:setText('') end
   end
@@ -281,6 +300,10 @@ function resetDataMouse()
   pushAttempts = 0
 end
 
+onCreaturePositionChange(function(creature, newPos, oldPos)
+  if creature == player then resetDataMouseIsolado() end
+end)
+
 local function obterDirecaoDoMouse(pPos, mPos)
     local dx, dy = mPos.x - pPos.x, mPos.y - pPos.y
     local rx, ry = 0, 0
@@ -288,25 +311,25 @@ local function obterDirecaoDoMouse(pPos, mPos)
     if dy > 0 then ry = 1 elseif dy < 0 then ry = -1 end
     return {x = rx, y = ry}
 end
-	-- =============================================================================
--- [SOULE PUSH SYSTEMS V5.0] - AUTO PUSH MOUSE ISOLADO: PARTE 3 DE 3 (CORE)
+-- =============================================================================
+-- [SOULE PUSH SYSTEMS V5.1] - AUTO PUSH MOUSE ISOLADO: PARTE 4 DE 4 (FINAL CORE)
 -- =============================================================================
 
--- 1. GATILHO DA HOTKEY INDEPENDENTE (ON/OFF DO BOTÃO GERAL)
+-- 1. GATILHO DA HOTKEY INDEPENDENTE (ON/OFF DO BOTÃO GERAL ISOLADO)
 onKeyDown(function(keys)
-    if keys == configMouse.toggleKey then
-        configMouse.enabled = not configMouse.enabled
-        modules.game_textmessage.displayGameMessage("Auto Push Mouse PRO: " .. (configMouse.enabled and "LIGADO" or "DESLIGADO"))
-        if not configMouse.enabled then resetDataMouse() end
-        atualizarTextoDosBotoesPainel()
+    if keys == configMouseIsolado.toggleKey then
+        configMouseIsolado.enabled = not configMouseIsolado.enabled
+        modules.game_textmessage.displayGameMessage("Auto Push Mouse PRO v2: " .. (configMouseIsolado.enabled and "LIGADO" or "DESLIGADO"))
+        if not configMouseIsolado.enabled then resetDataMouseIsolado() end
+        atualizarTextoDosBotoesPainelIsolado()
     elseif keys == "Escape" then 
-        resetDataMouse()
+        resetDataMouseIsolado()
     end
 end)
 
--- 2. TARGET AUTOMATICO POR ATAQUE NATIVO
+-- 2. TARGET AUTOMÁTICO POR ATAQUE NATIVO ISOLADO
 macro(100, function()
-    if not configMouse.enabled then return end
+    if not configMouseIsolado.enabled then return end
     local att = g_game.getAttackingCreature()
     if att and not mouse_pushTarget then
         if att and type(att) == "userdata" and type(att.getPosition) == "function" then 
@@ -315,28 +338,25 @@ macro(100, function()
     end
     if mouse_pushTarget and type(mouse_pushTarget) == "userdata" and type(mouse_pushTarget.getPosition) == "function" then
         local cPos = mouse_pushTarget:getPosition() 
-        if not cPos or cPos.z ~= posz() then resetDataMouse() return end
+        if not cPos or cPos.z ~= posz() then resetDataMouseIsolado() return end
         local tile = g_map.getTile(cPos) 
         if tile then tile:setText('TARGET') end
     end
 end)
 
-onCreaturePositionChange(function(creature, newPos, oldPos)
-  if creature == player then resetDataMouse() end
-end)
-
--- 3. LOOP CENTRAL EM 50MS TOTALMENTE LIMPO E VINCULADO AO CURSOR DO MOUSE
+-- 3. LOOP CENTRAL EM 50MS COLA/AFUNILA INTEGRADO AO CURSOR DO MOUSE V2
 macro(50, function()
-  if not configMouse.enabled or not mouse_pushTarget then return end
+  if not configMouseIsolado.enabled or not mouse_pushTarget then return end
   if type(mouse_pushTarget) ~= "userdata" or type(mouse_pushTarget.getPosition) ~= "function" then return end
   
-  local delayVal = tonumber(configMouse.pushDelay)
+  local delayVal = tonumber(configMouseIsolado.pushDelay)
   local tPos = mouse_pushTarget:getPosition() 
   local pPos = pos() 
   local nexPos = nil 
   local direcaoCalculada = nil
+  local now = os.time()
   
-  -- Leitura contínua do cursor físico na tela
+  -- Leitura contínua do cursor físico restrita a este macro
   local mousePos = g_window.getMousePosition()
   local mouseTile = modules.game_interface.gameMapPanel:getTile(mousePos)
   
@@ -348,7 +368,7 @@ macro(50, function()
   
   if nexPos and direcaoCalculada then
       local distDoPlayerAteAlvo = getDistanceBetween(pPos, tPos)
-      if distDoPlayerAteAlvo <= tonumber(configMouse.maxDistance) then
+      if distDoPlayerAteAlvo <= tonumber(configMouseIsolado.maxDistance) then
           
           -- MECÂNICA 1: PRIORIDADE ABSOLUTA DE PUSH (SPAM DE 8 CICLOS CONTINUO)
           if pushPriority then
@@ -362,7 +382,7 @@ macro(50, function()
               return
           end
 
-          -- PUSH NORMAL PREVENTIVO COLA/AFUNILA
+          -- PUSH NORMAL PREVENTIVO
           local nexTile = g_map.getTile(nexPos)
           if nexTile and nexTile:isWalkable() and not nexTile:hasCreature() and distDoPlayerAteAlvo >= 2 then
               local tileAtualInimigo = g_map.getTile(tPos)
@@ -372,8 +392,8 @@ macro(50, function()
               end
           end
 
-          -- MECÂNICA 2: DESTROY FIELD NO DESTINO (DA SUA LOGICA NATIVA REVISADA)
-          if nexTile and configMouse.cleanLixo then
+          -- MECÂNICA 2: DESTROY FIELD NO DESTINO
+          if nexTile and configMouseIsolado.cleanLixo then
               local things = nexTile:getThings()
               if things then
                   for i = #things, 1, -1 do
@@ -383,7 +403,7 @@ macro(50, function()
                           if thing ~= ground then
                               local thingId = tostring(thing:getId())
                               if fireFieldIds[thingId] then
-                                  useWith(tonumber(configMouse.destroyRuneId), thing) return 
+                                  useWith(tonumber(configMouseIsolado.destroyRuneId), thing) return 
                               end
                           end
                       end
@@ -391,9 +411,9 @@ macro(50, function()
               end
           end
 
-          -- MECÂNICA 3: ENCONTRAR ITEM MOVEVEL EMBAIXO USANDO SEU MOTOR DE GETTHINGS
+          -- MECÂNICA 3: ENCONTRAR ITEM MOVEVEL EMBAIXO DO ALVO
           local tileEmbaixoDoAlvo = g_map.getTile(tPos) local itemToFire = nil
-          if tileEmbaixoDoAlvo and configMouse.cleanLixo then
+          if tileEmbaixoDoAlvo and configMouseIsolado.cleanLixo then
               local things = tileEmbaixoDoAlvo:getThings()
               if things then
                   for i = #things, 1, -1 do
@@ -408,12 +428,12 @@ macro(50, function()
               end
           end
 
-          -- SE MANDAR O FOGO: Dispara useWith, pula 1 SQM para tras por tempo e spama
+          -- SE MANDAR A RUNA DE PUSH
           if itemToFire then
-              useWith(tonumber(configMouse.runeId), itemToFire)
+              useWith(tonumber(configMouseIsolado.runeId), itemToFire)
               
-              -- TRAVA TEMPORAL DO RECUO: Garante estritamente um único passo para trás
-              if (now - tempoUltimoRecuo) > 1500 then
+              -- TRAVA TEMPORAL DO RECUO
+              if (now - tempoUltimoRecuo) > 1.5 then
                   local recuoImediatoPos = {x = pPos.x - direcaoCalculada.x, y = pPos.y - direcaoCalculada.y, z = pPos.z}
                   local recuoImediatoTile = g_map.getTile(recuoImediatoPos)
                   if recuoImediatoTile and recuoImediatoTile:isWalkable() and not recuoImediatoTile:hasCreature() then
@@ -422,7 +442,6 @@ macro(50, function()
                   end
               end
               
-              -- Primeiro comando de empurrão executado instantaneamente pós-fire
               local tileAtualInimigo = g_map.getTile(tPos)
               if tileAtualInimigo then
                   local corpoMovel = tileAtualInimigo:getTopMoveThing()
@@ -432,16 +451,16 @@ macro(50, function()
               pushPriority = true pushAttempts = 1 return
           end
 
-          -- RECUO PREVENTIVO AUTOMÁTICO SE ESTIVER COLADO (DISTANCIA 1)
+          -- RECUO PREVENTIVO SE ESTIVER COLADO (DISTANCIA 1)
           if distDoPlayerAteAlvo <= 1 then
               local recuoPos = {x = pPos.x - direcaoCalculada.x, y = pPos.y - direcaoCalculada.y, z = pPos.z}
               local recuoTile = g_map.getTile(recuoPos)
               if recuoTile and recuoTile:isWalkable() and not recuoTile:hasCreature() then autoWalk(recuoPos, true, true) return end
           end
 
-          -- QUEIMA DESTINO ADICIONAL DO PROPRIO PAINEL SE ATIVO
+          -- QUEIMA DESTINO ADICIONAL DO PROPRIO PAINEL
           if nexTile and nexTile:isWalkable() and not nexTile:hasCreature() and distDoPlayerAteAlvo >= 2 then
-              if configMouse.autoFirePee and mouse_pushTarget:canShoot() then
+              if configMouseIsolado.autoFirePee and mouse_pushTarget:canShoot() then
                   schedule(100, function() useWith(3148, mouse_pushTarget) end)
               end
               delay(delayVal)
@@ -451,4 +470,5 @@ macro(50, function()
   end
 end)
 
-atualizarTextoDosBotoesPainel()
+-- Inicialização forçada sem conflito de cache
+atualizarTextoDosBotoesPainelIsolado()
