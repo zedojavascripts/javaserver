@@ -11,7 +11,7 @@ if not storage[STORAGE_MOUSE_ISOLADO] then
     enabled = false,
     pushDelay = 200,       
     maxDistance = 7,
-    toggleKey = "F8",      
+    toggleKey = "",      
     cleanLixo = true,
     autoFirePee = true,
     runeId = 3188,         
