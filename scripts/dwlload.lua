@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 1 DE 3
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 1 DE 3
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -8,27 +8,21 @@ local configMestre = storage[panelNameMestre]
 
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
--- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB (COLOQUE O SEU LINK ATUAL DA RAIZ)
+-- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
 local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 -- =============================================================================
--- 📂 MAPEAMENTO COMPLETO DOS SEUS ARQUIVOS POR SERVIDOR
--- Para esconder um macro da tela de vez, basta colocar "oculto = true" na linha!
+-- 📂 MAPEAMENTO DOS ARQUIVOS (VISÍVEIS E OCULTOS)
 -- =============================================================================
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
-        -- [COLUNA 1: HEALING]
         { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
-        -- [COLUNA 2: CAVE/TAGR]
         { nome = "CAVEBOT COMPLETO ILU",    key = "cavebotILU",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/cavebotILU.lua" },
-        -- [COLUNA 3: WAR]
         { nome = "MAGIAS S/PK BRQ ILUSION",  key = "magiasempkBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/magiasempkBRQ.lua" },
-        -- [COLUNA 4: EXTRAS]
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
-        -- [COLUNA 5: VBOT4.8]
         { nome = "SISTEMA VBOT 4.8 ILU",    key = "vbot48ILU",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/vbot48ILU.lua" },
 
-        -- 🛡️ MACROS OCULTOS INDESTRUTÍVEIS (RODAM EM SILÊNCIO NOS BASTIDORES)
+        -- 🛡️ MACROS OCULTOS IMPOSSÍVEIS DE DESMARCAR (RODAM EM SILÊNCIO)
         { nome = "Protecao Injetada",       key = "antidebug",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/antidebug.lua", oculto = true },
         { nome = "Auto Save Core",          key = "coreSave",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/coresave.lua",  oculto = true }
     },
@@ -50,14 +44,13 @@ local SCRIPTS_DO_REPOSITORIO = {
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 2 DE 3 FIX
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 2 DE 3
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- Nova Janela B redimensionada na horizontal com 780px de largura
-local design5ColunasOTUI = "MainWindow\n" ..
+local design5ColunasFixoOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 780 430\n" ..
 "  text: Painel Premium Multi-Colunas - Brinque Scripts\n" ..
@@ -84,18 +77,74 @@ local design5ColunasOTUI = "MainWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    id: containerColunas\n" ..
+"    id: colHealing\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    anchors.right: parent.right\n" ..
-"    anchors.bottom: sepInferior.top\n" ..
-"    margin-top: 40\n" ..
+"    margin-top: 35\n" ..
 "    margin-left: 20\n" ..
-"    margin-right: 20\n" ..
-"    margin-bottom: 10\n" ..
-"    layout:\n" ..
-"      type: horizontalBox\n" ..
-"      spacing: 15\n" ..
+"    size: 140 300\n" ..
+"    layout: { type: verticalBox, spacing: 6 }\n" ..
+"    Label\n" ..
+"      text: [HEALING]\n" ..
+"      font: verdana-11px-rounded\n" ..
+"      color: #44ff44\n" ..
+"      margin-bottom: 5\n" ..
+"\n" ..
+"  Panel\n" ..
+"    id: colCavebot\n" ..
+"    anchors.top: parent.top\n" ..
+"    anchors.left: colHealing.right\n" ..
+"    margin-top: 35\n" ..
+"    margin-left: 12\n" ..
+"    size: 140 300\n" ..
+"    layout: { type: verticalBox, spacing: 6 }\n" ..
+"    Label\n" ..
+"      text: [CAVE/TAGR]\n" ..
+"      font: verdana-11px-rounded\n" ..
+"      color: #00bfff\n" ..
+"      margin-bottom: 5\n" ..
+"\n" ..
+"  Panel\n" ..
+"    id: colWar\n" ..
+"    anchors.top: parent.top\n" ..
+"    anchors.left: colCavebot.right\n" ..
+"    margin-top: 35\n" ..
+"    margin-left: 12\n" ..
+"    size: 140 300\n" ..
+"    layout: { type: verticalBox, spacing: 6 }\n" ..
+"    Label\n" ..
+"      text: [WAR]\n" ..
+"      font: verdana-11px-rounded\n" ..
+"      color: #ff4444\n" ..
+"      margin-bottom: 5\n" ..
+"\n" ..
+"  Panel\n" ..
+"    id: colExtras\n" ..
+"    anchors.top: parent.top\n" ..
+"    anchors.left: colWar.right\n" ..
+"    margin-top: 35\n" ..
+"    margin-left: 12\n" ..
+"    size: 140 300\n" ..
+"    layout: { type: verticalBox, spacing: 6 }\n" ..
+"    Label\n" ..
+"      text: [EXTRAS]\n" ..
+"      font: verdana-11px-rounded\n" ..
+"      color: #e6bc22\n" ..
+"      margin-bottom: 5\n" ..
+"\n" ..
+"  Panel\n" ..
+"    id: colVbot\n" ..
+"    anchors.top: parent.top\n" ..
+"    anchors.left: colExtras.right\n" ..
+"    margin-top: 35\n" ..
+"    margin-left: 12\n" ..
+"    size: 140 300\n" ..
+"    layout: { type: verticalBox, spacing: 6 }\n" ..
+"    Label\n" ..
+"      text: [VBOT4.8]\n" ..
+"      font: verdana-11px-rounded\n" ..
+"      color: #d156ff\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepInferior\n" ..
@@ -137,69 +186,45 @@ local design5ColunasOTUI = "MainWindow\n" ..
 "    margin-right: 15\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-setupJanelaBotoesMacros = setupUI(design5ColunasOTUI, widgetRaizDoJogo)
+setupJanelaBotoesMacros = setupUI(design5ColunasFixoOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 
--- =============================================================================
--- [CONSTRUTOR DINÂMICO RECALIBRADO]
--- =============================================================================
+local dicionarioColunas = {
+    ["HEALING"] = setupJanelaBotoesMacros.colHealing,
+    ["CAVEBOT"] = setupJanelaBotoesMacros.colCavebot,
+    ["WAR"]     = setupJanelaBotoesMacros.colWar,
+    ["EXTRAS"]  = setupJanelaBotoesMacros.colExtras,
+    ["VBOT4.8"] = setupJanelaBotoesMacros.colVbot
+}
+
 local referenciasCheckBoxes = {}
-local containerDasColunas = setupJanelaBotoesMacros.containerColunas
 
-if containerDasColunas then
-    local ORDEM_COLUNAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
-    local TITULOS_COLUNAS = {
-        ["HEALING"] = "[HEALING]",
-        ["CAVEBOT"] = "[CAVE/TAGR]",
-        ["WAR"]     = "[WAR]",
-        ["EXTRAS"]  = "[EXTRAS]",
-        ["VBOT4.8"] = "[VBOT4.8]"
-    }
-    local CORES_COLUNAS = { 
-        ["HEALING"] = "#44ff44", 
-        ["CAVEBOT"] = "#00bfff", 
-        ["WAR"]     = "#ff4444", 
-        ["EXTRAS"]  = "#e6bc22",
-        ["VBOT4.8"] = "#d156ff" 
-    }
-
-    for _, catChave in ipairs(ORDEM_COLUNAS) do
-        local painelColuna = g_ui.createWidget("Panel", containerDasColunas)
-        painelColuna:setLayout({type = "verticalBox", spacing = 6})
-        painelColuna:setWidth(140)
-
-        local lblTitulo = g_ui.createWidget("Label", painelColuna)
-        lblTitulo:setText(TITULOS_COLUNAS[catChave])
-        lblTitulo:setFont("verdana-11px-rounded")
-        lblTitulo:setColor(CORES_COLUNAS[catChave])
-        lblTitulo:setMarginBottom(6)
-
-        for _, item in ipairs(MAPA_MACROS_GUILDA) do
-            if item.cat == catChave and not item.oculto then
-                if configMestre.macrosMarcados[item.key] == nil then 
-                    configMestre.macrosMarcados[item.key] = true 
-                end
-
-                local box = g_ui.createWidget("CheckBox", painelColuna)
-                box:setText(item.nome)
-                box:setFont("verdana-11px-rounded")
-                box:setHeight(16)
-                box:setChecked(configMestre.macrosMarcados[item.key] == true)
-                
-                box.onClick = function(w)
-                    local val = not w:isChecked()
-                    w:setChecked(val)
-                    configMestre.macrosMarcados[item.key] = val
-                end
-
-                table.insert(referênciasCheckBoxes, { widget = box, key = item.key })
-            end
+for _, item in ipairs(MAPA_MACROS_GUILDA) do
+    local alvoColunaWidget = dicionarioColunas[item.cat]
+    
+    if alvoColunaWidget and not item.oculto then
+        if configMestre.macrosMarcados[item.key] == nil then 
+            configMestre.macrosMarcados[item.key] = true 
         end
+
+        local box = g_ui.createWidget("CheckBox", alvoColunaWidget)
+        box:setText(item.nome)
+        box:setFont("verdana-11px-rounded")
+        box:setHeight(16)
+        box:setChecked(configMestre.macrosMarcados[item.key] == true)
+        
+        box.onClick = function(w)
+            local val = not w:isChecked()
+            w:setChecked(val)
+            configMestre.macrosMarcados[item.key] = val
+        end
+
+        table.insert(referenciasCheckBoxes, { widget = box, key = item.key })
     end
 end
 
 setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
-    for _, itemBox in ipairs(referênciasCheckBoxes) do
+    for _, itemBox in ipairs(referenciasCheckBoxes) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
     end
@@ -211,9 +236,8 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
-
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 3 DE 3
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 3 DE 3
 -- =============================================================================
 
 local loteJaEstaSendoBaixado = false
@@ -230,11 +254,11 @@ local function executarFilaCustomizadaHTTP(indice)
     if not macroAlvo then 
         print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
         loteJaEstaSendoBaixado = false 
-        g_sound.play("/bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/sounds/som.ogg")
+        g_sound.play("/sounds/magnum.ogg")
         return 
     end
     
-    -- 🛡️ REGRA SUPREMA DE INJEÇÃO: Se for OCULTO, roda direto. Se for VISÍVEL, checa se está marcado.
+    -- 🛡️ REGRA SUPREMA: Se for OCULTO, roda direto. Se for VISÍVEL, checa se está marcado.
     if macroAlvo.oculto or configMestre.macrosMarcados[macroAlvo.key] == true then
         local urlScript = BASE_RAW_PUBLICO .. macroAlvo.arquivo .. "?nocache=" .. os.time()
 
@@ -243,14 +267,11 @@ local function executarFilaCustomizadaHTTP(indice)
                 local script, syntaxErr = loadstring(content)
                 if script then 
                     pcall(script) 
-                    if macroAlvo.oculto then
-                        print("[🛡️ Protecao] Modulo de seguranca invisivel injetado com sucesso.")
-                    end
                 else 
                     print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) 
                 end
             end
-            -- Intervalo de escada suave para carregar sem lagar o jogo do cliente
+            -- Intervalo estável de 150ms entre cada injeção na RAM
             schedule(150, function() executarFilaCustomizadaHTTP(indice + 1) end)
         end)
     else
@@ -258,7 +279,7 @@ local function executarFilaCustomizadaHTTP(indice)
     end
 end
 
--- Inicializa a esteira de download na arrancada com timeout de segurança
+-- Dispara o carregamento assim que o acesso local dá o sinal verde
 schedule(300, function()
     if computadorEstaAutorizado then
         print("[Brinque] Inicializando download estruturado de: " .. tostring(servidorAtivoNoMomento))
