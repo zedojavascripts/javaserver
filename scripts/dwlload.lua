@@ -262,7 +262,7 @@ local function executarFilaCustomizadaHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
+        print("[Brinque] Sincronizacao Concluida! Painel 6 Colunas Ativo em RAM.")
         loteJaEstaSendoBaixado = false 
         return 
     end
