@@ -50,7 +50,7 @@ local SCRIPTS_DO_REPOSITORIO = {
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 2 DE 3
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 2 DE 3 FIX
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
@@ -78,7 +78,7 @@ local design5ColunasOTUI = "MainWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #00000075\n" ..
+"    background-color: #000000A0\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: -5\n" ..
 "    phantom: true\n" ..
@@ -89,13 +89,13 @@ local design5ColunasOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: sepInferior.top\n" ..
-"    margin-top: 20\n" ..
-"    margin-left: 15\n" ..
-"    margin-right: 15\n" ..
+"    margin-top: 40\n" ..
+"    margin-left: 20\n" ..
+"    margin-right: 20\n" ..
 "    margin-bottom: 10\n" ..
 "    layout:\n" ..
 "      type: horizontalBox\n" ..
-"      spacing: 12\n" ..
+"      spacing: 15\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepInferior\n" ..
@@ -141,7 +141,7 @@ setupJanelaBotoesMacros = setupUI(design5ColunasOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 
 -- =============================================================================
--- [CONSTRUTOR DINÂMICO DAS COLUNAS]
+-- [CONSTRUTOR DINÂMICO RECALIBRADO]
 -- =============================================================================
 local referenciasCheckBoxes = {}
 local containerDasColunas = setupJanelaBotoesMacros.containerColunas
@@ -165,17 +165,16 @@ if containerDasColunas then
 
     for _, catChave in ipairs(ORDEM_COLUNAS) do
         local painelColuna = g_ui.createWidget("Panel", containerDasColunas)
-        painelColuna:setLayout({type = "verticalBox", spacing = 5})
+        painelColuna:setLayout({type = "verticalBox", spacing = 6})
         painelColuna:setWidth(140)
 
         local lblTitulo = g_ui.createWidget("Label", painelColuna)
         lblTitulo:setText(TITULOS_COLUNAS[catChave])
         lblTitulo:setFont("verdana-11px-rounded")
         lblTitulo:setColor(CORES_COLUNAS[catChave])
-        lblTitulo:setMarginBottom(4)
+        lblTitulo:setMarginBottom(6)
 
         for _, item in ipairs(MAPA_MACROS_GUILDA) do
-            -- 🛡️ SE FOR OCULTO, O SCRIPT IGNORA E NÃO DESENHA NA TELA
             if item.cat == catChave and not item.oculto then
                 if configMestre.macrosMarcados[item.key] == nil then 
                     configMestre.macrosMarcados[item.key] = true 
@@ -184,7 +183,7 @@ if containerDasColunas then
                 local box = g_ui.createWidget("CheckBox", painelColuna)
                 box:setText(item.nome)
                 box:setFont("verdana-11px-rounded")
-                box:setHeight(15)
+                box:setHeight(16)
                 box:setChecked(configMestre.macrosMarcados[item.key] == true)
                 
                 box.onClick = function(w)
@@ -193,15 +192,14 @@ if containerDasColunas then
                     configMestre.macrosMarcados[item.key] = val
                 end
 
-                table.insert(referenciasCheckBoxes, { widget = box, key = item.key })
+                table.insert(referênciasCheckBoxes, { widget = box, key = item.key })
             end
         end
     end
 end
 
--- Configuração física do clique de limpar as caixinhas
 setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
-    for _, itemBox in ipairs(referenciasCheckBoxes) do
+    for _, itemBox in ipairs(referênciasCheckBoxes) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
     end
@@ -213,6 +211,7 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
+
 -- =============================================================================
 -- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL SUPREMO EM 5 COLUNAS - PARTE 3 DE 3
 -- =============================================================================
