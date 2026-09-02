@@ -71,18 +71,19 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #000000A0\n" ..
+"    background-color: #000000B5\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: -5\n" ..
 "    phantom: true\n" ..
 "\n" ..
+"  -- AS 5 COLUNAS RECALIBRADAS COM RECUO TOP PARA PULAR O FUNDO\n" ..
 "  Panel\n" ..
 "    id: colHealing\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    margin-top: 35\n" ..
+"    margin-top: 55\n" ..
 "    margin-left: 20\n" ..
-"    size: 140 300\n" ..
+"    size: 140 280\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -90,15 +91,15 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [HEALING]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #44ff44\n" ..
-"      margin-bottom: 5\n" ..
+"      margin-bottom: 8\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colCavebot\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colHealing.right\n" ..
-"    margin-top: 35\n" ..
+"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 300\n" ..
+"    size: 140 280\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -106,15 +107,15 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [CAVE/TAGR]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #00bfff\n" ..
-"      margin-bottom: 5\n" ..
+"      margin-bottom: 8\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colWar\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colCavebot.right\n" ..
-"    margin-top: 35\n" ..
+"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 300\n" ..
+"    size: 140 280\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -122,15 +123,15 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [WAR]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #ff4444\n" ..
-"      margin-bottom: 5\n" ..
+"      margin-bottom: 8\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colExtras\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colWar.right\n" ..
-"    margin-top: 35\n" ..
+"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 300\n" ..
+"    size: 140 280\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -138,15 +139,15 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [EXTRAS]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #e6bc22\n" ..
-"      margin-bottom: 5\n" ..
+"      margin-bottom: 8\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colVbot\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colExtras.right\n" ..
-"    margin-top: 35\n" ..
+"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 300\n" ..
+"    size: 140 280\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -154,7 +155,7 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [VBOT4.8]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #d156ff\n" ..
-"      margin-bottom: 5\n" ..
+"      margin-bottom: 8\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepInferior\n" ..
@@ -246,6 +247,7 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
+
 -- =============================================================================
 -- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 3 DE 3 FIX
 -- =============================================================================
