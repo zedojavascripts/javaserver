@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 -- =============================================================================
 -- 📂 MAPEAMENTO DOS ARQUIVOS (VISÍVEIS E OCULTOS)
