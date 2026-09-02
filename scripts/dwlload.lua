@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB (COLOQUE O SEU LINK ATUAL DA RAIZ)
-local BASE_RAW_PUBLICO = "https://githubusercontent.com"
+local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 -- =============================================================================
 -- 📂 MAPEAMENTO COMPLETO DOS SEUS ARQUIVOS POR SERVIDOR
@@ -231,7 +231,7 @@ local function executarFilaCustomizadaHTTP(indice)
     if not macroAlvo then 
         print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
         loteJaEstaSendoBaixado = false 
-        g_sound.play("/sounds/magnum.ogg")
+        g_sound.play("/bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/sounds/som.ogg")
         return 
     end
     
