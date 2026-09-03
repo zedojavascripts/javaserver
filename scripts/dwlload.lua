@@ -17,7 +17,9 @@ local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/java
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
+
         { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
+        { nome = "ENEGY BRQ ILUSION",     key = "enegyBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/enegy.lua" },
         { nome = "CAVEBOT COMPLETO ILU",    key = "cavebotILU",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/cavebotILU.lua" },
         { nome = "MAGIAS S/PK BRQ ILUSION",  key = "magiasempkBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/magiasempkBRQ.lua" },
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
