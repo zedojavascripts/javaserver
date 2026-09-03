@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 1 DE 2 FIX
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,10 +44,9 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 📐 NOVO TAMANHO RECALIBRADO: 350 de largura por 420 de altura (Acomoda a arte perfeitamente)
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 350 420\n" ..
+"  size: 360 420\n" ..
 "  text: Brinque Scripts Premium\n" ..
 "  @onEscape: self:hide()\n" ..
 "  padding: 12\n" ..
@@ -55,7 +54,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
+"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -145,16 +144,16 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-shapesJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-shapesJanelaBotoesMacros:hide()
+setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
+setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 2 DE 2 FIX
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
 local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
-local widgetListaScroll = shapesJanelaBotoesMacros.listaScrollMacrosAba
+local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
 local referenciasCheckBoxesAbaAtiva = {}
 
@@ -194,14 +193,14 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
-local containerAbasBotoes = shapesJanelaBotoesMacros.painelBotoesAbas
+local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         btnAba:setHeight(22)
-        btnAba:setWidth(60) -- Largura sintonizada com os 350px de tela
+        btnAba:setWidth(62) -- Largura ajustada para caberem os 5 botoes nos 360px
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -212,7 +211,7 @@ end
 
 renderizarConteudoDaAba(configMestre.abaAbertaAtual)
 
-shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
+setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
@@ -220,7 +219,7 @@ shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     print("[Brinque] Todos os macros da aba " .. configMestre.abaAbertaAtual .. " foram desligados!")
 end
 
-shapesJanelaBotoesMacros.btnLinkSuporte.onClick = function()
+setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     local linkSuporteZap = "https://wa.me"
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
