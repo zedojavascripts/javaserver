@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT (dwlload.lua)
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -8,15 +8,10 @@ local configMestre = storage[panelNameMestre]
 
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
--- Grava a aba que estava aberta para o jogador nao perder a selecao ao dar reload
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
--- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
 local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
--- =============================================================================
--- 📂 MAPEAMENTO DOS ARQUIVOS (VISÍVEIS E OCULTOS)
--- =============================================================================
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
         { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
@@ -24,8 +19,6 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "MAGIAS S/PK BRQ ILUSION",  key = "magiasempkBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/magiasempkBRQ.lua" },
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
         { nome = "SISTEMA VBOT 4.8 ILU",    key = "vbot48ILU",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/vbot48ILU.lua" },
-
-        -- 🛡️ MACROS OCULTOS IMPOSSÍVEIS DE DESMARCAR (RODAM EM SILÊNCIO NOS BASTIDORES)
         { nome = "Protecao Injetada",       key = "antidebug",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/antidebug.lua", oculto = true },
         { nome = "Auto Save Core",          key = "coreSave",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/coresave.lua",  oculto = true }
     },
@@ -47,14 +40,11 @@ local SCRIPTS_DO_REPOSITORIO = {
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
 
--- =============================================================================
--- 📐 DESIGN DO PAINEL DE ABAS (LARGURA ENCURTADA ESTILO MINI-MODAL DO VBOT)
--- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- Reduzimos a largura para 320px (perfeito para ficar compacto e bonito no monitor)
+-- 🛠️ CORREÇÃO: Removido todos os comentários internos da string para não bugar o OTML
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 320 400\n" ..
@@ -63,7 +53,6 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "  padding: 12\n" ..
 "  layout: anchor\n" ..
 "\n" ..
-"  -- CONTAINER COMPACTO HORIZONTAL PARA OS BOTÕES DAS ABAS\n" ..
 "  Panel\n" ..
 "    id: painelBotoesAbas\n" ..
 "    anchors.top: parent.top\n" ..
@@ -81,7 +70,6 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    margin-top: 6\n" ..
 "\n" ..
-"  -- CONTEÚDO DINÂMICO VERTICAL ABAIXO DA ABA SELECIONADA\n" ..
 "  ScrollablePanel\n" ..
 "    id: listaScrollMacrosAba\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
@@ -143,10 +131,10 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
+-- =============================================================================
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT - PARTE 2 DE 2
+-- =============================================================================
 
--- =============================================================================
--- [MOTOR LÓGICO DE RENDERIZAÇÃO DAS ABAS ESTILO VBOT]
--- =============================================================================
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
 local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
@@ -154,22 +142,19 @@ local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
 local referenciasCheckBoxesAbaAtiva = {}
 
--- Função principal que redesenha as caixinhas na tela quando muda de aba
 local function renderizarConteudoDaAba(categoriaNome)
     configMestre.abaAbertaAtual = categoriaNome
     widgetListaScroll:destroyChildren()
     referenciasCheckBoxesAbaAtiva = {}
 
-    -- Altera visualmente a cor do botão ativo para o jogador saber onde está
     for catKey, btnWidget in pairs(botoesAbasCriados) do
         if catKey == categoriaNome then
-            btnWidget:setColor("#44ff44") -- Verde se estiver aberto
+            btnWidget:setColor("#44ff44")
         else
-            btnWidget:setColor("#ffffff") -- Branco padrão para os outros
+            btnWidget:setColor("#ffffff")
         end
     end
 
-    -- Varre as macros injetando apenas as caixinhas da categoria selecionada
     for _, item in ipairs(MAPA_MACROS_GUILDA) do
         if item.cat == categoriaNome and not item.oculto then
             if configMestre.macrosMarcados[item.key] == nil then 
@@ -193,7 +178,6 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
--- Cria os botões das abas horizontais no topo do painel
 local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
@@ -210,10 +194,8 @@ if containerAbasBotoes then
     end
 end
 
--- Inicializa abrindo a aba que estava salva na memória
 renderizarConteudoDaAba(configMestre.abaAbertaAtual)
 
--- Funcionalidade do Botão de Limpar a Aba Aberta
 setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
@@ -228,9 +210,6 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
 
--- =============================================================================
--- [ESTEIRA HTTP ASSÍNCRONA DE INJEÇÃO EM SEGUNDO PLANO]
--- =============================================================================
 local loteJaEstaSendoBaixado = false
 
 local function executarFilaCustomizadaHTTP(indice)
@@ -254,11 +233,7 @@ local function executarFilaCustomizadaHTTP(indice)
         HTTP.get(urlScript, function(content, err)
             if not err and content and content ~= "" then
                 local script, syntaxErr = loadstring(content)
-                if script then 
-                    pcall(script) 
-                else 
-                    print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) 
-                end
+                if script then pcall(script) else print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) end
             end
             schedule(150, function() executarFilaCustomizadaHTTP(indice + 1) end)
         end)
