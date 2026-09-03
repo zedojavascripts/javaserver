@@ -50,8 +50,8 @@ if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 -- =============================================================================
 -- 🛠️ COFRE DE REGULAGEM MANUAL: ALTERE OS NÚMEROS ABAIXO PARA MOVER OS ITENS
 -- =============================================================================
-local TAMANHO_LARGURA      = "430"  -- Largura da janela total
-local TAMANHO_ALTURA       = "480"  -- Altura da janela total
+local TAMANHO_LARGURA      = "450"  -- Largura da janela total
+local TAMANHO_ALTURA       = "500"  -- Altura da janela total
 
 -- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
 local ABAS_DISTANCIA_TOPO  = "60"   -- Afasta ou aproxima as abas do topo da janela
