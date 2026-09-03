@@ -62,7 +62,7 @@ local ABA_ALTURA_BOTAO     = "19"   -- Altura individual de cada botão de aba
 
 -- 📋 CONFIGURAÇÃO DA LISTA CENTRAL DE CHECKBOXES (CONTEÚDO DOS MACROS)
 local LISTA_DISTANCIA_TOPO = "80"   -- Distância do conteúdo em relação ao topo
-local LISTA_DISTANCIA_ESQ  = "35"   -- Afasta os nomes dos macros da parede esquerda
+local LISTA_DISTANCIA_ESQ  = "50"   -- Afasta os nomes dos macros da parede esquerda
 local LISTA_LARGURA_AREA   = "350"  -- Largura da área onde os macros ficam listados
 local LISTA_ALTURA_AREA    = "290"  -- Altura da área de rolagem dos macros
 
