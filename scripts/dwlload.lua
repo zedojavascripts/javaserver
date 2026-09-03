@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS E AUTO-SAVE - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: AJUSTE DE MOLDURA E BARRA DE ROLAGEM - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -25,7 +25,7 @@ local SCRIPTS_DO_REPOSITORIO = {
     ["Minimalist"] = {
         { nome = "HEALING BRQ MINIMALIST",   key = "healingMIN",       cat = "HEALING",     arquivo = "sv_minimalist/healing/healingMIN.lua" },
         { nome = "CAVEBOT COMPLETO MIN",    key = "cavebotMIN",       cat = "CAVEBOT",     arquivo = "sv_minimalist/cave_target/cavebotMIN.lua" },
-        { nome = "FILTRO BATTLE BRQ",       key = "filtroBattle",     cat = "WAR",         bound = "sv_minimalist/war/Filtrobattle.lua" },
+        { nome = "FILTRO BATTLE BRQ",       key = "filtroBattle",     cat = "WAR",         arquivo = "sv_minimalist/war/Filtrobattle.lua" },
         { nome = "EXTRAS ESSENCIAIS MIN",   key = "extrasMIN",        cat = "EXTRAS",      arquivo = "sv_minimalist/extras/extrasMIN.lua" },
         { nome = "MODS VBOT 4.8 MIN",       key = "vbot48MIN",        cat = "VBOT4.8",     arquivo = "sv_minimalist/extras/vbot48MIN.lua" }
     },
@@ -44,14 +44,14 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 📐 ADICIONADO DRAGGABLE NATIVO NA MOLDURA: Afastamento padding 22px mantido
+-- 🛠️ AJUSTADO: Retornado padding para 12 e aplicado margins manuais para afastar os itens sem travar o layout
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
 "  draggable: true\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
-"  padding: 22\n" ..
+"  padding: 12\n" ..
 "  layout: anchor\n" ..
 "\n" ..
 "  UIWidget\n" ..
@@ -75,9 +75,9 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
 "    height: 24\n" ..
-"    margin-top: 5\n" ..
-"    margin-left: 5\n" ..
-"    margin-right: 5\n" ..
+"    margin-top: 10\n" ..
+"    margin-left: 10\n" ..
+"    margin-right: 10\n" ..
 "    layout:\n" ..
 "      type: horizontalBox\n" ..
 "      spacing: 6\n" ..
@@ -96,21 +96,26 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    background-color: #00000000\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
 "    anchors.left: parent.left\n" ..
-"    anchors.right: parent.right\n" ..
+"    anchors.right: barraRolagemAbas.left\n" ..
 "    anchors.bottom: sepInferior.top\n" ..
 "    margin-top: 10\n" ..
-"    margin-left: 5\n" ..
+"    margin-left: 15\n" ..
+"    margin-right: 5\n" ..
 "    margin-bottom: 8\n" ..
 "    vertical-scrollbar: barraRolagemAbas\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
 "\n" ..
+"  -- 🛠️ AJUSTADO: Adicionado margin-right de 15px para descolar a barra da parede direita do castelo\n" ..
 "  VerticalScrollBar\n" ..
 "    id: barraRolagemAbas\n" ..
-"    anchors.top: listaScrollMacrosAba.top\n" ..
-"    anchors.bottom: listaScrollMacrosAba.bottom\n" ..
+"    anchors.top: sepSuperiorAbas.bottom\n" ..
+"    anchors.bottom: sepInferior.top\n" ..
 "    anchors.right: parent.right\n" ..
+"    margin-top: 10\n" ..
+"    margin-bottom: 8\n" ..
+"    margin-right: 15\n" ..
 "    step: 16\n" ..
 "    pixels-scroll: true\n" ..
 "\n" ..
@@ -134,8 +139,8 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 115 24\n" ..
-"    margin-left: 5\n" ..
-"    margin-bottom: 5\n" ..
+"    margin-left: 15\n" ..
+"    margin-bottom: 12\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnLinkSuporte\n" ..
@@ -149,7 +154,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 105 24\n" ..
 "    margin-left: 6\n" ..
-"    margin-bottom: 5\n" ..
+"    margin-bottom: 12\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: closeBtnMacros\n" ..
@@ -161,17 +166,17 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 85 24\n" ..
-"    margin-right: 5\n" ..
-"    margin-bottom: 5\n" ..
+"    margin-right: 15\n" ..
+"    margin-bottom: 12\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 
--- 🧠 VINCULA O AUTO-SAVE DIRETAMENTE NA INSTÂNCIA DA JANELA CRIADA
-setupJanelaBotoesMacros:setAutoSave("posicaoJanelaAbasPremiumBrinque")
-setupJanelaBotoesMacros:show() -- Liga a janela antes de rodar os botoes para nao sumir nada!
+-- 🧠 NOVA ID DE MÓDULO FIXA: Garante o trancamento e salvamento das coordenadas no Windows
+setupJanelaBotoesMacros:setAutoSave("posicaoMestreAbasFundoBrinqueV5")
+setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS E AUTO-SAVE - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: AJUSTE DE MOLDURA E BARRA DE ROLAGEM - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -229,7 +234,7 @@ if containerAbasBotoes then
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(74) -- Largura expandida ideal para preencher os 420px de tela
+        btnAba:setWidth(74) -- Largura calibrada para preencher a moldura interna de 420px
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -269,7 +274,6 @@ local function poolDeDownloadsHTTP(indice)
         print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         
-        -- Garante exibicao em primeiro plano na tela do Tibia
         if setupJanelaBotoesMacros then
             setupJanelaBotoesMacros:show()
             setupJanelaBotoesMacros:raise()
