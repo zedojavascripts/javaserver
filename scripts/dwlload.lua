@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
@@ -44,14 +44,29 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ CORREÇÃO: Removido todos os comentários internos da string para não bugar o OTML
+-- 📐 NOVO TAMANHO RECALIBRADO: 350 de largura por 420 de altura (Acomoda a arte perfeitamente)
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 320 400\n" ..
+"  size: 350 420\n" ..
 "  text: Brinque Scripts Premium\n" ..
 "  @onEscape: self:hide()\n" ..
 "  padding: 12\n" ..
 "  layout: anchor\n" ..
+"\n" ..
+"  UIWidget\n" ..
+"    id: imgFundoMacros\n" ..
+"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
+"    image-smooth: true\n" ..
+"    image-fixed-ratio: false\n" ..
+"    anchors.fill: parent\n" ..
+"    margin: -5\n" ..
+"    phantom: true\n" ..
+"\n" ..
+"  Panel\n" ..
+"    background-color: #000000B5\n" ..
+"    anchors.fill: parent\n" ..
+"    margin: -5\n" ..
+"    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: painelBotoesAbas\n" ..
@@ -59,9 +74,10 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
 "    height: 24\n" ..
+"    margin-top: 5\n" ..
 "    layout:\n" ..
 "      type: horizontalBox\n" ..
-"      spacing: 4\n" ..
+"      spacing: 5\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepSuperiorAbas\n" ..
@@ -105,7 +121,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 110 22\n" ..
+"    size: 120 22\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
@@ -115,7 +131,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 90 22\n" ..
+"    size: 100 22\n" ..
 "    margin-left: 6\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
@@ -125,20 +141,20 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: cipsoftFont\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 65 22\n" ..
+"    size: 75 22\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-setupJanelaBotoesMacros:hide()
+shapesJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
+shapesJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
 local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
-local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
+local widgetListaScroll = shapesJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
 local referenciasCheckBoxesAbaAtiva = {}
 
@@ -178,14 +194,14 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
-local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
+local containerAbasBotoes = shapesJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         btnAba:setHeight(22)
-        btnAba:setWidth(54)
+        btnAba:setWidth(60) -- Largura sintonizada com os 350px de tela
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -196,7 +212,7 @@ end
 
 renderizarConteudoDaAba(configMestre.abaAbertaAtual)
 
-setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
+shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
@@ -204,7 +220,7 @@ setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     print("[Brinque] Todos os macros da aba " .. configMestre.abaAbertaAtual .. " foram desligados!")
 end
 
-setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
+shapesJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     local linkSuporteZap = "https://wa.me"
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
