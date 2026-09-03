@@ -1,3 +1,97 @@
+setDefaultTab("MAIN")
+UI.Separator()
+
+-- 1. Cria a label nativa comum
+local suporteLabel = UI.Label("CENTRAL DE HEALING")
+suporteLabel:setColor("#ffffff") -- Sempre Branco na onda
+
+-- Ativa a borda preta nativa do OTC
+if suporteLabel.setOutline then
+    suporteLabel:setOutline(true)
+end
+
+-- Títulos diferentes para cada fase
+local textoOnda = "central de healing"
+local textoPisca = "BRINQUE SCRIPTS"
+local tamanhoTexto = #textoOnda
+
+-- Paleta com 7 cores para o Super Pisca do Brinque Scripts
+local coresPisca = {"#00bfff", "#ffff00", "#ff0000", "#00ff00", "#ff00ff", "#ffffff", "#000000"} 
+local indiceCor = 1
+
+-- Controle de tempo, estágios e repetição das ondas
+local tempoEstagio = os.clock()
+local estagioAtual = 1 -- 1 = Ondinha Central de Suporte, 2 = Pisca Brinque Scripts
+local ondasFeitas = 0  
+local travaProximaOnda = false
+
+-- 2. Macro mestre de animação (100ms)
+macro(100, function()
+    local currentTime = os.clock()
+    
+    if estagioAtual == 1 then
+        -- [ESTÁGIO 1] A ONDA: Texto base sempre Branco
+        suporteLabel:setColor("#ffffff") 
+        
+        local speed = 1200 
+        local progresso = ((currentTime * 1000) % speed) / speed
+        local posicaoOnda = math.floor(progresso * (tamanhoTexto + 2)) + 1
+        
+        local textoModificado = ""
+        for i = 1, tamanhoTexto do
+            local letra = textoOnda:sub(i, i)
+            
+            if i == posicaoOnda then
+                -- A letra específica da onda vira o pulso (_)
+                if letra == " " then
+                    textoModificado = textoModificado .. " "
+                else
+                    textoModificado = textoModificado .. "_"
+                end
+            else
+                -- O resto do texto continua maiúsculo e visível em Branco
+                textoModificado = textoModificado .. letra:upper()
+            end
+        end
+        suporteLabel:setText(textoModificado)
+        
+        -- Controlador de loops da onda
+        if posicaoOnda > tamanhoTexto then
+            if not travaProximaOnda then
+                ondasFeitas = ondasFeitas + 1
+                travaProximaOnda = true
+            end
+            
+            -- [ALTERADO] Agora roda EXATAMENTE 4 VEZES antes de ir para o pisca
+            if ondasFeitas >= 4 then
+                estagioAtual = 2
+                ondasFeitas = 0
+                tempoEstagio = currentTime
+                suporteLabel:setText(textoPisca) -- Altera o título para BRINQUE SCRIPTS
+            end
+        else
+            travaProximaOnda = false
+        end
+        
+    elseif estagioAtual == 2 then
+        -- [ESTÁGIO 2] O SUPER PISCA: Brinque Scripts mudando de cor
+        indiceCor = indiceCor + 1
+        if indiceCor > #coresPisca then indiceCor = 1 end
+        
+        suporteLabel:setColor(coresPisca[indiceCor])
+        suporteLabel:setText(textoPisca) -- Garante que o texto continue fixo no pisca
+        
+        -- Fica piscando por 2 segundos e depois volta para a Central de Suporte
+        if currentTime - tempoEstagio > 2.0 then
+            estagioAtual = 1
+            indiceCor = 1
+            ondasFeitas = 0
+            travaProximaOnda = false
+        end
+    end
+end)
+
+
 setDefaultTab("HP") -- Garante que os créditos apareçam na aba HP do Healer
 
 -- =============================================================================
