@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CONTROLE MANUAL DE COORDENADAS - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: BOTÃO FECHAR REMOVIDO (FIM) - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -17,9 +17,7 @@ local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/java
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
-
         { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
-        { nome = "ENEGY BRQ ILUSION",     key = "enegyBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/enegy.lua" },
         { nome = "CAVEBOT COMPLETO ILU",    key = "cavebotILU",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/cavebotILU.lua" },
         { nome = "MAGIAS S/PK BRQ ILUSION",  key = "magiasempkBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/magiasempkBRQ.lua" },
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
@@ -50,32 +48,28 @@ local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesM
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
 -- =============================================================================
--- 🛠️ COFRE DE REGULAGEM MANUAL: ALTERE OS NÚMEROS ABAIXO PARA MOVER OS ITENS
+-- 🛠️ COFRE DE REGULAGEM MANUAL: CONSERVE OS SEUS NÚMEROS AQUI
 -- =============================================================================
-local TAMANHO_LARGURA      = "450"  -- Largura da janela total
-local TAMANHO_ALTURA       = "500"  -- Altura da janela total
+local TAMANHO_LARGURA      = "450"
+local TAMANHO_ALTURA       = "500"
 
--- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
-local ABAS_DISTANCIA_TOPO  = "60"   -- Afasta ou aproxima as abas do topo da janela
-local ABAS_DISTANCIA_ESQ   = "100"   -- Move o bloco de abas para a esquerda ou direita
-local ABAS_ESPACAMENTO     = "-10"    -- Espaço em pixels de uma aba para a outra
-local ABA_LARGURA_BOTAO    = "55"   -- Largura individual de cada botão de aba
-local ABA_ALTURA_BOTAO     = "19"   -- Altura individual de cada botão de aba
+local ABAS_DISTANCIA_TOPO  = "60"
+local ABAS_DISTANCIA_ESQ   = "100"
+local ABAS_ESPACAMENTO     = "-10"
+local ABA_LARGURA_BOTAO    = "55"
+local ABA_ALTURA_BOTAO     = "19"
 
--- 📋 CONFIGURAÇÃO DA LISTA CENTRAL DE CHECKBOXES (CONTEÚDO DOS MACROS)
-local LISTA_DISTANCIA_TOPO = "80"   -- Distância do conteúdo em relação ao topo
-local LISTA_DISTANCIA_ESQ  = "60"   -- Afasta os nomes dos macros da parede esquerda
-local LISTA_LARGURA_AREA   = "300"  -- Largura da área onde os macros ficam listados
-local LISTA_ALTURA_AREA    = "290"  -- Altura da área de rolagem dos macros
+local LISTA_DISTANCIA_TOPO = "80"
+local LISTA_DISTANCIA_ESQ  = "60"
+local LISTA_LARGURA_AREA   = "300"
+local LISTA_ALTURA_AREA    = "290"
 
--- 🎛️ CONFIGURAÇÃO DOS BOTÕES DO RODAPÉ (LIMPAR, SUPORTE, OCULTAR)
-local RODAPE_DISTANCIA_BOT = "60"   -- Distância fixa de todos os botões em relação ao fundo
-local BTN_LIMPAR_ESQ       = "100"   -- Posição horizontal do botão Limpar Aba
-local BTN_SUPORTE_ESQ      = "200"  -- Posição horizontal do botão Suporte
-local BTN_OCULTAR_DIREITA  = "35"   -- Afastamento do botão Ocultar em relação à parede direita
+local RODAPE_DISTANCIA_BOT = "60"
+local BTN_LIMPAR_ESQ       = "100"
+local BTN_SUPORTE_ESQ      = "200"
 
 -- =============================================================================
--- 📐 CONSTRUTOR OTUI DESACOPLADO E TOTALMENTE CONFIGURÁVEL MANUALMENTE
+-- 📐 CONSTRUTOR OTUI - REMOVIDO TOTALMENTE O BOTÃO CLOSE DO CÓDIGO DO RODAPÉ
 -- =============================================================================
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
@@ -96,7 +90,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #00000005\n" ..
+"    background-color: #000000B5\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
@@ -134,6 +128,15 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    step: 16\n" ..
 "    pixels-scroll: true\n" ..
 "\n" ..
+"  Panel\n" ..
+"    id: sepInferior\n" ..
+"    background-color: #00000000\n" ..
+"    anchors.left: parent.left\n" ..
+"    anchors.right: parent.right\n" ..
+"    anchors.bottom: btnDesmarcarTudo.top\n" ..
+"    height: 1\n" ..
+"    margin-bottom: 8\n" ..
+"\n" ..
 "  Button\n" ..
 "    id: btnDesmarcarTudo\n" ..
 "    text: [X] Limpar Aba\n" ..
@@ -160,27 +163,13 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    margin-left: " .. BTN_SUPORTE_ESQ .. "\n" ..
 "    margin-bottom: " .. RODAPE_DISTANCIA_BOT .. "\n" ..
-"    size: 105 24\n" ..
-"\n" ..
-"  Button\n" ..
-"    id: closeBtnMacros\n" ..
-"    text: Ocultar\n" ..
-"    font: cipsoftFont\n" ..
-"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
-"    image-smooth: true\n" ..
-"    image-border: 5\n" ..
-"    anchors.right: parent.right\n" ..
-"    anchors.bottom: parent.bottom\n" ..
-"    margin-right: " .. BTN_OCULTAR_DIREITA .. "\n" ..
-"    margin-bottom: " .. RODAPE_DISTANCIA_BOT .. "\n" ..
-"    size: 85 24\n" ..
-"    @onClick: self:getParent():hide()\n"
+"    size: 105 24\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:setPosition({x = configMestre.janelaX, y = configMestre.janelaY})
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CONTROLE MANUAL DE COORDENADAS - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: BOTÃO FECHAR REMOVIDO (FIM) - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
