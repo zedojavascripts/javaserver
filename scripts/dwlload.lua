@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INTEGRAL UNIFICADO (dwlload.lua)
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ESTILO VBOT (dwlload.lua)
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -7,6 +7,9 @@ if not storage[panelNameMestre] then storage[panelNameMestre] = {} end
 local configMestre = storage[panelNameMestre]
 
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
+
+-- Grava a aba que estava aberta para o jogador nao perder a selecao ao dar reload
+if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
 -- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
 local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
@@ -22,7 +25,7 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
         { nome = "SISTEMA VBOT 4.8 ILU",    key = "vbot48ILU",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/vbot48ILU.lua" },
 
-        -- 🛡️ MACROS OCULTOS IMPOSSÍVEIS DE DESMARCAR (RODAM EM SILÊNCIO)
+        -- 🛡️ MACROS OCULTOS IMPOSSÍVEIS DE DESMARCAR (RODAM EM SILÊNCIO NOS BASTIDORES)
         { nome = "Protecao Injetada",       key = "antidebug",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/antidebug.lua", oculto = true },
         { nome = "Auto Save Core",          key = "coreSave",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/coresave.lua",  oculto = true }
     },
@@ -45,93 +48,60 @@ local SCRIPTS_DO_REPOSITORIO = {
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
 
 -- =============================================================================
--- 📐 ESTRUTURA VISUAL DA JANELA NATIVA (IMUNE A ERROS E SINTAXE LIMPA)
+-- 📐 DESIGN DO PAINEL DE ABAS (LARGURA ENCURTADA ESTILO MINI-MODAL DO VBOT)
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
-local design5ColunasLimpoOTUI = "MainWindow\n" ..
+-- Reduzimos a largura para 320px (perfeito para ficar compacto e bonito no monitor)
+local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 780 400\n" ..
-"  text: Painel de Macros Premium - Brinque Scripts\n" ..
+"  size: 320 400\n" ..
+"  text: Brinque Scripts Premium\n" ..
 "  @onEscape: self:hide()\n" ..
-"  padding: 15\n" ..
+"  padding: 12\n" ..
 "  layout: anchor\n" ..
 "\n" ..
+"  -- CONTAINER COMPACTO HORIZONTAL PARA OS BOTÕES DAS ABAS\n" ..
 "  Panel\n" ..
-"    id: colHealing\n" ..
+"    id: painelBotoesAbas\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    size: 140 310\n" ..
+"    anchors.right: parent.right\n" ..
+"    height: 24\n" ..
 "    layout:\n" ..
-"      type: verticalBox\n" ..
-"      spacing: 6\n" ..
-"    Label\n" ..
-"      text: [HEALING]\n" ..
-"      font: verdana-11px-rounded\n" ..
-"      color: #44ff44\n" ..
-"      margin-bottom: 5\n" ..
+"      type: horizontalBox\n" ..
+"      spacing: 4\n" ..
 "\n" ..
-"  Panel\n" ..
-"    id: colCavebot\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: colHealing.right\n" ..
-"    margin-left: 12\n" ..
-"    size: 140 310\n" ..
-"    layout:\n" ..
-"      type: verticalBox\n" ..
-"      spacing: 6\n" ..
-"    Label\n" ..
-"      text: [CAVE/TAGR]\n" ..
-"      font: verdana-11px-rounded\n" ..
-"      color: #00bfff\n" ..
-"      margin-bottom: 5\n" ..
+"  HorizontalSeparator\n" ..
+"    id: sepSuperiorAbas\n" ..
+"    anchors.top: painelBotoesAbas.bottom\n" ..
+"    anchors.left: parent.left\n" ..
+"    anchors.right: parent.right\n" ..
+"    margin-top: 6\n" ..
 "\n" ..
-"  Panel\n" ..
-"    id: colWar\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: colCavebot.right\n" ..
-"    margin-left: 12\n" ..
-"    size: 140 310\n" ..
+"  -- CONTEÚDO DINÂMICO VERTICAL ABAIXO DA ABA SELECIONADA\n" ..
+"  ScrollablePanel\n" ..
+"    id: listaScrollMacrosAba\n" ..
+"    anchors.top: sepSuperiorAbas.bottom\n" ..
+"    anchors.left: parent.left\n" ..
+"    anchors.right: parent.right\n" ..
+"    anchors.bottom: sepInferior.top\n" ..
+"    margin-top: 10\n" ..
+"    margin-bottom: 8\n" ..
+"    vertical-scrollbar: barraRolagemAbas\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
-"    Label\n" ..
-"      text: [WAR]\n" ..
-"      font: verdana-11px-rounded\n" ..
-"      color: #ff4444\n" ..
-"      margin-bottom: 5\n" ..
 "\n" ..
-"  Panel\n" ..
-"    id: colExtras\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: colWar.right\n" ..
-"    margin-left: 12\n" ..
-"    size: 140 310\n" ..
-"    layout:\n" ..
-"      type: verticalBox\n" ..
-"      spacing: 6\n" ..
-"    Label\n" ..
-"      text: [EXTRAS]\n" ..
-"      font: verdana-11px-rounded\n" ..
-"      color: #e6bc22\n" ..
-"      margin-bottom: 5\n" ..
-"\n" ..
-"  Panel\n" ..
-"    id: colVbot\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: colExtras.right\n" ..
-"    margin-left: 12\n" ..
-"    size: 140 310\n" ..
-"    layout:\n" ..
-"      type: verticalBox\n" ..
-"      spacing: 6\n" ..
-"    Label\n" ..
-"      text: [VBOT4.8]\n" ..
-"      font: verdana-11px-rounded\n" ..
-"      color: #d156ff\n" ..
-"      margin-bottom: 5\n" ..
+"  VerticalScrollBar\n" ..
+"    id: barraRolagemAbas\n" ..
+"    anchors.top: listaScrollMacrosAba.top\n" ..
+"    anchors.bottom: listaScrollMacrosAba.bottom\n" ..
+"    anchors.right: parent.right\n" ..
+"    step: 16\n" ..
+"    pixels-scroll: true\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepInferior\n" ..
@@ -142,81 +112,114 @@ local design5ColunasLimpoOTUI = "MainWindow\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnDesmarcarTudo\n" ..
-"    text: [X] DESMARCA TODOS\n" ..
+"    text: [X] Limpar Aba\n" ..
 "    color: #ff4444\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 160 22\n" ..
+"    size: 110 22\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnLinkSuporte\n" ..
-"    text: SUPORTE WHATSAPP\n" ..
+"    text: Suporte\n" ..
 "    color: #00bfff\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 150 22\n" ..
-"    margin-left: 10\n" ..
+"    size: 90 22\n" ..
+"    margin-left: 6\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: closeBtnMacros\n" ..
-"    text: Fechar\n" ..
+"    text: Ocultar\n" ..
 "    font: cipsoftFont\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 80 22\n" ..
+"    size: 65 22\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-setupJanelaBotoesMacros = setupUI(design5ColunasLimpoOTUI, widgetRaizDoJogo)
+setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 
-local dicionarioColunas = {
-    ["HEALING"] = setupJanelaBotoesMacros.colHealing,
-    ["CAVEBOT"] = setupJanelaBotoesMacros.colCavebot,
-    ["WAR"]     = setupJanelaBotoesMacros.colWar,
-    ["EXTRAS"]  = setupJanelaBotoesMacros.colExtras,
-    ["VBOT4.8"] = setupJanelaBotoesMacros.colVbot
-}
-
 -- =============================================================================
--- [ALIMENTADOR DAS CHECKBOXES NAS COLUNAS REAIS]
+-- [MOTOR LÓGICO DE RENDERIZAÇÃO DAS ABAS ESTILO VBOT]
 -- =============================================================================
-local referenciasCheckBoxes = {}
+local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
+local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
-for _, item in ipairs(MAPA_MACROS_GUILDA) do
-    local alvoColunaWidget = dicionarioColunas[item.cat]
-    
-    if alvoColunaWidget and not item.oculto then
-        if configMestre.macrosMarcados[item.key] == nil then 
-            configMestre.macrosMarcados[item.key] = true 
+local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
+local botoesAbasCriados = {}
+local referenciasCheckBoxesAbaAtiva = {}
+
+-- Função principal que redesenha as caixinhas na tela quando muda de aba
+local function renderizarConteudoDaAba(categoriaNome)
+    configMestre.abaAbertaAtual = categoriaNome
+    widgetListaScroll:destroyChildren()
+    referenciasCheckBoxesAbaAtiva = {}
+
+    -- Altera visualmente a cor do botão ativo para o jogador saber onde está
+    for catKey, btnWidget in pairs(botoesAbasCriados) do
+        if catKey == categoriaNome then
+            btnWidget:setColor("#44ff44") -- Verde se estiver aberto
+        else
+            btnWidget:setColor("#ffffff") -- Branco padrão para os outros
         end
+    end
 
-        local box = g_ui.createWidget("CheckBox", alvoColunaWidget)
-        box:setText(item.nome)
-        box:setFont("verdana-11px-rounded")
-        box:setHeight(16)
-        box:setChecked(configMestre.macrosMarcados[item.key] == true)
-        
-        box.onClick = function(w)
-            local val = not w:isChecked()
-            w:setChecked(val)
-            configMestre.macrosMarcados[item.key] = val
+    -- Varre as macros injetando apenas as caixinhas da categoria selecionada
+    for _, item in ipairs(MAPA_MACROS_GUILDA) do
+        if item.cat == categoriaNome and not item.oculto then
+            if configMestre.macrosMarcados[item.key] == nil then 
+                configMestre.macrosMarcados[item.key] = true 
+            end
+
+            local box = g_ui.createWidget("CheckBox", widgetListaScroll)
+            box:setText(item.nome)
+            box:setFont("verdana-11px-rounded")
+            box:setHeight(16)
+            box:setChecked(configMestre.macrosMarcados[item.key] == true)
+            
+            box.onClick = function(w)
+                local val = not w:isChecked()
+                w:setChecked(val)
+                configMestre.macrosMarcados[item.key] = val
+            end
+
+            table.insert(referenciasCheckBoxesAbaAtiva, { widget = box, key = item.key })
         end
-
-        table.insert(referenciasCheckBoxes, { widget = box, key = item.key })
     end
 end
 
+-- Cria os botões das abas horizontais no topo do painel
+local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
+if containerAbasBotoes then
+    for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
+        local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
+        btnAba:setText(LISTA_LABEL_ABAS[catNome])
+        btnAba:setFont("verdana-11px-rounded")
+        btnAba:setHeight(22)
+        btnAba:setWidth(54)
+        
+        btnAba.onClick = function()
+            renderizarConteudoDaAba(catNome)
+        end
+        botoesAbasCriados[catNome] = btnAba
+    end
+end
+
+-- Inicializa abrindo a aba que estava salva na memória
+renderizarConteudoDaAba(configMestre.abaAbertaAtual)
+
+-- Funcionalidade do Botão de Limpar a Aba Aberta
 setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
-    for _, itemBox in ipairs(referenciasCheckBoxes) do
+    for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
     end
-    print("[Brinque] Todos os macros visiveis foram desmarcados!")
+    print("[Brinque] Todos os macros da aba " .. configMestre.abaAbertaAtual .. " foram desligados!")
 end
 
 setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
@@ -240,8 +243,8 @@ local function executarFilaCustomizadaHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
-        loteJaEstaSendoBaixado = false
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
+        loteJaEstaSendoBaixado = false 
         return 
     end
     
