@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "https://githubusercontent.com"
+local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
