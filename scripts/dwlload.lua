@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 1 DE 2 FIX
+-- [NUVEM PÚBLICA] ARQUIVO 2: DESIGN SEM BORDAS E BOTÕES COM IMAGEM - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
@@ -44,6 +44,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
+-- 📐 DESIGN ATUALIZADO: Injetado texturas de imagem reais nos botoes do rodape
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 360 420\n" ..
@@ -118,9 +119,12 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    text: [X] Limpar Aba\n" ..
 "    color: #ff4444\n" ..
 "    font: verdana-11px-rounded\n" ..
+"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-smooth: true\n" ..
+"    image-border: 3\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 120 22\n" ..
+"    size: 120 24\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
@@ -128,9 +132,12 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    text: Suporte\n" ..
 "    color: #00bfff\n" ..
 "    font: verdana-11px-rounded\n" ..
+"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-smooth: true\n" ..
+"    image-border: 3\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 100 22\n" ..
+"    size: 100 24\n" ..
 "    margin-left: 6\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
@@ -138,16 +145,19 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    id: closeBtnMacros\n" ..
 "    text: Ocultar\n" ..
 "    font: cipsoftFont\n" ..
+"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-smooth: true\n" ..
+"    image-border: 3\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 75 22\n" ..
+"    size: 75 24\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS COM FUNDO PREMIUM - PARTE 2 DE 2 FIX
+-- [NUVEM PÚBLICA] ARQUIVO 2: DESIGN SEM BORDAS E BOTÕES COM IMAGEM - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -182,6 +192,9 @@ local function renderizarConteudoDaAba(categoriaNome)
             box:setHeight(16)
             box:setChecked(configMestre.macrosMarcados[item.key] == true)
             
+            -- 🛡️ REMOVE AS BORDAS SILENCIOSAMENTE PARA FICAR TOTALMENTE LIMPO
+            box:setBorderWidth(0)
+            
             box.onClick = function(w)
                 local val = not w:isChecked()
                 w:setChecked(val)
@@ -199,8 +212,13 @@ if containerAbasBotoes then
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
+        
+        -- Aplica a textura visual de botão premium também nas abas do topo
+        btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
+        btnAba:setImageBorder(3)
+        
         btnAba:setHeight(22)
-        btnAba:setWidth(62) -- Largura ajustada para caberem os 5 botoes nos 360px
+        btnAba:setWidth(62)
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
