@@ -67,7 +67,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #000000B5\n" ..
+"    background-color: #00000015\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
