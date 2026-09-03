@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS LIMPO E SEGURO (dwlload.lua)
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INTEGRAL UNIFICADO (dwlload.lua)
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 -- =============================================================================
 -- 📂 MAPEAMENTO DOS ARQUIVOS (VISÍVEIS E OCULTOS)
@@ -43,9 +43,6 @@ local SCRIPTS_DO_REPOSITORIO = {
 }
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
--- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: ENGENHARIA VISUAL E FILA HTTP COORDENADA (FIM)
--- =============================================================================
 
 -- =============================================================================
 -- 📐 ESTRUTURA VISUAL DA JANELA NATIVA (IMUNE A ERROS E SINTAXE LIMPA)
@@ -244,7 +241,7 @@ local function executarFilaCustomizadaHTTP(indice)
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
         print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
-        loteJaEstaSendoBaixado = false 
+        loteJaEstaSendoBaixado = false
         return 
     end
     
@@ -271,8 +268,5 @@ schedule(300, function()
     if computadorEstaAutorizado then
         print("[Brinque] Inicializando download estruturado de: " .. tostring(servidorAtivoNoMomento))
         executarFilaCustomizadaHTTP(1)
-    end
-end)
-
     end
 end)
