@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: JANELA PURA UIWINDOW SEM NENHUMA BORDA - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM EXPANDIDO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "ttps://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
@@ -44,10 +44,10 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ ENGENHARIA REVERSA: Mudado de MainWindow para UIWindow para anular qualquer borda nativa do jogo
+-- 🛠️ ATUALIZADO: Tamanho esticado para 420x460 de forma folgada e proporcional
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 360 420\n" ..
+"  size: 420 460\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
 "  padding: 12\n" ..
@@ -129,7 +129,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 120 24\n" ..
+"    size: 130 24\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
@@ -142,7 +142,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 100 24\n" ..
+"    size: 110 24\n" ..
 "    margin-left: 6\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
@@ -155,14 +155,14 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 75 24\n" ..
+"    size: 85 24\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: JANELA PURA UIWINDOW SEM NENHUMA BORDA - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM EXPANDIDO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -196,8 +196,6 @@ local function renderizarConteudoDaAba(categoriaNome)
             box:setFont("verdana-11px-rounded")
             box:setHeight(16)
             box:setChecked(configMestre.macrosMarcados[item.key] == true)
-            
-            -- Garante a remocao de qualquer borda residual das caixinhas
             box:setBorderWidth(0)
             
             box.onClick = function(w)
@@ -218,12 +216,11 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
-        -- Aplica a textura perfeita sem esticar nas abas superiores
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(62)
+        btnAba:setWidth(74) -- 🛠️ AJUSTADO: Largura expandida para preencher perfeitamente os 420px de tela
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -260,7 +257,7 @@ local function poolDeDownloadsHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativoo.")
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         return 
     end
