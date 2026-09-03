@@ -55,7 +55,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
+"    image-source: bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
