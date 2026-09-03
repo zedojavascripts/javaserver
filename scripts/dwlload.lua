@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: AJUSTE DE MOLDURA E BARRA DE ROLAGEM - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ESTRUTURA REVISADA DO ZERO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,7 +44,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ AJUSTADO: Retornado padding para 12 e aplicado margins manuais para afastar os itens sem travar o layout
+-- 📐 RETORNO DO LAYOUT CLÁSSICO: Padding fixado em 12 para liberar espaço absoluto
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
@@ -107,7 +107,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
 "\n" ..
-"  -- 🛠️ AJUSTADO: Adicionado margin-right de 15px para descolar a barra da parede direita do castelo\n" ..
+"  -- 📐 DESCOLADO: Margem de 15px na direita afasta a barra da borda de ferro do castelo\n" ..
 "  VerticalScrollBar\n" ..
 "    id: barraRolagemAbas\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
@@ -171,12 +171,9 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-
--- 🧠 NOVA ID DE MÓDULO FIXA: Garante o trancamento e salvamento das coordenadas no Windows
-setupJanelaBotoesMacros:setAutoSave("posicaoMestreAbasFundoBrinqueV5")
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: AJUSTE DE MOLDURA E BARRA DE ROLAGEM - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ESTRUTURA REVISADA DO ZERO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -234,7 +231,7 @@ if containerAbasBotoes then
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(74) -- Largura calibrada para preencher a moldura interna de 420px
+        btnAba:setWidth(74)
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -274,7 +271,9 @@ local function poolDeDownloadsHTTP(indice)
         print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         
+        -- 🛠️ ATIVADOR COMPACTO: Força a exibição e injeta o salvador de coordenadas do Windows
         if setupJanelaBotoesMacros then
+            setupJanelaBotoesMacros:setAutoSave("posicaoMestreAbasFundoBrinqueV5")
             setupJanelaBotoesMacros:show()
             setupJanelaBotoesMacros:raise()
         end
