@@ -50,7 +50,7 @@ if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 420 460\n" ..
+"  size: 450 490\n" ..
 "  draggable: true\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
