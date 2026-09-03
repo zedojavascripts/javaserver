@@ -54,17 +54,17 @@ local TAMANHO_LARGURA      = "430"  -- Largura da janela total
 local TAMANHO_ALTURA       = "480"  -- Altura da janela total
 
 -- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
-local ABAS_DISTANCIA_TOPO  = "50"   -- Afasta ou aproxima as abas do topo da janela
+local ABAS_DISTANCIA_TOPO  = "55"   -- Afasta ou aproxima as abas do topo da janela
 local ABAS_DISTANCIA_ESQ   = "30"   -- Move o bloco de abas para a esquerda ou direita
 local ABAS_ESPACAMENTO     = "7"    -- Espaço em pixels de uma aba para a outra
 local ABA_LARGURA_BOTAO    = "74"   -- Largura individual de cada botão de aba
 local ABA_ALTURA_BOTAO     = "22"   -- Altura individual de cada botão de aba
 
 -- 📋 CONFIGURAÇÃO DA LISTA CENTRAL DE CHECKBOXES (CONTEÚDO DOS MACROS)
-local LISTA_DISTANCIA_TOPO = "55"   -- Distância do conteúdo em relação ao topo
+local LISTA_DISTANCIA_TOPO = "75"   -- Distância do conteúdo em relação ao topo
 local LISTA_DISTANCIA_ESQ  = "30"   -- Afasta os nomes dos macros da parede esquerda
 local LISTA_LARGURA_AREA   = "350"  -- Largura da área onde os macros ficam listados
-local LISTA_ALTURA_AREA    = "270"  -- Altura da área de rolagem dos macros
+local LISTA_ALTURA_AREA    = "290"  -- Altura da área de rolagem dos macros
 
 -- 🎛️ CONFIGURAÇÃO DOS BOTÕES DO RODAPÉ (LIMPAR, SUPORTE, OCULTAR)
 local RODAPE_DISTANCIA_BOT = "35"   -- Distância fixa de todos os botões em relação ao fundo
