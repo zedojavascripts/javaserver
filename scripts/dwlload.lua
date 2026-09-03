@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ZERO BORDAS INTERNAL - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: JANELA PURA UIWINDOW SEM NENHUMA BORDA - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,14 +44,12 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ ARRUMADO: Aplicado remocao de borda e cor transparente nas subcamadas e listas internas
-local designAbasPremiumOTUI = "MainWindow\n" ..
+-- 🛠️ ENGENHARIA REVERSA: Mudado de MainWindow para UIWindow para anular qualquer borda nativa do jogo
+local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 360 420\n" ..
+"  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
-"  background-color: alpha\n" ..
-"  image-border: 0\n" ..
-"  border: 0 alpha\n" ..
 "  padding: 12\n" ..
 "  layout: anchor\n" ..
 "\n" ..
@@ -61,13 +59,13 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
-"    margin: -5\n" ..
+"    margin: 0\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
 "    background-color: #000000B5\n" ..
 "    anchors.fill: parent\n" ..
-"    margin: -5\n" ..
+"    margin: 0\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
@@ -93,8 +91,6 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "  ScrollablePanel\n" ..
 "    id: listaScrollMacrosAba\n" ..
 "    background-color: #00000000\n" ..
-"    border: 0 alpha\n" ..
-"    image-border: 0\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
@@ -130,7 +126,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
-"    image-border: 3\n" ..
+"    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 120 24\n" ..
@@ -143,7 +139,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: verdana-11px-rounded\n" ..
 "    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
-"    image-border: 3\n" ..
+"    image-border: 5\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 100 24\n" ..
@@ -156,7 +152,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    font: cipsoftFont\n" ..
 "    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
-"    image-border: 3\n" ..
+"    image-border: 5\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 75 24\n" ..
@@ -166,7 +162,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ZERO BORDAS INTERNAL - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: JANELA PURA UIWINDOW SEM NENHUMA BORDA - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -201,7 +197,7 @@ local function renderizarConteudoDaAba(categoriaNome)
             box:setHeight(16)
             box:setChecked(configMestre.macrosMarcados[item.key] == true)
             
-            -- Remove qualquer borda interna residual
+            -- Garante a remocao de qualquer borda residual das caixinhas
             box:setBorderWidth(0)
             
             box.onClick = function(w)
@@ -222,8 +218,9 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
+        -- Aplica a textura perfeita sem esticar nas abas superiores
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
-        btnAba:setImageBorder(3)
+        btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
         btnAba:setWidth(62)
@@ -253,7 +250,7 @@ end
 
 local loteJaEstaSendoBaixado = false
 
-local function executarFilaCustomizadaHTTP(indice)
+local function poolDeDownloadsHTTP(indice)
     if not computadorEstaAutorizado then return end
     
     if indice == 1 then 
@@ -276,16 +273,16 @@ local function executarFilaCustomizadaHTTP(indice)
                 local script, syntaxErr = loadstring(content)
                 if script then pcall(script) else print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) end
             end
-            schedule(150, function() executarFilaCustomizadaHTTP(indice + 1) end)
+            schedule(150, function() poolDeDownloadsHTTP(indice + 1) end)
         end)
     else
-        executarFilaCustomizadaHTTP(indice + 1)
+        poolDeDownloadsHTTP(indice + 1)
     end
 end
 
 schedule(300, function()
     if computadorEstaAutorizado then
         print("[Brinque] Inicializando download estruturado de: " .. tostring(servidorAtivoNoMomento))
-        executarFilaCustomizadaHTTP(1)
+        poolDeDownloadsHTTP(1)
     end
 end)
