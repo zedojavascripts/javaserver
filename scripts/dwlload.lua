@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 1 DE 3
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS LIMPO E SEGURO (dwlload.lua)
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -9,7 +9,7 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 -- 🌐 RAIZ DO SEU REPOSITÓRIO PÚBLICO DO GITHUB
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 -- =============================================================================
 -- 📂 MAPEAMENTO DOS ARQUIVOS (VISÍVEIS E OCULTOS)
@@ -43,47 +43,27 @@ local SCRIPTS_DO_REPOSITORIO = {
 }
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
+
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 2 DE 3 FIX
+-- 📐 ESTRUTURA VISUAL DA JANELA NATIVA (IMUNE A ERROS E SINTAXE LIMPA)
 -- =============================================================================
 local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
-local design5ColunasFixoOTUI = "MainWindow\n" ..
+local design5ColunasLimpoOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 780 430\n" ..
-"  text: Painel Premium Multi-Colunas - Brinque Scripts\n" ..
+"  size: 780 400\n" ..
+"  text: Painel de Macros Premium - Brinque Scripts\n" ..
 "  @onEscape: self:hide()\n" ..
-"  background-color: alpha\n" ..
-"  image-border: 0\n" ..
-"  border: 0 alpha\n" ..
-"  padding: 0\n" ..
+"  padding: 15\n" ..
 "  layout: anchor\n" ..
 "\n" ..
-"  UIWidget\n" ..
-"    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
-"    image-smooth: true\n" ..
-"    image-fixed-ratio: false\n" ..
-"    anchors.fill: parent\n" ..
-"    margin: -5\n" ..
-"    phantom: true\n" ..
-"\n" ..
-"  Panel\n" ..
-"    background-color: #000000B5\n" ..
-"    anchors.fill: parent\n" ..
-"    margin: -5\n" ..
-"    phantom: true\n" ..
-"\n" ..
-"  -- AS 5 COLUNAS RECALIBRADAS COM RECUO TOP PARA PULAR O FUNDO\n" ..
 "  Panel\n" ..
 "    id: colHealing\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    margin-top: 55\n" ..
-"    margin-left: 20\n" ..
-"    size: 140 280\n" ..
+"    size: 140 310\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -91,15 +71,14 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [HEALING]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #44ff44\n" ..
-"      margin-bottom: 8\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colCavebot\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colHealing.right\n" ..
-"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 280\n" ..
+"    size: 140 310\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -107,15 +86,14 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [CAVE/TAGR]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #00bfff\n" ..
-"      margin-bottom: 8\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colWar\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colCavebot.right\n" ..
-"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 280\n" ..
+"    size: 140 310\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -123,15 +101,14 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [WAR]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #ff4444\n" ..
-"      margin-bottom: 8\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colExtras\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colWar.right\n" ..
-"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 280\n" ..
+"    size: 140 310\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -139,15 +116,14 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [EXTRAS]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #e6bc22\n" ..
-"      margin-bottom: 8\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: colVbot\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: colExtras.right\n" ..
-"    margin-top: 55\n" ..
 "    margin-left: 12\n" ..
-"    size: 140 280\n" ..
+"    size: 140 310\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -155,7 +131,7 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "      text: [VBOT4.8]\n" ..
 "      font: verdana-11px-rounded\n" ..
 "      color: #d156ff\n" ..
-"      margin-bottom: 8\n" ..
+"      margin-bottom: 5\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
 "    id: sepInferior\n" ..
@@ -172,8 +148,7 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 160 22\n" ..
-"    margin-left: 15\n" ..
-"    margin-bottom: 8\n" ..
+"    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnLinkSuporte\n" ..
@@ -184,20 +159,19 @@ local design5ColunasFixoOTUI = "MainWindow\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 150 22\n" ..
 "    margin-left: 10\n" ..
-"    margin-bottom: 8\n" ..
+"    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: closeBtnMacros\n" ..
-"    text: Ocultar Painel\n" ..
+"    text: Fechar\n" ..
 "    font: cipsoftFont\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 90 22\n" ..
-"    margin-bottom: 8\n" ..
-"    margin-right: 15\n" ..
+"    size: 80 22\n" ..
+"    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-setupJanelaBotoesMacros = setupUI(design5ColunasFixoOTUI, widgetRaizDoJogo)
+setupJanelaBotoesMacros = setupUI(design5ColunasLimpoOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 
 local dicionarioColunas = {
@@ -208,6 +182,9 @@ local dicionarioColunas = {
     ["VBOT4.8"] = setupJanelaBotoesMacros.colVbot
 }
 
+-- =============================================================================
+-- [ALIMENTADOR DAS CHECKBOXES NAS COLUNAS REAIS]
+-- =============================================================================
 local referenciasCheckBoxes = {}
 
 for _, item in ipairs(MAPA_MACROS_GUILDA) do
@@ -249,7 +226,23 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
 end
 
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 3 DE 3 FIX
+-- [ESTEIRA HTTP ASSÍNCRONA DE INJEÇÃO EM SEGUNDO PLANO]
+-- =============================================================================
+local loteJaEstaSendoBaixado = false
+
+local function executarFilaCustomizadaHTTP(indice)
+    if not computadorEstaAutorizado then return end
+    
+    if indice == 1 then 
+        if loteJaEstaSendoBaixado then return end 
+        loteJaEstaSendoBaixado = true 
+    end
+    
+    local macroAlvo = MAPA_MACROS_GUILDA[indice]
+    if not macroAlvo then 
+        print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
+-- =============================================================================
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 3 DE 3 CORRIGIDA
 -- =============================================================================
 
 local loteJaEstaSendoBaixado = false
@@ -264,11 +257,12 @@ local function executarFilaCustomizadaHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel 6 Colunas Ativo em RAM.")
+        print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
         loteJaEstaSendoBaixado = false 
         return 
     end
     
+    -- 🛡️ REGRA SUPREMA: Se for OCULTO, roda direto. Se for VISÍVEL, checa se está marcado.
     if macroAlvo.oculto or configMestre.macrosMarcados[macroAlvo.key] == true then
         local urlScript = BASE_RAW_PUBLICO .. macroAlvo.arquivo .. "?nocache=" .. os.time()
 
@@ -281,6 +275,7 @@ local function executarFilaCustomizadaHTTP(indice)
                     print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) 
                 end
             end
+            -- Intervalo estável de 150ms entre cada injeção na RAM
             schedule(150, function() executarFilaCustomizadaHTTP(indice + 1) end)
         end)
     else
@@ -288,6 +283,7 @@ local function executarFilaCustomizadaHTTP(indice)
     end
 end
 
+-- Dispara o carregamento assim que o acesso local dá o sinal verde
 schedule(300, function()
     if computadorEstaAutorizado then
         print("[Brinque] Inicializando download estruturado de: " .. tostring(servidorAtivoNoMomento))
