@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ARQUITETURA DE TAMANHO DINÂMICO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CONTROLE MANUAL DE COORDENADAS - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -13,11 +13,11 @@ if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" 
 if not configMestre.janelaX then configMestre.janelaX = 300 end
 if not configMestre.janelaY then configMestre.janelaY = 200 end
 
-local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://githubusercontent.com"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
-        { nome = "HEALING BRQ ILUSIOnn",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
+        { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healingBRQ.lua" },
         { nome = "CAVEBOT COMPLETO ILU",    key = "cavebotILU",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/cavebotILU.lua" },
         { nome = "MAGIAS S/PK BRQ ILUSION",  key = "magiasempkBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/magiasempkBRQ.lua" },
         { nome = "EXTRAS ESSENCIAIS ILU",   key = "extrasILU",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/extrasILU.lua" },
@@ -47,17 +47,41 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 📐 AJUSTE DE LARGURA E ALTURA DO PAINEL (Mude os números abaixo quando quiser regular o tamanho)
-local TAMANHO_LARGURA = "545"
-local TAMANHO_ALTURA  = "585"
+-- =============================================================================
+-- 🛠️ COFRE DE REGULAGEM MANUAL: ALTERE OS NÚMEROS ABAIXO PARA MOVER OS ITENS
+-- =============================================================================
+local TAMANHO_LARGURA      = "420"  -- Largura da janela total
+local TAMANHO_ALTURA       = "460"  -- Altura da janela total
 
+-- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
+local ABAS_DISTANCIA_TOPO  = "15"   -- Afasta ou aproxima as abas do topo da janela
+local ABAS_DISTANCIA_ESQ   = "15"   -- Move o bloco de abas para a esquerda ou direita
+local ABAS_ESPACAMENTO     = "5"    -- Espaço em pixels de uma aba para a outra
+local ABA_LARGURA_BOTAO    = "74"   -- Largura individual de cada botão de aba
+local ABA_ALTURA_BOTAO     = "22"   -- Altura individual de cada botão de aba
+
+-- 📋 CONFIGURAÇÃO DA LISTA CENTRAL DE CHECKBOXES (CONTEÚDO DOS MACROS)
+local LISTA_DISTANCIA_TOPO = "55"   -- Distância do conteúdo em relação ao topo
+local LISTA_DISTANCIA_ESQ  = "20"   -- Afasta os nomes dos macros da parede esquerda
+local LISTA_LARGURA_AREA   = "360"  -- Largura da área onde os macros ficam listados
+local LISTA_ALTURA_AREA    = "310"  -- Altura da área de rolagem dos macros
+
+-- 🎛️ CONFIGURAÇÃO DOS BOTÕES DO RODAPÉ (LIMPAR, SUPORTE, OCULTAR)
+local RODAPE_DISTANCIA_BOT = "15"   -- Distância fixa de todos os botões em relação ao fundo
+local BTN_LIMPAR_ESQ       = "15"   -- Posição horizontal do botão Limpar Aba
+local BTN_SUPORTE_ESQ      = "140"  -- Posição horizontal do botão Suporte
+local BTN_OCULTAR_DIREITA  = "15"   -- Afastamento do botão Ocultar em relação à parede direita
+
+-- =============================================================================
+-- 📐 CONSTRUTOR OTUI DESACOPLADO E TOTALMENTE CONFIGURÁVEL MANUALMENTE
+-- =============================================================================
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: " .. TAMANHO_LARGURA .. " " .. TAMANHO_ALTURA .. "\n" ..
 "  draggable: true\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
-"  padding: 12\n" ..
+"  padding: 0\n" ..
 "  layout: anchor\n" ..
 "\n" ..
 "  UIWidget\n" ..
@@ -70,7 +94,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #00000015\n" ..
+"    background-color: #000000B5\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
@@ -79,35 +103,21 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    id: painelBotoesAbas\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    anchors.right: parent.right\n" ..
-"    height: -24\n" ..
-"    margin-top: 10\n" ..
-"    margin-left: 10\n" ..
-"    margin-right: 10\n" ..
+"    margin-top: " .. ABAS_DISTANCIA_TOPO .. "\n" ..
+"    margin-left: " .. ABAS_DISTANCIA_ESQ .. "\n" ..
+"    size: " .. tostring((tonumber(ABA_LARGURA_BOTAO) * 5) + (tonumber(ABAS_ESPACAMENTO) * 4)) .. " " .. ABA_ALTURA_BOTAO .. "\n" ..
 "    layout:\n" ..
 "      type: horizontalBox\n" ..
-"      spacing: 6\n" ..
-"\n" ..
-"  Panel\n" ..
-"    id: sepSuperiorAbas\n" ..
-"    background-color: #00000000\n" ..
-"    anchors.top: painelBotoesAbas.bottom\n" ..
-"    anchors.left: parent.left\n" ..
-"    anchors.right: parent.right\n" ..
-"    height: 1\n" ..
-"    margin-top: 6\n" ..
+"      spacing: " .. ABAS_ESPACAMENTO .. "\n" ..
 "\n" ..
 "  ScrollablePanel\n" ..
 "    id: listaScrollMacrosAba\n" ..
 "    background-color: #00000000\n" ..
-"    anchors.top: sepSuperiorAbas.bottom\n" ..
+"    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
-"    anchors.right: barraRolagemAbas.left\n" ..
-"    anchors.bottom: sepInferior.top\n" ..
-"    margin-top: 20\n" ..
-"    margin-left: 15\n" ..
-"    margin-right: 5\n" ..
-"    margin-bottom: 8\n" ..
+"    margin-top: " .. LISTA_DISTANCIA_TOPO .. "\n" ..
+"    margin-left: " .. LISTA_DISTANCIA_ESQ .. "\n" ..
+"    size: " .. LISTA_LARGURA_AREA .. " " .. LISTA_ALTURA_AREA .. "\n" ..
 "    vertical-scrollbar: barraRolagemAbas\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
@@ -115,23 +125,12 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "\n" ..
 "  VerticalScrollBar\n" ..
 "    id: barraRolagemAbas\n" ..
-"    anchors.top: sepSuperiorAbas.bottom\n" ..
-"    anchors.bottom: sepInferior.top\n" ..
-"    anchors.right: parent.right\n" ..
-"    margin-top: 10\n" ..
-"    margin-bottom: 8\n" ..
-"    margin-right: 15\n" ..
+"    anchors.top: listaScrollMacrosAba.top\n" ..
+"    anchors.bottom: listaScrollMacrosAba.bottom\n" ..
+"    anchors.left: listaScrollMacrosAba.right\n" ..
+"    margin-left: 5\n" ..
 "    step: 16\n" ..
 "    pixels-scroll: true\n" ..
-"\n" ..
-"  Panel\n" ..
-"    id: sepInferior\n" ..
-"    background-color: #00000000\n" ..
-"    anchors.left: parent.left\n" ..
-"    anchors.right: parent.right\n" ..
-"    anchors.bottom: btnDesmarcarTudo.top\n" ..
-"    height: 1\n" ..
-"    margin-bottom: 8\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnDesmarcarTudo\n" ..
@@ -143,9 +142,9 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
+"    margin-left: " .. BTN_LIMPAR_ESQ .. "\n" ..
+"    margin-bottom: " .. RODAPE_DISTANCIA_BOT .. "\n" ..
 "    size: 115 24\n" ..
-"    margin-left: 15\n" ..
-"    margin-bottom: 12\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnLinkSuporte\n" ..
@@ -155,11 +154,11 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
 "    image-border: 5\n" ..
-"    anchors.left: btnDesmarcarTudo.right\n" ..
+"    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
+"    margin-left: " .. BTN_SUPORTE_ESQ .. "\n" ..
+"    margin-bottom: " .. RODAPE_DISTANCIA_BOT .. "\n" ..
 "    size: 105 24\n" ..
-"    margin-left: 6\n" ..
-"    margin-bottom: 12\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: closeBtnMacros\n" ..
@@ -170,16 +169,16 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
+"    margin-right: " .. BTN_OCULTAR_DIREITA .. "\n" ..
+"    margin-bottom: " .. RODAPE_DISTANCIA_BOT .. "\n" ..
 "    size: 85 24\n" ..
-"    margin-right: 15\n" ..
-"    margin-bottom: 12\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:setPosition({x = configMestre.janelaX, y = configMestre.janelaY})
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ARQUITETURA DE TAMANHO DINÂMICO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CONTROLE MANUAL DE COORDENADAS - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -226,12 +225,10 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
--- 🧠 INTELLIGENT RESIZE: Calcula e divide a largura das abas automaticamente para preencher o topo
 local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
-    local larguraDisponivelJanela = tonumber(TAMANHO_LARGURA) or 420
-    local larguraUtilDasAbas = larguraDisponivelJanela - 44 -- Subtrai as margens e paddings
-    local larguraCadaBotaoCalculada = math.floor((larguraUtilDasAbas - 24) / 5) -- Divide espaco entre as 5 abas
+    local larguraBotaoDefinida = tonumber(ABA_LARGURA_BOTAO) or 74
+    local alturaBotaoDefinida = tonumber(ABA_ALTURA_BOTAO) or 22
 
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
@@ -241,8 +238,8 @@ if containerAbasBotoes then
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(5)
         
-        btnAba:setHeight(22)
-        btnAba:setWidth(larguraCadaBotaoCalculada) -- Trava na largura calculada em tempo real
+        btnAba:setHeight(alturaBotaoDefinida)
+        btnAba:setWidth(larguraBotaoDefinida)
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -267,6 +264,7 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
 
+-- Rastreia o movimento de arrasto manual em Lua e joga as coordenadas no storage mestre
 setupJanelaBotoesMacros.onGeometryChange = function(widget)
     local pos = widget:getPosition()
     if pos and pos.x and pos.y and pos.x > 0 and pos.y > 0 then
@@ -287,7 +285,7 @@ local function poolDeDownloadsHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
+        print("[Brinque] Sincronizacao Concluida! Painel Desacoplado Ativo.")
         loteJaEstaSendoBaixado = false 
         
         if setupJanelaBotoesMacros then
