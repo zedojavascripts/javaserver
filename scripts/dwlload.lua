@@ -260,7 +260,7 @@ local function poolDeDownloadsHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativoo.")
         loteJaEstaSendoBaixado = false 
         return 
     end
