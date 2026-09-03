@@ -1,9 +1,11 @@
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V13.0] - MODOS DINÂMICOS (HP/MP): PARTE 1 DE 3
+-- =============================================================================
+
 setDefaultTab("hp")
 UI.Separator()
 
--- =================================================================
---  1. ESTRUTURA DE COMPONENTES DA INTERFACE DE BACKPACKS
--- =================================================================
+-- 1. ESTRUTURA DE COMPONENTES DA INTERFACE DE BACKPACKS
 g_ui.loadUIFromString([[
 DefMasterBPItem < Panel
   height: 34
@@ -52,7 +54,7 @@ DefMasterBPTitle < UIWidget
   font: verdana-11px-rounded
 
 DefMasterBPWindow < MainWindow
-  !text: tr('Defesa Master - Universal BP Settings')
+  !text: tr('CONFIGURACAO DAS BOLSAS')
   padding: 25
 
   VerticalScrollBar
@@ -105,10 +107,8 @@ DefMasterBPWindow < MainWindow
     margin-right: 5
 ]])
 
--- =================================================================
---  2. CONFIGURACOES, STORAGE E TABELA DE TEMPO LOCAL
--- =================================================================
-local panelName = "Enegy_SSA"
+-- 2. CONFIGURAÇÕES, STORAGE COM GATILHOS DE MODO (HP/MP SELECTION)
+local panelName = "Enegy_SSA_PinosDuplos_V13"
 
 if not storage[panelName] or not storage[panelName].bpConfigs then
     storage[panelName] = {
@@ -122,51 +122,53 @@ if not storage[panelName] or not storage[panelName].bpConfigs then
         ringBagId = 0,
         ssaBagId = 0,
         energyBagId = 0,
-        hpEquip = 50,
-        hpMight = 75,
-        hpSSA = 60,
+        
+        energyStop = 15,   
+        energyStart = 50,  
+        mightStop = 20,    
+        mightStart = 75,   
+        ssaStop = 10,      
+        ssaStart = 60,     
+        
         useSSA = false,
+        
+        -- Injeção das chaves de modo (false = HP, true = MP)
+        energyModeMP = false,
+        mightModeMP = true,   -- SLOOT DOIS Ring inicia na Mana por padrão
+        ssaModeMP = false,
+
         bpConfigs = {
-            { name = "BP MIGHT", autoOpen = true, keepSlotFree = false, targetItem = 3048 },
-            { name = "BP ENERGY", autoOpen = true, keepSlotFree = false, targetItem = 3051 },
+            { name = "BP SLOOT DOIS", autoOpen = true, keepSlotFree = false, targetItem = 3048 },
+            { name = "BP SLOOT UM", autoOpen = true, keepSlotFree = false, targetItem = 3051 },
             { name = "BP SSA", autoOpen = true, keepSlotFree = false, targetItem = 3081 }
         }
     }
 end
 local s = storage[panelName]
-
 local defMasterCooldowns = {}
 
--- Funcao auxiliar para achar o item dentro de uma BP especifica
-local function findItemInContainer(itemId, containerId)
+function findItemInContainer(itemId, containerId)
     if itemId <= 0 then return nil end
     for _, container in pairs(g_game.getContainers()) do
         if containerId == 0 or container:getContainerItem():getId() == containerId then
             for _, item in pairs(container:getItems()) do
-                if item:getId() == itemId then 
-                    return item 
-                end
+                if item:getId() == itemId then return item end
             end
         end
     end
     return nil
 end
 
--- Funcao auxiliar para obter o objeto do container pelo ID do item da BP
-local function getContainerByItemId(bagId)
+function getContainerByItemId(bagId)
     if bagId <= 0 then return nil end
     for _, container in pairs(g_game.getContainers()) do
         local containerItem = container:getContainerItem()
-        if containerItem and containerItem:getId() == bagId then
-            return container
-        end
+        if containerItem and containerItem:getId() == bagId then return container end
     end
     return nil
 end
 
--- =================================================================
---  3. INTERFACE PRINCIPAL (Painel Lateral)
--- =================================================================
+-- 3. INTERFACE PRINCIPAL (Painel Lateral)
 local ui = setupUI([[
 Panel
   height: 40
@@ -177,7 +179,7 @@ Panel
     anchors.left: parent.left
     text-align: center
     width: 125
-    text: Defesa Master
+    text: EQUIPE ITEM
 
   Button
     id: edit
@@ -195,37 +197,40 @@ Panel
     anchors.right: parent.right
     margin-top: 3
     height: 17
-    text: BP Settings
+    text: Config-Bolsa
     color: #FFA500
 ]], parent)
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V13.0] - MODOS DINÂMICOS (HP/MP): PARTE 2 DE 3
+-- =============================================================================
 
--- Janela de Configuracoes Principal (HP / Itens)
+-- 4. JANELA DE CONFIGURAÇÕES ORIGINAL REDESENHADA COM CHECKBOX DE SELEÇÃO HP/MP
 local configWindow = setupUI([[
 MainWindow
-  text: Configuracoes de Defesa
-  size: 540 340
+  text: BRINQUE SCRIPT ( CENTRAL DE EQUIPE )
+  size: 540 320
   @onEscape: self:hide()
 
   -- COLUNA ESQUERDA: ANEIS
   Label
     id: t1
-    text: --- ANEIS ---
+    text: - SLOT UM | SLOT DOIS | SLLOT PADRAO -
     anchors.top: parent.top
     anchors.left: parent.left
-    width: 240
+    width: 245
     text-align: center
     color: green
 
   Panel
     id: rSlots
-    anchors.top: prev.bottom
+    anchors.top: t1.bottom
     anchors.left: parent.left
     height: 36
-    width: 240
+    width: 245
     margin-top: 5
     layout:
       type: horizontalBox
-      spacing: 5
+      spacing: 50
     BotItem
       id: r1
     BotItem
@@ -233,60 +238,125 @@ MainWindow
     BotItem
       id: r2
 
-  Label
-    id: lblE
-    text: HP Energy: 50
+  -- SLOOT UM RING: SELEÇÃO HP/MP E PINOS LADO A LADO
+  CheckBox
+    id: toggleEnergyMP
+    text: Usar Mana (MP) no SLOOT UM
     anchors.top: rSlots.bottom
     anchors.left: parent.left
+    width: 245
     margin-top: 8
-
-  HorizontalScrollBar
-    id: scrollE
-    anchors.top: prev.bottom
-    anchors.left: parent.left
-    width: 240
-    margin-top: 2
-    minimum: 1
-    maximum: 100
-    step: 1
 
   Label
-    id: lblM
-    text: HP Might: 75
-    anchors.top: scrollE.bottom
+    id: lblE_Stop
+    text: Stop HP: 15%
+    anchors.top: toggleEnergyMP.bottom
     anchors.left: parent.left
+    width: 120
     margin-top: 8
+    color: #ff6666
+
+  Label
+    id: lblE_Start
+    text: Start HP: 50%
+    anchors.top: toggleEnergyMP.bottom
+    anchors.left: lblE_Stop.right
+    width: 120
+    margin-top: 8
+    margin-left: 5
+    color: #66ff66
 
   HorizontalScrollBar
-    id: scrollM
-    anchors.top: prev.bottom
+    id: scrollE_Stop
+    anchors.top: lblE_Stop.bottom
     anchors.left: parent.left
-    width: 240
+    width: 120
     margin-top: 2
     minimum: 1
     maximum: 100
     step: 1
 
-  -- COLUNA DIREITA: AMULETOS
+  HorizontalScrollBar
+    id: scrollE_Start
+    anchors.top: lblE_Start.bottom
+    anchors.left: scrollE_Stop.right
+    width: 120
+    margin-top: 2
+    margin-left: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+
+  -- SLOOT DOIS RING: SELEÇÃO HP/MP E PINOS LADO A LADO
+  CheckBox
+    id: toggleMightMP
+    text: Usar Mana (MP) no SLOOT DOIS
+    anchors.top: scrollE_Stop.bottom
+    anchors.left: parent.left
+    width: 245
+    margin-top: 10
+
+  Label
+    id: lblM_Stop
+    text: Stop MP: 20%
+    anchors.top: toggleMightMP.bottom
+    anchors.left: parent.left
+    width: 120
+    margin-top: 8
+    color: #ff6666
+
+  Label
+    id: lblM_Start
+    text: Start MP: 75%
+    anchors.top: toggleMightMP.bottom
+    anchors.left: lblM_Stop.right
+    width: 120
+    margin-top: 8
+    margin-left: 5
+    color: #66ff66
+
+  HorizontalScrollBar
+    id: scrollM_Stop
+    anchors.top: lblM_Stop.bottom
+    anchors.left: parent.left
+    width: 120
+    margin-top: 2
+    minimum: 1
+    maximum: 100
+    step: 1
+
+  HorizontalScrollBar
+    id: scrollM_Start
+    anchors.top: lblM_Start.bottom
+    anchors.left: scrollM_Stop.right
+    width: 120
+    margin-top: 2
+    margin-left: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+
+
+  -- COLUNA DIREITA: AMULETOS (SSA)
   Label
     id: t2
-    text: --- AMULETOS ---
+    text: --- AMULETO | AMULETO PADRAO ---
     anchors.top: parent.top
     anchors.right: parent.right
-    width: 240
+    width: 245
     text-align: center
     color: #00FFFF
 
   Panel
     id: sSlots
-    anchors.top: prev.bottom
+    anchors.top: t2.bottom
     anchors.right: parent.right
     height: 36
-    width: 240
+    width: 245
     margin-top: 5
     layout:
       type: horizontalBox
-      spacing: 5
+      spacing: 65
     BotItem
       id: ssa
     BotItem
@@ -297,40 +367,73 @@ MainWindow
     text: Ativar SSA
     anchors.top: sSlots.bottom
     anchors.left: sSlots.left
-    width: 240
-    margin-top: 10
+    width: 245
+    margin-top: 8
+
+  -- SSA: SELEÇÃO HP/MP E PINOS LADO A LADO
+  CheckBox
+    id: toggleSSAMP
+    text: Usar Mana (MP) no SSA
+    anchors.top: toggleSSA.bottom
+    anchors.left: sSlots.left
+    width: 245
+    margin-top: 8
 
   Label
-    id: lblS
-    text: HP SSA: 60
-    anchors.top: prev.bottom
+    id: lblS_Stop
+    text: Stop HP: 10%
+    anchors.top: toggleSSAMP.bottom
     anchors.left: sSlots.left
-    margin-top: 5
+    width: 120
+    margin-top: 8
+    color: #ff6666
+
+  Label
+    id: lblS_Start
+    text: Start HP: 60%
+    anchors.top: toggleSSAMP.bottom
+    anchors.left: lblS_Stop.right
+    width: 120
+    margin-top: 8
+    margin-left: 5
+    color: #66ff66
 
   HorizontalScrollBar
-    id: scrollS
-    anchors.top: prev.bottom
+    id: scrollS_Stop
+    anchors.top: lblS_Stop.bottom
     anchors.left: sSlots.left
-    width: 240
+    width: 120
     margin-top: 2
     minimum: 1
     maximum: 100
     step: 1
 
-  -- SECAO INFERIOR: BACKPACKS
+  HorizontalScrollBar
+    id: scrollS_Start
+    anchors.top: lblS_Start.bottom
+    anchors.left: scrollS_Stop.right
+    width: 120
+    margin-top: 2
+    margin-left: 5
+    minimum: 1
+    maximum: 100
+    step: 1
+
+
+  -- SEÇÃO INFERIOR: CONFIGURAÇÃO DE BOLSAS
   Label
     id: t3
     text: --- CONFIGURACAO DE BAGS ---
-    anchors.top: scrollM.bottom
+    anchors.top: scrollM_Start.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     text-align: center
-    margin-top: 15
+    margin-top: 20
     color: #FFA500
 
   Panel
     id: bagPanel
-    anchors.top: prev.bottom
+    anchors.top: t3.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     height: 36
@@ -360,7 +463,7 @@ MainWindow
         type: horizontalBox
         spacing: 3
       Label
-        text: BP MIGHT:
+        text: BP SLOOT DOIS:
         margin-top: 10
       BotItem
         id: rBag
@@ -373,7 +476,7 @@ MainWindow
         type: horizontalBox
         spacing: 3
       Label
-        text: BP ENERGY:
+        text: BP SLOOT UM:
         margin-top: 10
       BotItem
         id: eBag
@@ -409,9 +512,6 @@ end
 bpSettingsWindow:setHeight(450)
 bpSettingsWindow:setWidth(400)
 
--- =================================================================
---  4. MONTAGEM DINAMICA DO PAINEL
--- =================================================================
 local leftPanel = bpSettingsWindow.content.left
 
 local addSwitch = function(id, title, defaultValue, dest, configField)
@@ -455,21 +555,23 @@ for i = 1, 3 do
     addSwitch(i, "Manter Slot Livre", bpData.keepSlotFree, leftPanel, "keepSlotFree")
     addItemEdit(i, "Item para Monitorar/Drop", bpData.targetItem, leftPanel, "targetItem")
 end
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V13.0] - MODOS DINÂMICOS (HP/MP): PARTE 3 DE 3 (LETRA A)
+-- =============================================================================
 
 -- =================================================================
---  5. EXECUCAO DO MACRO E CONDICIONAIS INTEGRADAS
+-- 5. MOTOR CENTRAL DE COMBATE INTELIGENTE (HP / MP SELECTOR)
 -- =================================================================
-macro(100, "Defesa Master", function()
+macro(100, "BOLSAS", function()
     if not s.enabled then return end
     local hp = hppercent()
+    local mp = manapercent()
     local now = os.time()
 
-    -- Trava Anti-Spam de abertura inicial
     local function checkAndOpenBag(bagId, itemId)
         if bagId and bagId > 0 then
             if getContainerByItemId(bagId) then return end
             if itemId and itemId > 0 and findItemInContainer(itemId, 0) then return end
-
             if defMasterCooldowns[bagId] and (now - defMasterCooldowns[bagId] < 2) then return end
 
             local bagItem = findItemInContainer(bagId, s.mainBagId)
@@ -481,7 +583,6 @@ macro(100, "Defesa Master", function()
         end
     end
 
-    -- LOGICA DA BP PRINCIPAL
     if s.mainBagId and s.mainBagId > 0 then
         if not getContainerByItemId(s.mainBagId) then
             if not defMasterCooldowns[s.mainBagId] or (now - defMasterCooldowns[s.mainBagId] >= 2) then
@@ -496,9 +597,7 @@ macro(100, "Defesa Master", function()
     checkAndOpenBag(s.energyBagId, s.ringEquipId)
     checkAndOpenBag(s.ssaBagId, s.ssaId)
 
-    -- REGRAS DAS CONFIGURACOES DE BAGS
     local bpMapping = { s.ringBagId, s.energyBagId, s.ssaBagId }
-    
     for i = 1, 3 do
         local bpRule = s.bpConfigs[i]
         local actualBagId = bpMapping[i]
@@ -506,7 +605,6 @@ macro(100, "Defesa Master", function()
         if actualBagId and actualBagId > 0 and bpRule.targetItem > 0 then
             local container = getContainerByItemId(actualBagId)
             if container then
-                -- CORRECAO INFALIVEL: Abre a proxima mochila e FECHA a janela vazia antiga no mesmo instante
                 if bpRule.autoOpen then
                     local itemCount = 0
                     for _, item in pairs(container:getItems()) do
@@ -519,11 +617,8 @@ macro(100, "Defesa Master", function()
                             if item:isContainer() then
                                 local internalId = item:getId()
                                 if not defMasterCooldowns[internalId] or (now - defMasterCooldowns[internalId] >= 2) then
-                                    -- 1. Abre a mochila de refil interna
                                     g_game.use(item)
-                                    -- 2. Fecha o container velho que ficou vazio para nao acumular abas na tela
                                     g_game.close(container)
-                                    
                                     defMasterCooldowns[internalId] = now
                                     delay(600)
                                 end
@@ -548,16 +643,13 @@ macro(100, "Defesa Master", function()
         end
     end
 
-    -- FUNCAO DE AUTO-ORGANIZACAO
     local function organizeItems(itemId, targetBagId)
         if itemId <= 0 or s.mainBagId <= 0 then return end
-        
         local mainContainer = getContainerByItemId(s.mainBagId)
         if not mainContainer then return end
         
         local currentRing = getFinger()
         local currentNeck = getNeck()
-        
         local isEquipped = (currentRing and currentRing:getId() == itemId) or (currentNeck and currentNeck:getId() == itemId)
         if isEquipped then return end
 
@@ -591,6 +683,9 @@ macro(100, "Defesa Master", function()
             end
         end
     end
+-- =============================================================================
+-- [SOULE DEFENSE SYSTEMS V13.0] - MODOS DINÂMICOS (HP/MP): PARTE 3 DE 3 (LETRA B)
+-- =============================================================================
 
     organizeItems(s.ringDeffId, 0)
     organizeItems(s.normalAmuletId, 0)
@@ -598,29 +693,39 @@ macro(100, "Defesa Master", function()
     organizeItems(s.ringEquipId, s.energyBagId) 
     organizeItems(s.ssaId, s.ssaBagId)         
 
-    -- LOGICA DE EQUIPAR AMULETOS DIRETO DE SUAS RESPECTIVAS BPs
+    -- 🎯 GATILHO COMPACTO DO AMULETO (SSA): Valida modo HP ou modo MP dinamicamente
     local currentNeck = getNeck()
-    if s.useSSA and hp <= s.hpSSA then
+    local usarAmuletAgora = false
+    local ssaValorChecagem = s.ssaModeMP and mp or hp
+
+    if s.useSSA and ssaValorChecagem <= (s.ssaStart or 60) and ssaValorChecagem > (s.ssaStop or 10) then
+        usarAmuletAgora = true
+    end
+
+    if usarAmuletAgora then
         if not currentNeck or currentNeck:getId() ~= s.ssaId then
             local item = findItemInContainer(s.ssaId, s.ssaBagId)
             if item then moveToSlot(item, SlotNeck) end
         end
-    elseif hp > (s.hpSSA + 3) then
+    else
         if s.normalAmuletId > 0 and (not currentNeck or currentNeck:getId() ~= s.normalAmuletId) then
             local item = findItemInContainer(s.normalAmuletId, s.mainBagId)
             if item then moveToSlot(item, SlotNeck) end
         end
     end
 
-    -- LOGICA DE EQUIPAR ANEIS DIRETO DE SUAS RESPECTIVAS BPs
+    -- 🎯 GATILHO COMPACTO DOS ANÉIS: Valida modo HP ou modo MP dinamicamente para cada slot
     local currentRing = getFinger()
     local targetRing = s.ringDeffId
     local targetBag = s.mainBagId 
 
-    if hp <= s.hpEquip then
+    local energyValorChecagem = s.energyModeMP and mp or hp
+    local mightValorChecagem = s.mightModeMP and mp or hp
+
+    if energyValorChecagem <= (s.energyStart or 50) and energyValorChecagem > (s.energyStop or 15) then
         targetRing = s.ringEquipId
         targetBag = s.energyBagId 
-    elseif hp <= s.hpMight then
+    elseif mightValorChecagem <= (s.mightStart or 75) and mightValorChecagem > (s.mightStop or 20) then
         targetRing = s.ringMightId
         targetBag = s.ringBagId 
     end
@@ -632,7 +737,7 @@ macro(100, "Defesa Master", function()
 end)
 
 -- =================================================================
---  6. CONEXOES DE ACIONAMENTO DA UI
+-- 6. CONEXOES DE ACIONAMENTO DA UI COMPACTA E EVENTOS LUA
 -- =================================================================
 ui.title:setOn(s.enabled)
 ui.title.onClick = function(w)
@@ -641,15 +746,11 @@ ui.title.onClick = function(w)
 end
 
 ui.edit.onClick = function()
-    configWindow:show()
-    configWindow:raise()
-    configWindow:focus()
+    configWindow:show() configWindow:raise() configWindow:focus()
 end
 
 ui.bpSettings.onClick = function()
-    bpSettingsWindow:show()
-    bpSettingsWindow:raise()
-    bpSettingsWindow:focus()
+    bpSettingsWindow:show() bpSettingsWindow:raise() bpSettingsWindow:focus()
 end
 
 configWindow.rSlots.r1:setItemId(s.ringEquipId)
@@ -673,17 +774,69 @@ configWindow.bagPanel.energyBagPanel.eBag.onItemChange = function(w) s.energyBag
 configWindow.bagPanel.rightBagPanel.sBag:setItemId(s.ssaBagId)
 configWindow.bagPanel.rightBagPanel.sBag.onItemChange = function(w) s.ssaBagId = w:getItemId() end
 
-configWindow.scrollE.onValueChange = function(w, v)
-    s.hpEquip = v
-    configWindow.lblE:setText("HP Energy: " .. v)
+-- EVENTOS DE VALOR PARA OS SCROLLBARS LADO A LADO
+configWindow.scrollE_Stop.onValueChange = function(w, v)
+    s.energyStop = tonumber(v) or 15
+    local sufixo = s.energyModeMP and "MP" or "HP"
+    configWindow.lblE_Stop:setText("Stop " .. sufixo .. ": " .. s.energyStop .. "%")
 end
-configWindow.scrollE:setValue(s.hpEquip)
+configWindow.scrollE_Start.onValueChange = function(w, v)
+    s.energyStart = tonumber(v) or 50
+    local sufixo = s.energyModeMP and "MP" or "HP"
+    configWindow.lblE_Start:setText("Start " .. sufixo .. ": " .. s.energyStart .. "%")
+end
 
-configWindow.scrollM.onValueChange = function(w, v)
-    s.hpMight = v
-    configWindow.lblM:setText("HP Might: " .. v)
+configWindow.scrollM_Stop.onValueChange = function(w, v)
+    s.mightStop = tonumber(v) or 20
+    local sufixo = s.mightModeMP and "MP" or "HP"
+    configWindow.lblM_Stop:setText("Stop " .. sufixo .. ": " .. s.mightStop .. "%")
 end
-configWindow.scrollM:setValue(s.hpMight)
+configWindow.scrollM_Start.onValueChange = function(w, v)
+    s.mightStart = tonumber(v) or 75
+    local sufixo = s.mightModeMP and "MP" or "HP"
+    configWindow.lblM_Start:setText("Start " .. sufixo .. ": " .. s.mightStart .. "%")
+end
+
+configWindow.scrollS_Stop.onValueChange = function(w, v)
+    s.ssaStop = tonumber(v) or 10
+    local sufixo = s.ssaModeMP and "MP" or "HP"
+    configWindow.lblS_Stop:setText("Stop " .. sufixo .. ": " .. s.ssaStop .. "%")
+end
+configWindow.scrollS_Start.onValueChange = function(w, v)
+    s.ssaStart = tonumber(v) or 60
+    local sufixo = s.ssaModeMP and "MP" or "HP"
+    configWindow.lblS_Start:setText("Start " .. sufixo .. ": " .. s.ssaStart .. "%")
+end
+
+-- VÍNCULO E ATUALIZADORES DAS CAIXAS DE SELEÇÃO DINÂMICAS DE MODO (HP/MP)
+configWindow.toggleEnergyMP:setChecked(s.energyModeMP)
+configWindow.toggleEnergyMP.onCheckChange = function(w, c)
+    s.energyModeMP = c
+    configWindow.scrollE_Stop:onValueChange(configWindow.scrollE_Stop:getValue())
+    configWindow.scrollE_Start:onValueChange(configWindow.scrollE_Start:getValue())
+end
+
+configWindow.toggleMightMP:setChecked(s.mightModeMP)
+configWindow.toggleMightMP.onCheckChange = function(w, c)
+    s.mightModeMP = c
+    configWindow.scrollM_Stop:onValueChange(configWindow.scrollM_Stop:getValue())
+    configWindow.scrollM_Start:onValueChange(configWindow.scrollM_Start:getValue())
+end
+
+configWindow.toggleSSAMP:setChecked(s.ssaModeMP)
+configWindow.toggleSSAMP.onCheckChange = function(w, c)
+    s.ssaModeMP = c
+    configWindow.scrollS_Stop:onValueChange(configWindow.scrollS_Stop:getValue())
+    configWindow.scrollS_Start:onValueChange(configWindow.scrollS_Start:getValue())
+end
+
+-- Cravamento inicial dos eixos deslizantes
+configWindow.scrollE_Stop:setValue(s.energyStop or 15)
+configWindow.scrollE_Start:setValue(s.energyStart or 50)
+configWindow.scrollM_Stop:setValue(s.mightStop or 20)
+configWindow.scrollM_Start:setValue(s.mightStart or 75)
+configWindow.scrollS_Stop:setValue(s.ssaStop or 10)
+configWindow.scrollS_Start:setValue(s.ssaStart or 60)
 
 configWindow.sSlots.ssa:setItemId(s.ssaId)
 configWindow.sSlots.ssa.onItemChange = function(w) s.ssaId = w:getItemId() end
@@ -693,12 +846,6 @@ configWindow.sSlots.amu.onItemChange = function(w) s.normalAmuletId = w:getItemI
 
 configWindow.toggleSSA:setChecked(s.useSSA)
 configWindow.toggleSSA.onCheckChange = function(w, c) s.useSSA = c end
-
-configWindow.scrollS.onValueChange = function(w, v)
-    s.hpSSA = v
-    configWindow.lblS:setText("HP SSA: " .. v)
-end
-configWindow.scrollS:setValue(s.hpSSA)
 
 configWindow.close.onClick = function()
     configWindow:hide()
