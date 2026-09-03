@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: DESIGN SEM BORDAS E BOTÕES COM IMAGEM - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM TOTALMENTE SEM BORDAS - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "ttps://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
@@ -44,12 +44,14 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 📐 DESIGN ATUALIZADO: Injetado texturas de imagem reais nos botoes do rodape
+-- 🛠️ ESTRUTURA BLINDADA: Removido o titulo em texto e zerado as bordas nativas da MainWindow
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 360 420\n" ..
-"  text: Brinque Scripts Premium\n" ..
 "  @onEscape: self:hide()\n" ..
+"  background-color: alpha\n" ..
+"  image-border: 0\n" ..
+"  border: 0 alpha\n" ..
 "  padding: 12\n" ..
 "  layout: anchor\n" ..
 "\n" ..
@@ -85,6 +87,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
 "    margin-top: 6\n" ..
+"    border: 0 alpha\n" ..
 "\n" ..
 "  ScrollablePanel\n" ..
 "    id: listaScrollMacrosAba\n" ..
@@ -95,6 +98,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    margin-top: 10\n" ..
 "    margin-bottom: 8\n" ..
 "    vertical-scrollbar: barraRolagemAbas\n" ..
+"    border: 0 alpha\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -113,6 +117,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: btnDesmarcarTudo.top\n" ..
 "    margin-bottom: 8\n" ..
+"    border: 0 alpha\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnDesmarcarTudo\n" ..
@@ -157,7 +162,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: DESIGN SEM BORDAS E BOTÕES COM IMAGEM - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM TOTALMENTE SEM BORDAS - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -192,7 +197,7 @@ local function renderizarConteudoDaAba(categoriaNome)
             box:setHeight(16)
             box:setChecked(configMestre.macrosMarcados[item.key] == true)
             
-            -- 🛡️ REMOVE AS BORDAS SILENCIOSAMENTE PARA FICAR TOTALMENTE LIMPO
+            -- Remove as bordas internas do elemento
             box:setBorderWidth(0)
             
             box.onClick = function(w)
@@ -213,7 +218,7 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
-        -- Aplica a textura visual de botão premium também nas abas do topo
+        -- Textura vermelha e dourada para os botoes do topo
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(3)
         
