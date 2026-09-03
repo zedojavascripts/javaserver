@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: LUA-SAVE DE COORDENADAS FIXO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ARQUITETURA DE TAMANHO DINÂMICO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,6 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
--- 🧠 LUA-SAVE COORDENADAS: Inicializa as variáveis na memória do bot caso seja a primeira vez
 if not configMestre.janelaX then configMestre.janelaX = 300 end
 if not configMestre.janelaY then configMestre.janelaY = 200 end
 
@@ -48,9 +47,13 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
+-- 📐 AJUSTE DE LARGURA E ALTURA DO PAINEL (Mude os números abaixo quando quiser regular o tamanho)
+local TAMANHO_LARGURA = "420"
+local TAMANHO_ALTURA  = "460"
+
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
-"  size: 420 460\n" ..
+"  size: " .. TAMANHO_LARGURA .. " " .. TAMANHO_ALTURA .. "\n" ..
 "  draggable: true\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
@@ -67,7 +70,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #00000015\n" ..
+"    background-color: #000000B5\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
@@ -173,12 +176,10 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-
--- 🛠️ ARRUMADO: Força o painel a colar na posição salva na memória Lua do storage
 setupJanelaBotoesMacros:setPosition({x = configMestre.janelaX, y = configMestre.janelaY})
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: LUA-SAVE DE COORDENADAS FIXO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ARQUITETURA DE TAMANHO DINÂMICO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -225,8 +226,13 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
+-- 🧠 INTELLIGENT RESIZE: Calcula e divide a largura das abas automaticamente para preencher o topo
 local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
+    local larguraDisponivelJanela = tonumber(TAMANHO_LARGURA) or 420
+    local larguraUtilDasAbas = larguraDisponivelJanela - 44 -- Subtrai as margens e paddings
+    local larguraCadaBotaoCalculada = math.floor((larguraUtilDasAbas - 24) / 5) -- Divide espaco entre as 5 abas
+
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
@@ -236,7 +242,7 @@ if containerAbasBotoes then
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(74)
+        btnAba:setWidth(larguraCadaBotaoCalculada) -- Trava na largura calculada em tempo real
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -261,7 +267,6 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
 
--- 🧠 SISTEMA LUA-SAVE: Rastreia o movimento de arrasto em tempo real e joga as coordenadas no storage
 setupJanelaBotoesMacros.onGeometryChange = function(widget)
     local pos = widget:getPosition()
     if pos and pos.x and pos.y and pos.x > 0 and pos.y > 0 then
