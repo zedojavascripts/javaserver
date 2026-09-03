@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM TOTALMENTE SEM BORDAS - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ZERO BORDAS INTERNAL - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,7 +44,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ ESTRUTURA BLINDADA: Removido o titulo em texto e zerado as bordas nativas da MainWindow
+-- 🛠️ ARRUMADO: Aplicado remocao de borda e cor transparente nas subcamadas e listas internas
 local designAbasPremiumOTUI = "MainWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 360 420\n" ..
@@ -81,16 +81,20 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "      type: horizontalBox\n" ..
 "      spacing: 5\n" ..
 "\n" ..
-"  HorizontalSeparator\n" ..
+"  Panel\n" ..
 "    id: sepSuperiorAbas\n" ..
+"    background-color: #00000000\n" ..
 "    anchors.top: painelBotoesAbas.bottom\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
+"    height: 1\n" ..
 "    margin-top: 6\n" ..
-"    border: 0 alpha\n" ..
 "\n" ..
 "  ScrollablePanel\n" ..
 "    id: listaScrollMacrosAba\n" ..
+"    background-color: #00000000\n" ..
+"    border: 0 alpha\n" ..
+"    image-border: 0\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
@@ -98,7 +102,6 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    margin-top: 10\n" ..
 "    margin-bottom: 8\n" ..
 "    vertical-scrollbar: barraRolagemAbas\n" ..
-"    border: 0 alpha\n" ..
 "    layout:\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
@@ -111,13 +114,14 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 "    step: 16\n" ..
 "    pixels-scroll: true\n" ..
 "\n" ..
-"  HorizontalSeparator\n" ..
+"  Panel\n" ..
 "    id: sepInferior\n" ..
+"    background-color: #00000000\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: btnDesmarcarTudo.top\n" ..
+"    height: 1\n" ..
 "    margin-bottom: 8\n" ..
-"    border: 0 alpha\n" ..
 "\n" ..
 "  Button\n" ..
 "    id: btnDesmarcarTudo\n" ..
@@ -162,7 +166,7 @@ local designAbasPremiumOTUI = "MainWindow\n" ..
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM TOTALMENTE SEM BORDAS - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM ZERO BORDAS INTERNAL - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -197,7 +201,7 @@ local function renderizarConteudoDaAba(categoriaNome)
             box:setHeight(16)
             box:setChecked(configMestre.macrosMarcados[item.key] == true)
             
-            -- Remove as bordas internas do elemento
+            -- Remove qualquer borda interna residual
             box:setBorderWidth(0)
             
             box.onClick = function(w)
@@ -218,7 +222,6 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
-        -- Textura vermelha e dourada para os botoes do topo
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(3)
         
@@ -260,7 +263,7 @@ local function executarFilaCustomizadaHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativoo.")
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         return 
     end
