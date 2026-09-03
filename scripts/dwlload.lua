@@ -13,7 +13,7 @@ if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" 
 if not configMestre.janelaX then configMestre.janelaX = 300 end
 if not configMestre.janelaY then configMestre.janelaY = 200 end
 
-local BASE_RAW_PUBLICO = "https://githubusercontent.com"
+local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
