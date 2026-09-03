@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM EXPANDIDO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM RECALIBRADO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,13 +44,13 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ ATUALIZADO: Tamanho esticado para 420x460 de forma folgada e proporcional
+-- 🛠️ AJUSTADO: Aumentado o padding para 22 para afastar tudo das beiradas laterais, topo e rodape
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
-"  padding: 12\n" ..
+"  padding: 22\n" ..
 "  layout: anchor\n" ..
 "\n" ..
 "  UIWidget\n" ..
@@ -75,9 +75,11 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    height: 24\n" ..
 "    margin-top: 5\n" ..
+"    margin-left: 5\n" ..
+"    margin-right: 5\n" ..
 "    layout:\n" ..
 "      type: horizontalBox\n" ..
-"      spacing: 5\n" ..
+"      spacing: 6\n" ..
 "\n" ..
 "  Panel\n" ..
 "    id: sepSuperiorAbas\n" ..
@@ -96,6 +98,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: sepInferior.top\n" ..
 "    margin-top: 10\n" ..
+"    margin-left: 5\n" ..
 "    margin-bottom: 8\n" ..
 "    vertical-scrollbar: barraRolagemAbas\n" ..
 "    layout:\n" ..
@@ -129,7 +132,8 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 130 24\n" ..
+"    size: 115 24\n" ..
+"    margin-left: 5\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
 "  Button\n" ..
@@ -142,7 +146,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: btnDesmarcarTudo.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
-"    size: 110 24\n" ..
+"    size: 105 24\n" ..
 "    margin-left: 6\n" ..
 "    margin-bottom: 5\n" ..
 "\n" ..
@@ -156,19 +160,20 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.right: parent.right\n" ..
 "    anchors.bottom: parent.bottom\n" ..
 "    size: 85 24\n" ..
+"    margin-right: 5\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-setupJanelaBotoesMacros:hide()
+shapesJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
+shapesJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM EXPANDIDO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM RECALIBRADO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
 local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
-local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
+local widgetListaScroll = shapesJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
 local referenciasCheckBoxesAbaAtiva = {}
 
@@ -209,7 +214,7 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
-local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
+local containerAbasBotoes = shapesJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
@@ -220,7 +225,7 @@ if containerAbasBotoes then
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(74) -- 🛠️ AJUSTADO: Largura expandida para preencher perfeitamente os 420px de tela
+        btnAba:setWidth(66) -- 🛠️ ARRUMADO: Proporcao perfeita para o novo padding de 22px
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -231,7 +236,7 @@ end
 
 renderizarConteudoDaAba(configMestre.abaAbertaAtual)
 
-setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
+shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
@@ -239,7 +244,7 @@ setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     print("[Brinque] Todos os macros da aba " .. configMestre.abaAbertaAtual .. " foram desligados!")
 end
 
-setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
+shapesJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     local linkSuporteZap = "https://wa.me"
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
