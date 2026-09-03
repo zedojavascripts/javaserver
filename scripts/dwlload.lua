@@ -80,7 +80,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.right\n" ..
-"    height: 24\n" ..
+"    height: -24\n" ..
 "    margin-top: 10\n" ..
 "    margin-left: 10\n" ..
 "    margin-right: 10\n" ..
