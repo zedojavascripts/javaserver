@@ -54,23 +54,23 @@ local TAMANHO_LARGURA      = "420"  -- Largura da janela total
 local TAMANHO_ALTURA       = "460"  -- Altura da janela total
 
 -- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
-local ABAS_DISTANCIA_TOPO  = "15"   -- Afasta ou aproxima as abas do topo da janela
-local ABAS_DISTANCIA_ESQ   = "15"   -- Move o bloco de abas para a esquerda ou direita
-local ABAS_ESPACAMENTO     = "5"    -- Espaço em pixels de uma aba para a outra
+local ABAS_DISTANCIA_TOPO  = "35"   -- Afasta ou aproxima as abas do topo da janela
+local ABAS_DISTANCIA_ESQ   = "30"   -- Move o bloco de abas para a esquerda ou direita
+local ABAS_ESPACAMENTO     = "2"    -- Espaço em pixels de uma aba para a outra
 local ABA_LARGURA_BOTAO    = "74"   -- Largura individual de cada botão de aba
 local ABA_ALTURA_BOTAO     = "22"   -- Altura individual de cada botão de aba
 
 -- 📋 CONFIGURAÇÃO DA LISTA CENTRAL DE CHECKBOXES (CONTEÚDO DOS MACROS)
 local LISTA_DISTANCIA_TOPO = "55"   -- Distância do conteúdo em relação ao topo
-local LISTA_DISTANCIA_ESQ  = "20"   -- Afasta os nomes dos macros da parede esquerda
-local LISTA_LARGURA_AREA   = "360"  -- Largura da área onde os macros ficam listados
-local LISTA_ALTURA_AREA    = "310"  -- Altura da área de rolagem dos macros
+local LISTA_DISTANCIA_ESQ  = "30"   -- Afasta os nomes dos macros da parede esquerda
+local LISTA_LARGURA_AREA   = "350"  -- Largura da área onde os macros ficam listados
+local LISTA_ALTURA_AREA    = "300"  -- Altura da área de rolagem dos macros
 
 -- 🎛️ CONFIGURAÇÃO DOS BOTÕES DO RODAPÉ (LIMPAR, SUPORTE, OCULTAR)
 local RODAPE_DISTANCIA_BOT = "15"   -- Distância fixa de todos os botões em relação ao fundo
-local BTN_LIMPAR_ESQ       = "15"   -- Posição horizontal do botão Limpar Aba
-local BTN_SUPORTE_ESQ      = "140"  -- Posição horizontal do botão Suporte
-local BTN_OCULTAR_DIREITA  = "15"   -- Afastamento do botão Ocultar em relação à parede direita
+local BTN_LIMPAR_ESQ       = "30"   -- Posição horizontal do botão Limpar Aba
+local BTN_SUPORTE_ESQ      = "156"  -- Posição horizontal do botão Suporte
+local BTN_OCULTAR_DIREITA  = "35"   -- Afastamento do botão Ocultar em relação à parede direita
 
 -- =============================================================================
 -- 📐 CONSTRUTOR OTUI DESACOPLADO E TOTALMENTE CONFIGURÁVEL MANUALMENTE
@@ -94,7 +94,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #000000B5\n" ..
+"    background-color: #00000005\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
