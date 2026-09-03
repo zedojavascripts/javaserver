@@ -43,6 +43,9 @@ local SCRIPTS_DO_REPOSITORIO = {
 }
 
 local MAPA_MACROS_GUILDA = SCRIPTS_DO_REPOSITORIO[servidorAtivoNoMomento] or {}
+-- =============================================================================
+-- [NUVEM PÚBLICA] ARQUIVO 2: ENGENHARIA VISUAL E FILA HTTP COORDENADA (FIM)
+-- =============================================================================
 
 -- =============================================================================
 -- 📐 ESTRUTURA VISUAL DA JANELA NATIVA (IMUNE A ERROS E SINTAXE LIMPA)
@@ -241,28 +244,10 @@ local function executarFilaCustomizadaHTTP(indice)
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
         print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
--- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL 5 COLUNAS INDESTRUTÍVEL - PARTE 3 DE 3 CORRIGIDA
--- =============================================================================
-
-local loteJaEstaSendoBaixado = false
-
-local function executarFilaCustomizadaHTTP(indice)
-    if not computadorEstaAutorizado then return end
-    
-    if indice == 1 then 
-        if loteJaEstaSendoBaixado then return end 
-        loteJaEstaSendoBaixado = true 
-    end
-    
-    local macroAlvo = MAPA_MACROS_GUILDA[indice]
-    if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel 5 Colunas Ativo em RAM.")
         loteJaEstaSendoBaixado = false 
         return 
     end
     
-    -- 🛡️ REGRA SUPREMA: Se for OCULTO, roda direto. Se for VISÍVEL, checa se está marcado.
     if macroAlvo.oculto or configMestre.macrosMarcados[macroAlvo.key] == true then
         local urlScript = BASE_RAW_PUBLICO .. macroAlvo.arquivo .. "?nocache=" .. os.time()
 
@@ -275,7 +260,6 @@ local function executarFilaCustomizadaHTTP(indice)
                     print("[Erro] " .. macroAlvo.nome .. " - Erro: " .. tostring(syntaxErr)) 
                 end
             end
-            -- Intervalo estável de 150ms entre cada injeção na RAM
             schedule(150, function() executarFilaCustomizadaHTTP(indice + 1) end)
         end)
     else
@@ -283,10 +267,12 @@ local function executarFilaCustomizadaHTTP(indice)
     end
 end
 
--- Dispara o carregamento assim que o acesso local dá o sinal verde
 schedule(300, function()
     if computadorEstaAutorizado then
         print("[Brinque] Inicializando download estruturado de: " .. tostring(servidorAtivoNoMomento))
         executarFilaCustomizadaHTTP(1)
+    end
+end)
+
     end
 end)
