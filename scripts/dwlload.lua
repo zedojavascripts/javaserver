@@ -48,8 +48,8 @@ local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesM
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
 -- 📐 AJUSTE DE LARGURA E ALTURA DO PAINEL (Mude os números abaixo quando quiser regular o tamanho)
-local TAMANHO_LARGURA = "420"
-local TAMANHO_ALTURA  = "460"
+local TAMANHO_LARGURA = "445"
+local TAMANHO_ALTURA  = "485"
 
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
@@ -70,7 +70,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #000000B5\n" ..
+"    background-color: #00000015\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: 0\n" ..
 "    phantom: true\n" ..
