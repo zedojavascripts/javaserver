@@ -55,7 +55,7 @@ local TAMANHO_ALTURA       = "500"  -- Altura da janela total
 
 -- 📊 CONFIGURAÇÃO DAS ABAS DO TOPO (CURA, CAVE, WAR...)
 local ABAS_DISTANCIA_TOPO  = "60"   -- Afasta ou aproxima as abas do topo da janela
-local ABAS_DISTANCIA_ESQ   = "88"   -- Move o bloco de abas para a esquerda ou direita
+local ABAS_DISTANCIA_ESQ   = "95"   -- Move o bloco de abas para a esquerda ou direita
 local ABAS_ESPACAMENTO     = "-10"    -- Espaço em pixels de uma aba para a outra
 local ABA_LARGURA_BOTAO    = "55"   -- Largura individual de cada botão de aba
 local ABA_ALTURA_BOTAO     = "19"   -- Altura individual de cada botão de aba
