@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS COM IMAGEM - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS E AUTO-SAVE - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -25,7 +25,7 @@ local SCRIPTS_DO_REPOSITORIO = {
     ["Minimalist"] = {
         { nome = "HEALING BRQ MINIMALIST",   key = "healingMIN",       cat = "HEALING",     arquivo = "sv_minimalist/healing/healingMIN.lua" },
         { nome = "CAVEBOT COMPLETO MIN",    key = "cavebotMIN",       cat = "CAVEBOT",     arquivo = "sv_minimalist/cave_target/cavebotMIN.lua" },
-        { nome = "FILTRO BATTLE BRQ",       key = "filtroBattle",     cat = "WAR",         arquivo = "sv_minimalist/war/Filtrobattle.lua" },
+        { nome = "FILTRO BATTLE BRQ",       key = "filtroBattle",     cat = "WAR",         bound = "sv_minimalist/war/Filtrobattle.lua" },
         { nome = "EXTRAS ESSENCIAIS MIN",   key = "extrasMIN",        cat = "EXTRAS",      arquivo = "sv_minimalist/extras/extrasMIN.lua" },
         { nome = "MODS VBOT 4.8 MIN",       key = "vbot48MIN",        cat = "VBOT4.8",     arquivo = "sv_minimalist/extras/vbot48MIN.lua" }
     },
@@ -44,6 +44,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
+-- 📐 ADICIONADO DRAGGABLE NATIVO NA MOLDURA: Afastamento padding 22px mantido
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
@@ -164,12 +165,13 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
--- 🛠️ ARRUMADO: Variavel principal configurada como setupJanelaBotoesMacros
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-setupJanelaBotoesMacros:setAutoSave("posicaoJanelaMacrosBrinque")
-setupJanelaBotoesMacros:hide()
+
+-- 🧠 VINCULA O AUTO-SAVE DIRETAMENTE NA INSTÂNCIA DA JANELA CRIADA
+setupJanelaBotoesMacros:setAutoSave("posicaoJanelaAbasPremiumBrinque")
+setupJanelaBotoesMacros:show() -- Liga a janela antes de rodar os botoes para nao sumir nada!
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS COM IMAGEM - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS E AUTO-SAVE - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -223,12 +225,11 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
-        -- 🛠️ CORREÇÃO SUPREMA: Vinculado a textura certa sem bugar as variaveis
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(74)
+        btnAba:setWidth(74) -- Largura expandida ideal para preencher os 420px de tela
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -265,9 +266,10 @@ local function poolDeDownloadsHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativoo.")
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         
+        -- Garante exibicao em primeiro plano na tela do Tibia
         if setupJanelaBotoesMacros then
             setupJanelaBotoesMacros:show()
             setupJanelaBotoesMacros:raise()
