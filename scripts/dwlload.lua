@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL COM AUTO-SAVE DE POSIÇÃO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS COM IMAGEM - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -10,7 +10,7 @@ local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
 
-local BASE_RAW_PUBLICO = "ttps://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
+local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
@@ -44,7 +44,6 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- Adicionado "draggable: true" para o jogador conseguir arrastar a janela livremente pela tela
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
@@ -165,13 +164,12 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
+-- 🛠️ ARRUMADO: Variavel principal configurada como setupJanelaBotoesMacros
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-
--- 🧠 AUTO-SAVE ATIVADO: Força o OTClient a gravar a posição exata da janela no PC do cliente!
 setupJanelaBotoesMacros:setAutoSave("posicaoJanelaMacrosBrinque")
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL COM AUTO-SAVE DE POSIÇÃO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: CORREÇÃO TOTAL DE ABAS COM IMAGEM - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -225,11 +223,12 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
+        -- 🛠️ CORREÇÃO SUPREMA: Vinculado a textura certa sem bugar as variaveis
         btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(66)
+        btnAba:setWidth(74)
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -269,7 +268,6 @@ local function poolDeDownloadsHTTP(indice)
         print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         
-        -- 🛠️ GATILHO CORRIGIDO: Obriga o painel a aparecer centralizado ou na ultima posicao salva
         if setupJanelaBotoesMacros then
             setupJanelaBotoesMacros:show()
             setupJanelaBotoesMacros:raise()
