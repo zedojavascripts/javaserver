@@ -68,8 +68,8 @@ local LISTA_ALTURA_AREA    = "290"  -- Altura da área de rolagem dos macros
 
 -- 🎛️ CONFIGURAÇÃO DOS BOTÕES DO RODAPÉ (LIMPAR, SUPORTE, OCULTAR)
 local RODAPE_DISTANCIA_BOT = "45"   -- Distância fixa de todos os botões em relação ao fundo
-local BTN_LIMPAR_ESQ       = "136"   -- Posição horizontal do botão Limpar Aba
-local BTN_SUPORTE_ESQ      = "176"  -- Posição horizontal do botão Suporte
+local BTN_LIMPAR_ESQ       = "116"   -- Posição horizontal do botão Limpar Aba
+local BTN_SUPORTE_ESQ      = "190"  -- Posição horizontal do botão Suporte
 local BTN_OCULTAR_DIREITA  = "35"   -- Afastamento do botão Ocultar em relação à parede direita
 
 -- =============================================================================
