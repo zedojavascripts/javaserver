@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM RECALIBRADO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL COM AUTO-SAVE DE POSIÇÃO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -44,10 +44,11 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 🛠️ AJUSTADO: Aumentado o padding para 22 para afastar tudo das beiradas laterais, topo e rodape
+-- Adicionado "draggable: true" para o jogador conseguir arrastar a janela livremente pela tela
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
+"  draggable: true\n" ..
 "  clipping: true\n" ..
 "  @onEscape: self:hide()\n" ..
 "  padding: 22\n" ..
@@ -164,16 +165,19 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    margin-bottom: 5\n" ..
 "    @onClick: self:getParent():hide()\n"
 
-shapesJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
-shapesJanelaBotoesMacros:hide()
+setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
+
+-- 🧠 AUTO-SAVE ATIVADO: Força o OTClient a gravar a posição exata da janela no PC do cliente!
+setupJanelaBotoesMacros:setAutoSave("posicaoJanelaMacrosBrinque")
+setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL DE ABAS PREMIUM RECALIBRADO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2: PAINEL COM AUTO-SAVE DE POSIÇÃO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
 local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
 
-local widgetListaScroll = shapesJanelaBotoesMacros.listaScrollMacrosAba
+local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
 local referenciasCheckBoxesAbaAtiva = {}
 
@@ -214,7 +218,7 @@ local function renderizarConteudoDaAba(categoriaNome)
     end
 end
 
-local containerAbasBotoes = shapesJanelaBotoesMacros.painelBotoesAbas
+local containerAbasBotoes = setupJanelaBotoesMacros.painelBotoesAbas
 if containerAbasBotoes then
     for _, catNome in ipairs(LISTA_CATEGORIAS_ABAS) do
         local btnAba = g_ui.createWidget("Button", containerAbasBotoes)
@@ -225,7 +229,7 @@ if containerAbasBotoes then
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(22)
-        btnAba:setWidth(66) -- 🛠️ ARRUMADO: Proporcao perfeita para o novo padding de 22px
+        btnAba:setWidth(66)
         
         btnAba.onClick = function()
             renderizarConteudoDaAba(catNome)
@@ -236,7 +240,7 @@ end
 
 renderizarConteudoDaAba(configMestre.abaAbertaAtual)
 
-shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
+setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     for _, itemBox in ipairs(referenciasCheckBoxesAbaAtiva) do
         itemBox.widget:setChecked(false)
         configMestre.macrosMarcados[itemBox.key] = false
@@ -244,7 +248,7 @@ shapesJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
     print("[Brinque] Todos os macros da aba " .. configMestre.abaAbertaAtual .. " foram desligados!")
 end
 
-shapesJanelaBotoesMacros.btnLinkSuporte.onClick = function()
+setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     local linkSuporteZap = "https://wa.me"
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
@@ -262,8 +266,14 @@ local function poolDeDownloadsHTTP(indice)
     
     local macroAlvo = MAPA_MACROS_GUILDA[indice]
     if not macroAlvo then 
-        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativooo.")
+        print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
+        
+        -- 🛠️ GATILHO CORRIGIDO: Obriga o painel a aparecer centralizado ou na ultima posicao salva
+        if setupJanelaBotoesMacros then
+            setupJanelaBotoesMacros:show()
+            setupJanelaBotoesMacros:raise()
+        end
         return 
     end
     
