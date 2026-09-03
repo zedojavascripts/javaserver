@@ -1,5 +1,5 @@
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ESTRUTURA REVISADA DO ZERO - PARTE 1 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: LUA-SAVE DE COORDENADAS FIXO - PARTE 1 DE 2
 -- =============================================================================
 
 local panelNameMestre = "painelBrinqueMultiServidores"
@@ -9,6 +9,10 @@ local configMestre = storage[panelNameMestre]
 local servidorAtivoNoMomento = configMestre.servidorSelecionado or "Ilusion"
 
 if not configMestre.abaAbertaAtual then configMestre.abaAbertaAtual = "HEALING" end
+
+-- 🧠 LUA-SAVE COORDENADAS: Inicializa as variáveis na memória do bot caso seja a primeira vez
+if not configMestre.janelaX then configMestre.janelaX = 300 end
+if not configMestre.janelaY then configMestre.janelaY = 200 end
 
 local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/javaserver/refs/heads/main/scripts/"
 
@@ -44,7 +48,6 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local painelVelhoJanelaB = widgetRaizDoJogo:recursiveGetChildById("janelaBotoesMacrosRemotos")
 if painelVelhoJanelaB then painelVelhoJanelaB:destroy() end
 
--- 📐 RETORNO DO LAYOUT CLÁSSICO: Padding fixado em 12 para liberar espaço absoluto
 local designAbasPremiumOTUI = "UIWindow\n" ..
 "  id: janelaBotoesMacrosRemotos\n" ..
 "  size: 420 460\n" ..
@@ -107,7 +110,6 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "      type: verticalBox\n" ..
 "      spacing: 6\n" ..
 "\n" ..
-"  -- 📐 DESCOLADO: Margem de 15px na direita afasta a barra da borda de ferro do castelo\n" ..
 "  VerticalScrollBar\n" ..
 "    id: barraRolagemAbas\n" ..
 "    anchors.top: sepSuperiorAbas.bottom\n" ..
@@ -171,9 +173,12 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    @onClick: self:getParent():hide()\n"
 
 setupJanelaBotoesMacros = setupUI(designAbasPremiumOTUI, widgetRaizDoJogo)
+
+-- 🛠️ ARRUMADO: Força o painel a colar na posição salva na memória Lua do storage
+setupJanelaBotoesMacros:setPosition({x = configMestre.janelaX, y = configMestre.janelaY})
 setupJanelaBotoesMacros:hide()
 -- =============================================================================
--- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: ESTRUTURA REVISADA DO ZERO - PARTE 2 DE 2
+-- [NUVEM PÚBLICA] ARQUIVO 2 MESTRE: LUA-SAVE DE COORDENADAS FIXO - PARTE 2 DE 2
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
@@ -256,6 +261,15 @@ setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
 
+-- 🧠 SISTEMA LUA-SAVE: Rastreia o movimento de arrasto em tempo real e joga as coordenadas no storage
+setupJanelaBotoesMacros.onGeometryChange = function(widget)
+    local pos = widget:getPosition()
+    if pos and pos.x and pos.y and pos.x > 0 and pos.y > 0 then
+        configMestre.janelaX = pos.x
+        configMestre.janelaY = pos.y
+    end
+end
+
 local loteJaEstaSendoBaixado = false
 
 local function poolDeDownloadsHTTP(indice)
@@ -271,9 +285,7 @@ local function poolDeDownloadsHTTP(indice)
         print("[Brinque] Sincronizacao Concluida! Painel de Abas Premium Ativo.")
         loteJaEstaSendoBaixado = false 
         
-        -- 🛠️ ATIVADOR COMPACTO: Força a exibição e injeta o salvador de coordenadas do Windows
         if setupJanelaBotoesMacros then
-            setupJanelaBotoesMacros:setAutoSave("posicaoMestreAbasFundoBrinqueV5")
             setupJanelaBotoesMacros:show()
             setupJanelaBotoesMacros:raise()
         end
