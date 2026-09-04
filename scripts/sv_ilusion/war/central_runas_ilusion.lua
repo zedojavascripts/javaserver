@@ -1,6 +1,6 @@
 local widgetRaizDoJogo = g_ui.getRootWidget()
 
-setDefaultTab("guild")
+setDefaultTab("war")
 
 if not storage.mwallPainelConfig then
     storage.mwallPainelConfig = {}
