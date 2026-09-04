@@ -148,7 +148,7 @@ storage.iconPotPos       = storage.iconPotPos or {x=260,y=120}
 -- =============================================================================
 healerMainWindow = setupUI([[
 MainWindow
-  id: janelaHealerUltimateFlutuante
+  id: janelaHealerFlutuante
   size: 260 410
   anchors.centerIn: parent
   draggable: true
@@ -320,7 +320,7 @@ Panel
     anchors.right: parent.right
     text-align: center
     height: 17
-    text: Config Healer Ultimate
+    text: Config Healer
 ]], painelDaAbaTools)
 
 -- =============================================================================
