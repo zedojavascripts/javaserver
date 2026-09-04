@@ -1,3 +1,4 @@
+setDefaultTab("HP")
 -- TRAVA SUPREMA ANTI-BUG: Limpa o console de resíduos antigos caso o bot retenha loops
 if not updateDropUI then function updateDropUI() end end
 if not updateOlheiroUI then function updateOlheiroUI() end end
@@ -6,7 +7,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local idPainelBrinqueBuff = "janelaBrinqueBuffSetupVis"
 local idPainelEditBrinqueBuff = "janelaBrinqueBuffPopVis"
 
-setDefaultTab("hp") -- Aparece na aba Tools do seu menu lateral
+setDefaultTab("HP") -- Aparece na aba Tools do seu menu lateral
 
 -- =============================================================================
 -- [BLOCO 1] ARMAZENAMENTO DE CONFIGURAÇÕES (TOTALMENTE SEPARADO DO COMBO)
@@ -14,8 +15,8 @@ setDefaultTab("hp") -- Aparece na aba Tools do seu menu lateral
 if not storage.brinqueBuffSimpleEngine then
     storage.brinqueBuffSimpleEngine = {
         palavraSpell = "utito tempo san",
-        tempoCooldown = 2000,
-        idDoIcone = 37110,
+        tempoCooldown = 1000,
+        idDoIcone = 37063,
         posicaoIcone = {x = 320, y = 320}
     }
 end
