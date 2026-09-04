@@ -23,7 +23,7 @@ local SCRIPTS_DO_REPOSITORIO = {
     -- ==========================================
         { nome = "HEALING BRQ ILUSION",     key = "healingBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/healing_ilusion.lua" },
         { nome = "ENEGY BRQ ILUSION",     key = "enegyBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/enegy_ilusion.lua" },
-		{ nome = "BLESSED BRQ ILUSION",     key = "blessedBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/stamin_ilusion.lua" },
+		{ nome = "BLESSED BRQ ILUSION",     key = "blessedBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/blessed_ilusion.lua" },
 	    { nome = "BUFF BRQ ILUSION",     key = "buffBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/buff_ilusion.lua" },
         { nome = "STAMINA BRQ ILUSION",     key = "staminBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/stamin_ilusion.lua" },
 		
@@ -112,7 +112,7 @@ local TAMANHO_LARGURA      = "450"
 local TAMANHO_ALTURA       = "500"
 
 local ABAS_DISTANCIA_TOPO  = "60"
-local ABAS_DISTANCIA_ESQ   = "80"
+local ABAS_DISTANCIA_ESQ   = "78"
 local ABAS_ESPACAMENTO     = "10"
 local ABA_LARGURA_BOTAO    = "50"
 local ABA_ALTURA_BOTAO     = "19"
