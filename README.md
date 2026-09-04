@@ -1,1 +1,1 @@
-# customotserver
+# javaserver
