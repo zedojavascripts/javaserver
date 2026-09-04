@@ -165,7 +165,7 @@ popUpEditWindow:hide()
 -- =============================================================================
 -- [BLOCO EXTRA] BOTÕES DO MENU LATERAL COMPACTO CLÁSSICO (BOTSWITCH)
 -- =============================================================================
-local painelDaAbaTools = getTab("tools")
+local painelDaAbaTools = getTab("war")
 if painelDaAbaTools:recursiveGetChildById("panelDropBotoesNativos") then
     painelDaAbaTools:recursiveGetChildById("panelDropBotoesNativos"):destroy()
 end
