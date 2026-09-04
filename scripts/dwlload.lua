@@ -113,8 +113,8 @@ local TAMANHO_LARGURA      = "450"
 local TAMANHO_ALTURA       = "500"
 
 local ABAS_DISTANCIA_TOPO  = "60"
-local ABAS_DISTANCIA_ESQ   = "78"
-local ABAS_ESPACAMENTO     = "10"
+local ABAS_DISTANCIA_ESQ   = "77"
+local ABAS_ESPACAMENTO     = "11"
 local ABA_LARGURA_BOTAO    = "50"
 local ABA_ALTURA_BOTAO     = "19"
 
