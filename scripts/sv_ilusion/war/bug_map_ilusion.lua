@@ -1,7 +1,4 @@
-
-setDefaultTab("war")
-
-
+  UI.Separator()
 panel = mainTab;
 setDefaultTab("war")
 local bugMap = {};
@@ -64,3 +61,4 @@ iconeBugMap:move(300, 290);
 
 print(">>> [BUGMAP] Seu motor original foi restaurado e o Icone Flutuante foi injetado com sucesso!")
 setDefaultTab("war")
+  UI.Separator()
