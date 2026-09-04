@@ -1,5 +1,5 @@
 
-setDefaultTab("main")
+setDefaultTab("war")
 
 
 panel = mainTab;
