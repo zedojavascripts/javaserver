@@ -231,7 +231,7 @@ setupJanelaBotoesMacros:hide()
 -- =============================================================================
 
 local LISTA_CATEGORIAS_ABAS = { "HEALING", "CAVEBOT", "WAR", "EXTRAS", "VBOT4.8" }
-local LISTA_LABEL_ABAS = { ["HEALING"]="Cura", ["CAVEBOT"]="Cave", ["WAR"]="War", ["EXTRAS"]="Extr", ["VBOT4.8"]="4.8" }
+local LISTA_LABEL_ABAS = { ["HEALING"]="HEALING", ["CAVEBOT"]="CAVEBOT", ["WAR"]="WAR", ["EXTRAS"]="EXTRAS", ["VBOT4.8"]="VBOT4.8" }
 
 local widgetListaScroll = setupJanelaBotoesMacros.listaScrollMacrosAba
 local botoesAbasCriados = {}
