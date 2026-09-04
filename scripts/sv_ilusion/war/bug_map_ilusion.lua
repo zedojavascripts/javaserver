@@ -3,7 +3,7 @@ setDefaultTab("war")
 
 
 panel = mainTab;
-
+setDefaultTab("war")
 local bugMap = {};
 
 -- CRIAÇÃO DA SUA CAIXA DE MARCAR ORIGINAL NA ABA MAIN
@@ -63,3 +63,4 @@ iconeBugMap:breakAnchors();
 iconeBugMap:move(300, 290);
 
 print(">>> [BUGMAP] Seu motor original foi restaurado e o Icone Flutuante foi injetado com sucesso!")
+setDefaultTab("war")
