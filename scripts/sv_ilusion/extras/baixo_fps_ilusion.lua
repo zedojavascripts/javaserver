@@ -1,4 +1,4 @@
-setDefaultTab("GUILD")
+setDefaultTab("tools")
 ------------------------------------------------------
 local secondsToIdle = 5
 local activeFPS = 60
