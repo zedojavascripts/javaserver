@@ -1,4 +1,4 @@
-setDefaultTab("MAIN")
+setDefaultTab("HP")
 UI.Separator()
 
 -- 1. Cria a label nativa comum
