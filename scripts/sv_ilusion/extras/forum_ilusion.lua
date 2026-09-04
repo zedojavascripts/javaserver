@@ -252,3 +252,5 @@ schedule(3000, function()
         end
     end
 end)
+
+  UI.Separator()
