@@ -218,7 +218,7 @@ end
 mwallStatusWindow.onGeometryChange = function(w) salvarPosicaoDoPainelStatus(w) end
 mwallStatusWindow.onMove = function(w) salvarPosicaoDoPainelStatus(w) end
 
-local painelDaAbaGuild = getTab("guild")
+local painelDaAbaGuild = getTab("war")
 if painelDaAbaGuild:recursiveGetChildById("panelBotoesMwallNativos") then
     painelDaAbaGuild:recursiveGetChildById("panelBotoesMwallNativos"):destroy()
 end
