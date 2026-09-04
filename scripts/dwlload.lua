@@ -308,7 +308,7 @@ setupJanelaBotoesMacros.btnDesmarcarTudo.onClick = function()
 end
 
 setupJanelaBotoesMacros.btnLinkSuporte.onClick = function()
-    local linkSuporteZap = "https://wa.me"
+    local linkSuporteZap = "https://wa.me/qr/QHQWPAJNPYRDJ1"
     if g_signals and g_signals.openUrl then g_signals.openUrl(linkSuporteZap)
     elseif g_platform and g_platform.openUrl then g_platform.openUrl(linkSuporteZap) end
 end
