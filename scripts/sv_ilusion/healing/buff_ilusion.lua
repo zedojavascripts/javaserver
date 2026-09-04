@@ -6,7 +6,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local idPainelBrinqueBuff = "janelaBrinqueBuffSetupVis"
 local idPainelEditBrinqueBuff = "janelaBrinqueBuffPopVis"
 
-setDefaultTab("tools") -- Aparece na aba Tools do seu menu lateral
+setDefaultTab("hp") -- Aparece na aba Tools do seu menu lateral
 
 -- =============================================================================
 -- [BLOCO 1] ARMAZENAMENTO DE CONFIGURAÇÕES (TOTALMENTE SEPARADO DO COMBO)
@@ -130,7 +130,7 @@ popUpBrinqueBuffEditWindow = setupUI(designPopUpOTUI, widgetRaizDoJogo)
 brinqueBuffWindow:hide()
 popUpBrinqueBuffEditWindow:hide()
 
-local painelDaAbaTools = getTab("tools")
+local painelDaAbaTools = getTab("hp")
 if painelDaAbaTools:recursiveGetChildById("panelBrinqueBuffBotoesNativos") then
     painelDaAbaTools:recursiveGetChildById("panelBrinqueBuffBotoesNativos"):destroy()
 end
