@@ -17,6 +17,11 @@ local BASE_RAW_PUBLICO = "https://raw.githubusercontent.com/zedojavascripts/java
 
 local SCRIPTS_DO_REPOSITORIO = {
     ["Ilusion"] = {
+	-- ==========================================
+    -- MACROS COM PRIORIDADE (OCULTO)
+    -- ==========================================
+        { nome = "PAINEL BRQ ILUSION",       key = "painelBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/painel_ilusion.lua", oculto = true },
+        { nome = "FORUM BRQ ILUSION",          key = "forumBRQ",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/forum_ilusion.lua",  oculto = true },
 
     -- ==========================================
     -- MACROS COM PRIORIDADE (HEALING)
@@ -75,13 +80,9 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "NEW HEALER VBOT4.8 ILU",    key = "newhealerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/new_healerVBOT4.8_ilusion.lua" },
         { nome = "HOLD TARGET VBOT4.8 ILU",    key = "holdtargetBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/hold_targetVBOT4.8_ilusion.lua" },
         { nome = "FOOD VBOT4.8 ILU",    key = "foodVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/foodVBOT4.8_ilusion.lua" },
-        { nome = "PLAY LIST VBOT4.8 ILU",    key = "playlistVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/playlistVBOT4.8_ilusion.lua" },
+        { nome = "PLAY LIST VBOT4.8 ILU",    key = "playlistVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/playlistVBOT4.8_ilusion.lua" }
 
-    -- ==========================================
-    -- MACROS COM PRIORIDADE (OCULTO)
-    -- ==========================================
-        { nome = "PAINEL BRQ ILUSION",       key = "painelBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/painel_ilusion.lua", oculto = true },
-        { nome = "FORUM BRQ ILUSION",          key = "forumBRQ",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/forum_ilusion.lua",  oculto = true }
+		
     },
     ["Minimalist"] = {
         { nome = "HEALING BRQ MINIMALIST",   key = "healingMIN",       cat = "HEALING",     arquivo = "sv_minimalist/healing/healingMIN.lua" },
