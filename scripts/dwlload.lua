@@ -141,7 +141,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE/imagens/minimalistum.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/minimalistum.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -201,7 +201,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    text: [X] Limpar Aba\n" ..
 "    color: #ff4444\n" ..
 "    font: verdana-11px-rounded\n" ..
-"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
@@ -215,7 +215,7 @@ local designAbasPremiumOTUI = "UIWindow\n" ..
 "    text: Suporte\n" ..
 "    color: #00bfff\n" ..
 "    font: verdana-11px-rounded\n" ..
-"    image-source: /bot/BRINQUE/imagens/BOTAO.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
 "    image-border: 5\n" ..
 "    anchors.left: parent.left\n" ..
@@ -285,7 +285,7 @@ if containerAbasBotoes then
         btnAba:setText(LISTA_LABEL_ABAS[catNome])
         btnAba:setFont("verdana-11px-rounded")
         
-        btnAba:setImageSource("/bot/BRINQUE/imagens/BOTAO.png")
+        btnAba:setImageSource("/bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png")
         btnAba:setImageBorder(5)
         
         btnAba:setHeight(alturaBotaoDefinida)
