@@ -233,7 +233,7 @@ local designMacrosOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/logobrinque.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/asddsa.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
