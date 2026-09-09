@@ -59,7 +59,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoCustomCelestiais\n" ..
-"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -133,7 +133,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoInsta\n" ..
-"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/botao_dourado_dois.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: lblRedesTitulo.bottom\n" ..
@@ -157,7 +157,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoWhats\n" ..
-"    image-source: /bot/Vs3_CUSTOM_PREMIUM/vBot_configs/confg/Imagens/botao_dourado_dois.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: imgFundoInsta.bottom\n" ..
@@ -306,8 +306,8 @@ setupMacrosWindow.btnInstagram.onClick = function() abrirLinkNoNavegadorReal(LIN
 setupMacrosWindow.btnWhatsApp.onClick  = function() abrirLinkNoNavegadorReal(LINK_WHATSAPP) end
 
 local mapeamentoBotoesImagens = {
-    { widget = setupMacrosWindow.imgFundoInsta,   file = "botao_dourado_dois.png" },
-    { widget = setupMacrosWindow.imgFundoWhats,   file = "botao_dourado_dois.png" }
+    { widget = setupMacrosWindow.imgFundoInsta,   file = "BOTAO.png" },
+    { widget = setupMacrosWindow.imgFundoWhats,   file = "BOTAO.png" }
 }
 for _, itemBtn in ipairs(mapeamentoBotoesImagens) do
     if not g_resources.fileExists(pastaImg .. itemBtn.file) then
