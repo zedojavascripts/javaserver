@@ -320,7 +320,7 @@ end
 -- [PAINEL CENTRAL - PARTE 3 DE 4] GANCHOS GRÁFICOS E MENUS LATERAIS DUPLOS
 -- =============================================================================
 
-local LISTA_COMPLETA_SERVIDORES_OTS = { "Ilusion", "Minimalist", "Legedy", "brutal" }
+local LISTA_COMPLETA_SERVIDORES_OTS = { "Ilusion", "Minimalist", "Legedy", "Brutal" }
 
 -- Alimenta a caixa do ComboBox com as opções cadastradas
 setupMacrosWindow.comboServidores:clear()
