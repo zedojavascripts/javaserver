@@ -61,7 +61,8 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "ATTACK TODOS BRQ ILUSION",  key = "attacktodosBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/attack_todos_ilusion.lua" },
         { nome = "BUG MAP BRQ ILUSION",  key = "bugmapBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/bug_map_ilusion.lua" },
         { nome = "WAR VISUAL BRQ ILUSION",  key = "warvisualBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/war_visual_ilusion.lua" },
-
+        { nome = "FOLLOW MILITAR ILUSION",  key = "folowmilitarBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/Militar.lua" },
+		{ nome = "PARTE PRO ILUSION",  key = "PARTEPROBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/partypro.lua" },
 
 	-- ==========================================
     -- MACROS COM PRIORIDADE (EXTRAS)
@@ -130,6 +131,8 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "ATTACK TODOS BRQ ILUSION",  key = "attacktodosBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/attack_todos_ilusion.lua" },
         { nome = "BUG MAP BRQ ILUSION",  key = "bugmapBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/bug_map_ilusion.lua" },
         { nome = "WAR VISUAL BRQ ILUSION",  key = "warvisualBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/war_visual_ilusion.lua" },
+        { nome = "FOLLOW MILITAR ILUSION",  key = "folowmilitarBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/Militar.lua" },
+		{ nome = "PARTE PRO ILUSION",  key = "PARTEPROBRQ",    cat = "WAR",         arquivo = "sv_ilusion/war/partypro.lua" },
 
 
 	-- ==========================================
