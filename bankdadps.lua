@@ -43,6 +43,7 @@ BANCO_DADOS_CLIENTES = {
 local LISTA_MESTRE_DE_SERVIDORES = { 
     "Ilusion", 
     "Minimalist", 
+    "Brutal",
     "Legedy" 
 }
 
