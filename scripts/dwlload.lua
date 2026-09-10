@@ -77,7 +77,7 @@ local SCRIPTS_DO_REPOSITORIO = {
     -- ==========================================
         { nome = "CONDITIONS VBOT4.8 ILU",    key = "conditionsBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/conditionsVBOT4.8_ilusion.lua" },
         { nome = "EQ MANAGER VBOT4.8 ILU",    key = "eqmanagerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/eq_managerVBOT4.8_ilusion.lua" },
-        { nome = "NEW HEALER VBOT4.8 ILU",    key = "newhealerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/Container_namesVBOT4.8_ilusion.lua" },
+        { nome = "CONTAINER NAME VBOT4.8 ILU",    key = "newhealerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/Container_namesVBOT4.8_ilusion.lua" },
         { nome = "HOLD TARGET VBOT4.8 ILU",    key = "holdtargetBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/hold_targetVBOT4.8_ilusion.lua" },
         { nome = "FOOD VBOT4.8 ILU",    key = "foodVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/foodVBOT4.8_ilusion.lua" },
         { nome = "PLAY LIST VBOT4.8 ILU",    key = "playlistVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/playlistVBOT4.8_ilusion.lua" }
@@ -146,7 +146,7 @@ local SCRIPTS_DO_REPOSITORIO = {
     -- ==========================================
         { nome = "CONDITIONS VBOT4.8 ILU",    key = "conditionsBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/conditionsVBOT4.8_ilusion.lua" },
         { nome = "EQ MANAGER VBOT4.8 ILU",    key = "eqmanagerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/eq_managerVBOT4.8_ilusion.lua" },
-        { nome = "NEW HEALER VBOT4.8 ILU",    key = "newhealerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/Container_namesVBOT4.8_ilusion.lua" },
+        { nome = "CONTAINER NAME VBOT4.8 ILU",    key = "newhealerBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/Container_namesVBOT4.8_ilusion.lua" },
         { nome = "HOLD TARGET VBOT4.8 ILU",    key = "holdtargetBRQ",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/hold_targetVBOT4.8_ilusion.lua" },
         { nome = "FOOD VBOT4.8 ILU",    key = "foodVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/foodVBOT4.8_ilusion.lua" },
         { nome = "PLAY LIST VBOT4.8 ILU",    key = "playlistVBOT",        cat = "VBOT4.8",     arquivo = "sv_ilusion/extras/playlistVBOT4.8_ilusion.lua" }
