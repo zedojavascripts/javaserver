@@ -8,7 +8,7 @@ BANCO_DADOS_CLIENTES = {
         vence = "ilimitado",
         servidores = {
             ["CELESTIAL-HWID-14233261"] = "Ilusion",
-            ["CELESTIAL-HWID-45889926"] = "brutal",
+            ["CELESTIAL-HWID-45889926"] = "Brutal",
             ["CELESTIAL-HWID-49966485"] = "Minimalist"
         }
     },
