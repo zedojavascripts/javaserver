@@ -20,6 +20,7 @@ local SCRIPTS_DO_REPOSITORIO = {
 	-- ==========================================
     -- MACROS COM PRIORIDADE (OCULTO)
     -- ==========================================
+		{ nome = "EXTRAS BRQ ILUSION",   key = "extrasBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/extrasVBOT4.8_ilusion.lua" },
         { nome = "PAINEL BRQ ILUSION",       key = "painelBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/painel_ilusion.lua", oculto = true },
         { nome = "FORUM BRQ ILUSION",          key = "forumBRQ",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/forum_ilusion.lua",  oculto = true },
 
@@ -67,7 +68,6 @@ local SCRIPTS_DO_REPOSITORIO = {
 	-- ==========================================
     -- MACROS COM PRIORIDADE (EXTRAS)
     -- ==========================================
-        { nome = "EXTRAS BRQ ILUSION",   key = "extrasBRQ",        cat = "VBOT4.8",      arquivo = "sv_ilusion/extras/extrasVBOT4.8_ilusion.lua" },
         { nome = "CENTRAL DE ICONS BRQ ILUSION",   key = "centraliconsBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/central_icons_ilusion.lua" },
         { nome = "HUD COLOR BRQ ILUSION",   key = "hudcolorBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/hud_color_ilusion.lua" },
         { nome = "RAINBOW COLOR BRQ ILUSION",   key = "rainbowcolorBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/rainbow_color_ilusion.lua" },
