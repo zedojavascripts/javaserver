@@ -645,3 +645,5 @@ if true then
       end
   end)
 end
+
+dofile("/vBot/cavebot.lua")
