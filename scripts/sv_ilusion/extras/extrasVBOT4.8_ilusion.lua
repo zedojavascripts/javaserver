@@ -646,4 +646,3 @@ if true then
   end)
 end
 
-dofile("/vBot/cavebot.lua")
