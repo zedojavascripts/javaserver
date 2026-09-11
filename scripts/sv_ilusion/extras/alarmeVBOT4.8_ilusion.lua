@@ -414,3 +414,8 @@ macro(100, function()
         end
     end
 end)
+
+
+
+-- Espera 200 milissegundos para o download assentar e joga o último painel adicionado direto para o topo (posição 0)
+schedule(200, function() local tab = getTab("cave") if tab then tab:moveChildToIndex(tab:getLastChild(), 0) end end)
