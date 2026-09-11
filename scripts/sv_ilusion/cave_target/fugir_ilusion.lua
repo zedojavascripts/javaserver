@@ -645,3 +645,21 @@ macro(100, function()
 end)
 
 updateFugaUI()
+
+
+-- Espera 300 milissegundos para o download assentar e injeta com segurança no topo real
+schedule(300, function() 
+    local tab = getTab("cave") -- Mude para "Cave" ou "main" se o script for de outra aba
+    if tab then 
+        local meuPainelBaixado = tab:getLastChild()
+        if meuPainelBaixado then
+            -- Remove da posição de baixo e insere no topo real de forma segura
+            tab:removeChild(meuPainelBaixado)
+            tab:insertChild(2, meuPainelBaixado)
+            
+            -- Atualiza o layout visual para reordenar instantaneamente
+            if tab.getLayout then tab:getLayout():update() end
+            print(">>> [REDE] Script alocado no topo de forma segura e estável!")
+        end
+    end 
+end)
