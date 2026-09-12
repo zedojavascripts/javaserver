@@ -49,7 +49,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 -- JANELA A: SELEÇÃO DE SERVIDORES E STATUS DA CONTA
 local designPrincipalOTUI = "MainWindow\n" ..
 "  id: janelaEscolhaMacros\n" ..
-"  size: 560 300\n" ..
+"  size: 580 320\n" ..
 "  @onEscape: self:hide()\n" ..
 "  background-color: alpha\n" ..
 "  image-border: 0\n" ..
