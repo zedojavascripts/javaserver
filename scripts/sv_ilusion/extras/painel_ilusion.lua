@@ -1,5 +1,5 @@
 -- =================================================================
--- SYSTEM DESIGN PREMIUM (PARTE 1) - REATIVADO - BY BRINQUE SCRIPTS
+-- SYSTEM DESIGN PREMIUM (PARTE 1) - ISOLADO CONTRA CONFLITOS
 -- =================================================================
 
 setDefaultTab("main")
@@ -17,7 +17,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local botWindow = modules.game_bot.botWindow
 local contents = botWindow:recursiveGetChildById("contentsPanel")
 
--- ALTERAÇÃO FÍSICA E DE ESCOPO: Trocado de 'parent' para 'contents' para os botoes reaparecerem!
+-- Injeção do menu de imagens com IDs de botões totalmente isolados e exclusivos
 local menuImagensUI = setupUI([[
 Panel
   height: 52
@@ -81,9 +81,9 @@ Panel
       color: #556b2f
       width: 31
       height: 30
-]], contents) -- Alinhado diretamente no contents do bot para renderizar na tela!
+]], contents)
 
--- Painel de escolhas concatenado nativo do seu modelo estavel
+-- Painel de escolhas renomeado na ID interna para evitar conflito de MainWindow
 local designPainelImagensOTUI = "MainWindow\n" ..
 "  id: janelaEscolhaImagensDesignMestre\n" ..
 "  !text: tr('Fundos Premium - BRQ')\n" ..
@@ -159,7 +159,7 @@ local designPainelImagensOTUI = "MainWindow\n" ..
 global_painelDesignImagens = setupUI(designPainelImagensOTUI, widgetRaizDoJogo)
 global_painelDesignImagens:hide()
 -- =================================================================
--- SYSTEM DESIGN PREMIUM (PARTE 2) - REATIVADO - BY BRINQUE SCRIPTS
+-- SYSTEM DESIGN PREMIUM (PARTE 2) - ISOLADO CONTRA CONFLITOS
 -- =================================================================
 
 -- [BLOCO 2] ARCO-ÍRIS RGB, DIRETÓRIO DO PERFIL E MAPEAMENTO DAS 5 TEXTURAS
@@ -356,17 +356,5 @@ end
 
 updateButtonsBot()
 aplicarFundoDoBot()
-
--- FORÇA O TOPO DA ABA DE FORMA SEGURA (EVITA ATROPELAMENTO DE REDE)
-schedule(300, function() 
-    if contents then 
-        local meuPainelBaixado = contents:getLastChild()
-        if meuPainelBaixado and meuPainelBaixado:getId() ~= "janelaEscolhaImagensDesignMestre" then
-            contents:removeChild(meuPainelBaixado)
-            contents:insertChild(1, meuPainelBaixado)
-            if contents.getLayout then contents:getLayout():update() end
-        end
-    end 
-end)
 
 UI.Separator()
