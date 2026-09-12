@@ -1,11 +1,6 @@
--- =================================================================
--- SYSTEM DESIGN PREMIUM (PARTE 1) - ISOLADO CONTRA CONFLITOS
--- =================================================================
-
 setDefaultTab("main")
 UI.Separator()
-
--- Storage exclusivo do sistema de design de fundos para não colidir
+-- Inicializa o storage expandido para gerenciar as 5 imagens ou o modo padrao
 if type(storage.brinqueDesignPremium) ~= "table" then
     storage.brinqueDesignPremium = {
         imagemSelecionada = "imagem1"
@@ -17,7 +12,7 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 local botWindow = modules.game_bot.botWindow
 local contents = botWindow:recursiveGetChildById("contentsPanel")
 
--- Injeção do menu de imagens com IDs de botões totalmente isolados e exclusivos
+-- ALTERAÇÃO FÍSICA: Largura recalculada para 22px cada para acoplar o 5º botao de forma simétrica
 local menuImagensUI = setupUI([[
 Panel
   height: 52
@@ -81,9 +76,9 @@ Panel
       color: #556b2f
       width: 31
       height: 30
-]], contents)
+]], parent)
 
--- Painel de escolhas renomeado na ID interna para evitar conflito de MainWindow
+-- Painel de escolhas concatenado nativo do seu modelo estavel
 local designPainelImagensOTUI = "MainWindow\n" ..
 "  id: janelaEscolhaImagensDesignMestre\n" ..
 "  !text: tr('Fundos Premium - BRQ')\n" ..
@@ -158,12 +153,12 @@ local designPainelImagensOTUI = "MainWindow\n" ..
 
 global_painelDesignImagens = setupUI(designPainelImagensOTUI, widgetRaizDoJogo)
 global_painelDesignImagens:hide()
--- =================================================================
--- SYSTEM DESIGN PREMIUM (PARTE 2) - ISOLADO CONTRA CONFLITOS
--- =================================================================
-
+-- =============================================================================
 -- [BLOCO 2] ARCO-ÍRIS RGB, DIRETÓRIO DO PERFIL E MAPEAMENTO DAS 5 TEXTURAS
-local coresRGBDesign = { 
+-- =============================================================================
+
+-- Tabela de cores completa que comanda a sincronia de toda a interface do bot
+local colorsRGB = { 
     "#FF0000", "#FF4000", "#FF8000", "#FFBF00",
     "#FFFF00", "#BFFF00", "#80FF00", "#40FF00",
     "#00FF00", "#00FF40", "#00FF80", "#00FFBF",
@@ -171,7 +166,7 @@ local coresRGBDesign = {
     "#0000FF", "#4000FF", "#8000FF", "#BF00FF",
     "#FF00FF", "#FF00BF", "#FF0080", "#FF0040" 
 }
-local indexCorDesign = 1
+local colorIndexRGB = 1
 
 -- Rota dinamica que puxa as imagens de dentro do Perfil ativo no momento
 local configProfileName = modules.game_bot.contentsPanel.config:getCurrentOption().text
@@ -193,24 +188,26 @@ local function changeBotImage(path)
             contents:setImageSource(path)
             contents:setImageFixedRatio(false)
             contents:setImageRepeated(false)
-            contents:setBackgroundColor("alpha")
+            contents:setBackgroundColor("alpha") -- Remove cor solida para mostrar a imagem customizada
         else
             -- REVERÇÃO PURA PARA TEXTURA METÁLICA LISA (SEM EMENDAS / SEM MOSAICO)
             pcall(function() contents:unsetImageSource() end)
-            contents:setImageSource("/images/ui/window")
-            contents:setImageFixedRatio(false)
-            contents:setImageRepeated(false)
+            contents:setImageSource("/images/ui/window") -- Textura metalica nativa embutida
+            contents:setImageFixedRatio(false) -- Permite esticar para preencher toda a Janela
+            contents:setImageRepeated(false) -- DESATIVADO MOSAICO: Remove as emendas e camadas de quadradinhos!
             contents:setBackgroundColor("alpha")
         end
     end
 end
 
--- MOTOR DE LEITURA REATIVO DO STORAGE
+-- MOTOR DE LEITURA REATIVO DO STORAGE (RESTAURADOR CINZA METÁLICO LISO)
 function aplicarFundoDoBot()
     local escolha = designConfig.imagemSelecionada
     
     if escolha == "padrao" then
-        changeBotImage("padrao")
+        changeBotImage("padrao") -- Cai no bloco de reset da textura metalica esticada sem divisorias
+        
+        -- Recarrega a estilizacao padrão dos botoes e janelas
         if type(updateButtonsBot) == "function" then
             updateButtonsBot()
         end
@@ -220,12 +217,16 @@ function aplicarFundoDoBot()
         print(">>> [DESIGN] Sucesso ao aplicar background: " .. escolha:upper())
     end
 end
+-- =============================================================================
+-- [BLOCO 3] ANIMAÇÃO FUSIONADA (ONDA, TRAVA E PISCA), LINKS DO PRO E CLEAN RAM
+-- =============================================================================
 
--- [BLOCO 3] ANIMAÇÃO FUSIONADA COM VARIÁVEIS ISOLADAS (SEM ATROPELAR OUTROS MACROS)
-local ticksAnimacaoDesign = 0
-local estagioDesign = 1 
-local estadoPiscaDesign = false
+-- Controle interno da super animacao unificada de 3 estágios
+local ticksAnimacao = 0
+local estagioAtual = 1 -- 1 = Onda correndo, 2 = Trava estatica, 3 = Pisca total
+local estadoPiscaGeral = false
 
+-- Macro mestre de sincronizacao visual (100ms)
 macro(100, function()
     if not menuImagensUI then return end
     local btnMestre = menuImagensUI.btnAlternarImagemFundo
@@ -234,45 +235,48 @@ macro(100, function()
     if not btnMestre or not b then return end
     if not b.btnLinkD or not b.btnLinkI or not b.btnLinkS or not b.btnLinkW or not b.btnLinkGW then return end
 
-    indexCorDesign = indexCorDesign + 1
-    if indexCorDesign > #coresRGBDesign then indexCorDesign = 1 end
+    -- Avanca a cor base do arco-iris
+    colorIndexRGB = colorIndexRGB + 1
+    if colorIndexRGB > #colorsRGB then colorIndexRGB = 1 end
 
-    ticksAnimacaoDesign = ticksAnimacaoDesign + 1
+    ticksAnimacao = ticksAnimacao + 1
 
-    if estagioDesign == 1 then
-        -- [ESTÁGIO 1] A ONDA UNIFICADA
-        local idxMestre = indexCorDesign
-        local idxD = (indexCorDesign + 2) % #coresRGBDesign + 1
-        local idxI = (indexCorDesign + 4) % #coresRGBDesign + 1
-        local idxS = (indexCorDesign + 6) % #coresRGBDesign + 1
-        local idxW = (indexCorDesign + 8) % #coresRGBDesign + 1
-        local idxGW = (indexCorDesign + 10) % #coresRGBDesign + 1
+    if estagioAtual == 1 then
+        -- [ESTÁGIO 1] A ONDA UNIFICADA: Degradê corre do botao mestre ate o ultimo menor
+        local idxMestre = colorIndexRGB
+        local idxD = (colorIndexRGB + 2) % #colorsRGB + 1
+        local idxI = (colorIndexRGB + 4) % #colorsRGB + 1
+        local idxS = (colorIndexRGB + 6) % #colorsRGB + 1
+        local idxW = (colorIndexRGB + 8) % #colorsRGB + 1
+        local idxGW = (colorIndexRGB + 10) % #colorsRGB + 1
 
-        btnMestre:setColor(coresRGBDesign[idxMestre])
-        b.btnLinkD:setColor(coresRGBDesign[idxD])
-        b.btnLinkI:setColor(coresRGBDesign[idxI])
-        b.btnLinkS:setColor(coresRGBDesign[idxS])
-        b.btnLinkW:setColor(coresRGBDesign[idxW])
-        b.btnLinkGW:setColor(coresRGBDesign[idxGW])
+        btnMestre:setColor(colorsRGB[idxMestre])
+        b.btnLinkD:setColor(colorsRGB[idxD])
+        b.btnLinkI:setColor(colorsRGB[idxI])
+        b.btnLinkS:setColor(colorsRGB[idxS])
+        b.btnLinkW:setColor(colorsRGB[idxW])
+        b.btnLinkGW:setColor(colorsRGB[idxGW])
 
-        if ticksAnimacaoDesign > 30 then
-            estagioDesign = 2
-            ticksAnimacaoDesign = 0
+        -- Onda corre por 30 ticks (3 segundos)
+        if ticksAnimacao > 30 then
+            estagioAtual = 2
+            ticksAnimacao = 0
         end
 
-    elseif estagioDesign == 2 then
-        -- [ESTÁGIO 2] O TRAVA-COR UNIFICADO
-        if ticksAnimacaoDesign > 15 then
-            estagioDesign = 3
-            ticksAnimacaoDesign = 0
-            estadoPiscaDesign = true
+    elseif estagioAtual == 2 then
+        -- [ESTÁGIO 2] O TRAVA-COR UNIFICADO: Todos congelam na cor brilhante onde a onda parou
+        -- Mantem congelado por 15 ticks (1.5 segundos)
+        if ticksAnimacao > 15 then
+            estagioAtual = 3
+            ticksAnimacao = 0
+            estadoPiscaGeral = true
         end
 
-    elseif estagioDesign == 3 then
-        -- [ESTÁGIO 3] O PISCA INSANO
-        local corDoPisca = coresRGBDesign[indexCorDesign]
+    elseif estagioAtual == 3 then
+        -- [ESTÁGIO 3] O PISCA INSANO: Botao mestre e os 5 menores piscam juntos em sincronia
+        local corDoPisca = colorsRGB[colorIndexRGB]
         
-        if estadoPiscaDesign then
+        if estadoPiscaGeral then
             btnMestre:setColor(corDoPisca)
             b.btnLinkD:setColor(corDoPisca)
             b.btnLinkI:setColor(corDoPisca)
@@ -288,11 +292,12 @@ macro(100, function()
             b.btnLinkGW:setColor("#ffffff")
         end
         
-        estadoPiscaDesign = not estadoPiscaDesign
+        estadoPiscaGeral = not estadoPiscaGeral
 
-        if ticksAnimacaoDesign > 16 then
-            estagioDesign = 1
-            ticksAnimacaoDesign = 0
+        -- Metralha o pisca por 16 ticks (1.6 segundos) e reinicia o ciclo
+        if ticksAnimacao > 16 then
+            estagioAtual = 1
+            ticksAnimacao = 0
         end
     end
 end)
@@ -310,31 +315,44 @@ menuImagensUI.btnAlternarImagemFundo.onClick = function()
     end
 end
 
--- ATRIBUIÇÃO DOS CLIQUES PARA OS LINKS (AQUI O 'S' FICA EXCLUSIVO DO WHATSAPP)
+-- ATRIBUIÇÃO DOS CLIQUES PARA OS 5 BOTÕES DE LINKS DA ABA MAIN (MODO SEGURO)
 if menuImagensUI and menuImagensUI.barraLinksHorizontais then
     local barra = menuImagensUI.barraLinksHorizontais
-    barra.btnLinkD.onClick = function() g_platform.openUrl("https://discord.gg") end
-    barra.btnLinkI.onClick = function() g_platform.openUrl("https://instagram.com") end
-    barra.btnLinkS.onClick = function() g_platform.openUrl("https://whatsapp.com") end
-    barra.btnLinkW.onClick = function() g_platform.openUrl("https://wa.me") end
-    barra.btnLinkGW.onClick = function() g_platform.openUrl("https://whatsapp.com") end
+    barra.btnLinkD.onClick = function() g_platform.openUrl("https://discord.gg/BRNzJ7cZjq") end
+    barra.btnLinkI.onClick = function() g_platform.openUrl("https://www.instagram.com/brinquescriptsgamer?igsh=dXhhN2MxNWhxMm9m") end
+    barra.btnLinkS.onClick = function() g_platform.openUrl("https://chat.whatsapp.com/KH06HKx6tkq2cjOB0F4k4P") end
+    barra.btnLinkW.onClick = function() g_platform.openUrl("https://wa.me/qr/QHQWPAJNPYRDJ1") end
+    
+    -- [GW] - Seu novo botao de Guild War / Clan (Altere o link para o seu site se desejar)
+    barra.btnLinkGW.onClick = function() g_platform.openUrl("https://chat.whatsapp.com/KH06HKx6tkq2cjOB0F4k4P") end
 end
 
+-- ATRIBUIÇÃO DOS CLIQUES INDIVIDUAIS DO PAINEL DE CONFIGURAÇÃO DE IMAGENS
 if global_painelDesignImagens then
     global_painelDesignImagens.btnFundo1.onClick = function() designConfig.imagemSelecionada = "imagem1" aplicarFundoDoBot() end
     global_painelDesignImagens.btnFundo2.onClick = function() designConfig.imagemSelecionada = "imagem2" aplicarFundoDoBot() end
     global_painelDesignImagens.btnFundo3.onClick = function() designConfig.imagemSelecionada = "imagem3" aplicarFundoDoBot() end
     global_painelDesignImagens.btnFundo4.onClick = function() designConfig.imagemSelecionada = "imagem4" aplicarFundoDoBot() end
     global_painelDesignImagens.btnFundo5.onClick = function() designConfig.imagemSelecionada = "imagem5" aplicarFundoDoBot() end
-    global_painelDesignImagens.btnFundoPadrao.onClick = function() designConfig.imagemSelecionada = "padrao" aplicarFundoDoBot() end
-    global_painelDesignImagens.closeBtn.onClick = function() global_painelDesignImagens:hide() end
+
+    -- Botao de Pânico: Reseta a imagem para a Textura Metalica Lisa de fabrica
+    global_painelDesignImagens.btnFundoPadrao.onClick = function() 
+        designConfig.imagemSelecionada = "padrao" 
+        aplicarFundoDoBot() 
+    end
+
+    -- Botao de Fechar do Painel
+    global_painelDesignImagens.closeBtn.onClick = function() 
+        global_painelDesignImagens:hide() 
+    end
 end
 
+-- Configurações visuais nativas e travadas da janela mestre por Brinque Premium
 botWindow:setWidth(216)
 botWindow.closeButton:setImageColor("#363434")
 botWindow.minimizeButton:setImageColor("#363434")
 
-function updateButtonsBot()
+local function updateButtonsBot()
     modules.game_bot.botWindow.closeButton:setImageColor("#363434")
     modules.game_bot.botWindow.minimizeButton:setImageColor("#363434")
     modules.game_bot.botWindow.lockButton:setImageColor("#363434")
@@ -348,13 +366,16 @@ function updateButtonsBot()
     modules.game_bot.botWindow:setColor("red")
 end
 
+-- VARREDURA DE LIMPEZA RAM CONTRA JANELAS DUPLICADAS POR RELOAD
 for _, child in pairs(widgetRaizDoJogo:getChildren()) do 
     if child:getId() == "janelaEscolhaImagensDesignMestre" and child ~= global_painelDesignImagens then 
         child:destroy() 
     end
 end
 
+-- Roda as atualizações de inicialização fixa do client de War
 updateButtonsBot()
 aplicarFundoDoBot()
 
+-- SEU SEPARADOR FINAL EMBUTIDO ABAIXO DE TODO O CONJUNTO
 UI.Separator()
