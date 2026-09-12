@@ -418,7 +418,7 @@ end)
 
 
 -- Espera 300 milissegundos para o download assentar e injeta com segurança no topo real
-schedule(300, function() 
+schedule(700, function() 
     local tab = getTab("cave") -- Mude para "Cave" ou "main" se o script for de outra aba
     if tab then 
         local meuPainelBaixado = tab:getLastChild()
