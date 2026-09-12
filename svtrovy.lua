@@ -49,12 +49,12 @@ local widgetRaizDoJogo = g_ui.getRootWidget()
 -- JANELA A: SELEÇÃO DE SERVIDORES E STATUS DA CONTA
 local designPrincipalOTUI = "MainWindow\n" ..
 "  id: janelaEscolhaMacros\n" ..
-"  size: 580 320\n" ..
+"  size: 570 300\n" ..
 "  @onEscape: self:hide()\n" ..
 "  background-color: alpha\n" ..
 "  image-border: 0\n" ..
-"  border: 0 alpha\n" ..
-"  padding: 0\n" ..
+"  border: 10 alpha\n" ..
+"  padding: -10\n" ..
 "  layout: anchor\n" ..
 "\n" ..
 "  UIWidget\n" ..
@@ -67,7 +67,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    phantom: true\n" ..
 "\n" ..
 "  Panel\n" ..
-"    background-color: #00000055\n" ..
+"    background-color: #00000015\n" ..
 "    anchors.fill: parent\n" ..
 "    margin: -5\n" ..
 "    phantom: true\n" ..
@@ -76,12 +76,12 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    id: lblServidoresTitulo\n" ..
 "    text: -- SELECIONE O SEU SERVIDOR --\n" ..
 "    font: verdana-11px-rounded\n" ..
-"    color: #00bfff\n" ..
+"    color: #FFD700\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
-"    margin-top: 20\n" ..
-"    margin-left: 15\n" ..
+"    margin-top: 60\n" ..
+"    margin-left: 85\n" ..
 "    text-align: center\n" ..
 "\n" ..
 "  ComboBox\n" ..
@@ -90,7 +90,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
 "    margin-top: 15\n" ..
-"    margin-left: 25\n" ..
+"    margin-left: 75\n" ..
 "    margin-right: 25\n" ..
 "    height: 22\n" ..
 "\n" ..
@@ -103,7 +103,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
 "    margin-top: 12\n" ..
-"    margin-left: 25\n" ..
+"    margin-left: 50\n" ..
 "    height: 16\n" ..
 "\n" ..
 "  Button\n" ..
@@ -115,7 +115,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
 "    margin-top: 15\n" ..
-"    margin-left: 25\n" ..
+"    margin-left: 75\n" ..
 "    margin-right: 25\n" ..
 "    height: 24\n" ..
 "\n" ..
@@ -127,21 +127,21 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.top: parent.top\n" ..
 "    anchors.left: parent.horizontalCenter\n" ..
 "    anchors.right: parent.right\n" ..
-"    margin-top: 20\n" ..
-"    margin-left: 15\n" ..
+"    margin-top: 60\n" ..
+"    margin-left: -35\n" ..
 "    text-align: center\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoInsta\n" ..
-"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/botao.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: lblRedesTitulo.bottom\n" ..
 "    anchors.left: parent.horizontalCenter\n" ..
 "    anchors.right: parent.right\n" ..
-"    margin-top: 15\n" ..
-"    margin-left: 20\n" ..
-"    margin-right: 15\n" ..
+"    margin-top: 25\n" ..
+"    margin-left: 30\n" ..
+"    margin-right: 55\n" ..
 "    height: 24\n" ..
 "    phantom: true\n" ..
 "  Label\n" ..
@@ -157,16 +157,16 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoWhats\n" ..
-"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/BOTAO.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/botao.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.top: imgFundoInsta.bottom\n" ..
 "    anchors.left: parent.horizontalCenter\n" ..
 "    anchors.right: parent.right\n" ..
-"    margin-top: 10\n" ..
-"    margin-left: 20\n" ..
-"    margin-right: 15\n" ..
-"    height: 80\n" ..
+"    margin-top: 20\n" ..
+"    margin-left: 30\n" ..
+"    margin-right: 55\n" ..
+"    height: 24\n" ..
 "    phantom: true\n" ..
 "  Label\n" ..
 "    id: btnWhatsApp\n" ..
@@ -187,6 +187,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.top: btnConfirmarEntrada.bottom\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
+"    margin-left: 30\n" ..
 "    margin-top: 12\n" ..
 "    text-align: center\n" ..
 "\n" ..
@@ -199,6 +200,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "    anchors.left: parent.left\n" ..
 "    anchors.right: parent.horizontalCenter\n" ..
 "    margin-top: 6\n" ..
+"    margin-left: 30\n" ..
 "    text-align: center\n" ..
 "\n" ..
 "  HorizontalSeparator\n" ..
@@ -233,7 +235,7 @@ local designMacrosOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/asddsa.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/minimalistum.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -306,8 +308,8 @@ setupMacrosWindow.btnInstagram.onClick = function() abrirLinkNoNavegadorReal(LIN
 setupMacrosWindow.btnWhatsApp.onClick  = function() abrirLinkNoNavegadorReal(LINK_WHATSAPP) end
 
 local mapeamentoBotoesImagens = {
-    { widget = setupMacrosWindow.imgFundoInsta,   file = "BOTAO.png" },
-    { widget = setupMacrosWindow.imgFundoWhats,   file = "BOTAO.png" }
+    { widget = setupMacrosWindow.imgFundoInsta,   file = "botao.png" },
+    { widget = setupMacrosWindow.imgFundoWhats,   file = "botao.png" }
 }
 for _, itemBtn in ipairs(mapeamentoBotoesImagens) do
     if not g_resources.fileExists(pastaImg .. itemBtn.file) then
