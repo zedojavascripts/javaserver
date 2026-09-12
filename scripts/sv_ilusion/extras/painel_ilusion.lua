@@ -80,7 +80,7 @@ Panel
 
 -- Painel de escolhas concatenado nativo do seu modelo estavel
 local designPainelImagensOTUI = "MainWindow\n" ..
-"  id: janelaEscolhaImagensDesignMestre\n" ..
+"  id: janelaEscolhaImagensDesignMestreee\n" ..
 "  !text: tr('Fundos Premium - BRQ')\n" ..
 "  size: 240 250\n" ..
 "  anchors.centerIn: parent\n" ..
@@ -368,7 +368,7 @@ end
 
 -- VARREDURA DE LIMPEZA RAM CONTRA JANELAS DUPLICADAS POR RELOAD
 for _, child in pairs(widgetRaizDoJogo:getChildren()) do 
-    if child:getId() == "janelaEscolhaImagensDesignMestre" and child ~= global_painelDesignImagens then 
+    if child:getId() == "janelaEscolhaImagensDesignMestreee" and child ~= global_painelDesignImagens then 
         child:destroy() 
     end
 end
