@@ -27,7 +27,7 @@ if type(storage[panelName]) ~= "table" then
 end
 
 local config = storage[panelName]
-local CAMINHO_FOTO_SETA = "/bot/CUSTOM_PREMIUM/imagens/stylesense.png"
+local CAMINHO_FOTO_SETA = "/bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/imagens/stylesense.png"
 
 local currentTab = "enemy"
 local timeoutPainelJanela = 0
