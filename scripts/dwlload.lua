@@ -45,6 +45,7 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "OLHEIRO-1.0 BRQ ILUSION",    key = "olheiroBRQ",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/olheiro_ilusion.lua" },
         { nome = "ATTACK LABEL BRQ ILUSION",    key = "attacklabelBRQ",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/attack_label_ilusion.lua" },
         { nome = "FUGIR LABEL BRQ ILUSION",    key = "fugirlabelBRQ",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/fugir_label_ilusion.lua" },
+		{ nome = "Of-PVP-CaveON BRQ ILUSION",    key = "offpvpCaveON",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/Off_PvP_CaveON.lua" },
 
 
     -- ==========================================
@@ -116,6 +117,7 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "ATTACK LABEL BRQ ILUSION",    key = "attacklabelBRQ",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/attack_label_ilusion.lua" },
         { nome = "FUGIR LABEL BRQ ILUSION",    key = "fugirlabelBRQ",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/fugir_label_ilusion.lua" },
         { nome = "Exchange_money BRQ ILUSION",    key = "Exchangemoney",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/Exchange_money.lua" },
+        { nome = "Of-PVP-CaveON BRQ ILUSION",    key = "offpvpCaveON",       cat = "CAVEBOT",     arquivo = "sv_ilusion/cave_target/Off_PvP_CaveON.lua" },
 		
 
 
