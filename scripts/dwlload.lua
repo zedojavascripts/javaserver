@@ -144,6 +144,7 @@ local SCRIPTS_DO_REPOSITORIO = {
         { nome = "CENTRAL DE ICONS BRQ ILUSION",   key = "centraliconsBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/central_icons_ilusion.lua" },
         { nome = "HUD COLOR BRQ ILUSION",   key = "hudcolorBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/hud_color_ilusion.lua" },
         { nome = "RAINBOW COLOR BRQ ILUSION",   key = "rainbowcolorBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/rainbow_color_ilusion.lua" },
+		{ nome = "Ant Kick BRQ ILUSION",   key = "AntKickBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/Ant_Kick.lua" },
         { nome = "BAIXO FPS BRQ ILUSION",   key = "baixofpsBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/baixo_fps_ilusion.lua" },
 
     -- ==========================================
