@@ -59,7 +59,7 @@ local designPrincipalOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoCustomCelestiais\n" ..
-"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/llogobrinque.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/acsso.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
@@ -235,7 +235,7 @@ local designMacrosOTUI = "MainWindow\n" ..
 "\n" ..
 "  UIWidget\n" ..
 "    id: imgFundoMacros\n" ..
-"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/minimalistum.png\n" ..
+"    image-source: /bot/BRINQUE_SCRIPS_V3/vBot_configs/confg/Imagens/acsso.png\n" ..
 "    image-smooth: true\n" ..
 "    image-fixed-ratio: false\n" ..
 "    anchors.fill: parent\n" ..
