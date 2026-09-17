@@ -174,11 +174,11 @@ local pathPastaImagens = "/bot/" .. configProfileName .. "/vBot_configs/confg/Im
 
 -- Registro fixo para buscar os arquivos .png dentro do client customizado
 local caminhosImagens = {
-    imagem1 = pathPastaImagens .. "fundodois",
-    imagem2 = pathPastaImagens .. "fundotreis",
-    imagem3 = pathPastaImagens .. "fundoquatro",
-    imagem4 = pathPastaImagens .. "fundocinco",
-    imagem5 = pathPastaImagens .. "fundoseis"
+    imagem1 = pathPastaImagens .. "fundoum",
+    imagem2 = pathPastaImagens .. "fundodois",
+    imagem3 = pathPastaImagens .. "fundotreis",
+    imagem4 = pathPastaImagens .. "fundoquatro",
+    imagem5 = pathPastaImagens .. "fundocinco"
 }
 
 -- Funcao nativa tatica para desenhar as customizadas ou a Textura Metalica Esticada Lisa
