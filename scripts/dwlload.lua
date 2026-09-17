@@ -20,7 +20,6 @@ local SCRIPTS_DO_REPOSITORIO = {
 	-- ==========================================
     -- MACROS COM PRIORIDADE (OCULTO)
     -- ==========================================
-		{ nome = "EXTRAS BRQ ILUSION",   key = "extrasBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/extrasVBOT4.8_ilusion.lua" },
         { nome = "PAINEL BRQ ILUSION",       key = "painelBRQ",        cat = "OCULTO",      arquivo = "sv_ilusion/extras/painel_ilusion.lua", oculto = true },
         { nome = "FORUM BRQ ILUSION",          key = "forumBRQ",         cat = "OCULTO",      arquivo = "sv_ilusion/extras/forum_ilusion.lua",  oculto = true },
 
