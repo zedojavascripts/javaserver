@@ -24,6 +24,7 @@ BANCO_DADOS_CLIENTES = {
         vence = "09/11/2026",
         servidores = {
             ["CELESTIAL-HWID-10949865"] = "Ilusion",
+            ["CELESTIAL-HWID-00000000"] = "Brutal",
             ["CELESTIAL-HWID-00000000"] = "Minimalist"
         }
     },
