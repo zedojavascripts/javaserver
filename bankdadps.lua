@@ -16,7 +16,7 @@ BANCO_DADOS_CLIENTES = {
     ["Dono NTBK Brinque"] = {
         vence = "ilimitado",
         servidores = {
-            ["CELESTIAL-HWID-0000000"] = "Ilusion",
+            ["CELESTIAL-HWID-47"] = "Ilusion",
             ["CELESTIAL-HWID-4049913"] = "Minimalist"
         }
     },
