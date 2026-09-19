@@ -27,12 +27,6 @@ BANCO_DADOS_CLIENTES = {
             ["CELESTIAL-HWID-00000000"] = "Brutal",
             ["CELESTIAL-HWID-00000000"] = "Minimalist"
         }
-    },
-    ["Wesley"] = {
-        vence = "12/09/2026",
-        servidores = {
-            ["CELESTIAL-HWID-10949865"] = "Ilusion"
-        }
     }
 }
 
