@@ -21,6 +21,16 @@ BANCO_DADOS_CLIENTES = {
         }
     },
 
+
+    ["Matheus Samengudo"] = {
+        vence = "26/09/2026",
+        servidores = {
+            ["CELESTIAL-HWID-38396807"] = "Ilusion",
+            ["CELESTIAL-HWID-0000000"] = "Brutal",
+            ["CELESTIAL-HWID-0000000"] = "Minimalist"
+        }
+    },
+
     ["Felipe Farias"] = {
         vence = "20/10/2026",
         servidores = {
