@@ -1,3 +1,4 @@
+UI.Separator()
 setDefaultTab("Tools")
 local panelName = "renameContainers"
 if type(storage[panelName]) ~= "table" then
@@ -675,3 +676,4 @@ onContainerClose(function(container)
         mainLoop:setOn()
     end
 end)
+UI.Separator()
