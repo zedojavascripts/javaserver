@@ -1,3 +1,4 @@
+UI.Separator()
 setDefaultTab("HP")
 local panelName = "ConditionPanel"
 local ui = setupUI([[
@@ -260,3 +261,4 @@ Panel
     elseif config.cureParalyse and mana() >= config.paralyseCost and isParalyzed() and not getSpellCoolDown(config.paralyseSpell) then say(config.paralyseSpell)
     end
   end)
+UI.Separator()
