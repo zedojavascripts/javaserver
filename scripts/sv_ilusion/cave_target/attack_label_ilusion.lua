@@ -1,3 +1,4 @@
+UI.Separator()
 setDefaultTab("TARGET")
 
 macro(500, "Mudar Perfil do Target", function()
@@ -57,3 +58,4 @@ addIcon("AntiPlayer", {
         end
     end
 end))
+UI.Separator()
