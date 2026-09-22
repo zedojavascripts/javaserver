@@ -1,3 +1,4 @@
+UI.Separator()
 setDefaultTab("Cave")
 UI.Separator()
 macro(200, "Off PvP - Cave ON", function()
