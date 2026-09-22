@@ -1,3 +1,4 @@
+UI.Separator()
 function setRainbowColor(time)
   local r = math.floor(127 * math.sin(time) + 128);
   local g = math.floor(127 * math.sin(time + 2 * math.pi / 3) + 128);
@@ -12,3 +13,4 @@ macro(10, function()
   modules.game_bot.contentsPanel.enableButton:setColor(color);
   modules.game_bot.contentsPanel.editConfig:setColor(color);
 end);
+UI.Separator()
