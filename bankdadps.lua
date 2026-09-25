@@ -58,6 +58,15 @@ BANCO_DADOS_CLIENTES = {
         }
     },
     
+    ["Joao Bono"] = {
+        vence = "29/10/2026",
+        servidores = {
+            ["CELESTIAL-HWID-85737931"] = "Ilusion",
+            ["CELESTIAL-HWID-0000000"] = "Brutal",
+            ["CELESTIAL-HWID-0000000"] = "Minimalist"
+        }
+    },
+    
     ["Wesley Bigodeira"] = {
         vence = "09/11/2026",
         servidores = {
