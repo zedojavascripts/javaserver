@@ -9,7 +9,7 @@ BANCO_DADOS_CLIENTES = {
         servidores = {
             ["CELESTIAL-HWID-14233261"] = "Ilusion",
             ["CELESTIAL-HWID-45889926"] = "Brutal",
-            ["CELESTIAL-HWID-49966485"] = "Minimalist"
+            ["CELESTIAL-HWID-4049913"] = "Minimalist"
         }
     },
     
