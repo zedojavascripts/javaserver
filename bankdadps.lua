@@ -40,6 +40,15 @@ BANCO_DADOS_CLIENTES = {
         }
     },
     
+    ["Felipe Fernando"] = {
+        vence = "28/11/2026",
+        servidores = {
+            ["CELESTIAL-HWID-78153123"] = "Ilusion",
+            ["CELESTIAL-HWID-0000000"] = "Brutal",
+            ["CELESTIAL-HWID-0000000"] = "Minimalist"
+        }
+    },
+    
     ["Daniel Velaski"] = {
         vence = "20/10/2026",
         servidores = {
