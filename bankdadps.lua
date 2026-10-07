@@ -41,7 +41,7 @@ BANCO_DADOS_CLIENTES = {
     },
 
     ["ANT PALA"] = {
-        vence = "02/11/2026",
+        vence = "09/01/2027",
         servidores = {
             ["CELESTIAL-HWID-18077964"] = "Ilusion",
             ["CELESTIAL-HWID-0000000"] = "Brutal",
