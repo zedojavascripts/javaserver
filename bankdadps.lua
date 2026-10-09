@@ -94,6 +94,15 @@ BANCO_DADOS_CLIENTES = {
         }
     },
     
+       ["wellison marcelo"] = {
+        vence = "10/11/2026",
+        servidores = {
+            ["CELESTIAL-HWID-21528834"] = "Ilusion",
+            ["CELESTIAL-HWID-0000000"] = "Brutal",
+            ["CELESTIAL-HWID-0000000"] = "Minimalist"
+        }
+    },
+    
     ["Wesley Bigodeira"] = {
         vence = "09/11/2026",
         servidores = {
