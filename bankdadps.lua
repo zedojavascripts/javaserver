@@ -251,7 +251,7 @@ BANCO_DADOS_CLIENTES = {
 
     
     
-       ["Wesley Bigodeira"] = {
+       ["Wesley Bigodeira PC"] = {
         vence = "10/11/2026",
         servidores = {
             ["CELESTIAL-HWID-59944889"] = "Ilusion",
