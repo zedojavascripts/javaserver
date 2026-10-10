@@ -22,6 +22,12 @@ BANCO_DADOS_CLIENTES = {
     },
 
 
+
+
+
+
+    
+    
     ["Matheus Samengudo"] = {
         vence = "26/09/2026",
         servidores = {
@@ -31,6 +37,12 @@ BANCO_DADOS_CLIENTES = {
         }
     },
 
+
+
+
+    
+
+    
     ["Felipe Farias"] = {
         vence = "20/10/2026",
         servidores = {
@@ -40,6 +52,12 @@ BANCO_DADOS_CLIENTES = {
         }
     },
 
+
+
+
+
+    
+    
     ["ANT PALA"] = {
         vence = "09/01/2027",
         servidores = {
@@ -48,6 +66,12 @@ BANCO_DADOS_CLIENTES = {
             ["CELESTIAL-HWID-0000000"] = "Minimalist"
         }
     },
+    
+
+
+    
+
+
     
     ["Felipe Fernando"] = {
         vence = "28/11/2026",
@@ -58,6 +82,12 @@ BANCO_DADOS_CLIENTES = {
         }
     },
     
+
+
+    
+
+
+    
     ["Daniel Velaski"] = {
         vence = "20/10/2026",
         servidores = {
@@ -66,6 +96,12 @@ BANCO_DADOS_CLIENTES = {
             ["CELESTIAL-HWID-0000000"] = "Minimalist"
         }
     },
+    
+
+
+    
+
+
     
     ["Kyan Rodrigo"] = {
         vence = "19/10/2026",
@@ -85,6 +121,11 @@ BANCO_DADOS_CLIENTES = {
         }
     },
 
+
+
+
+    
+    
        ["Luiz Henrique"] = {
         vence = "03/12/2026",
         servidores = {
@@ -93,16 +134,27 @@ BANCO_DADOS_CLIENTES = {
             ["CELESTIAL-HWID-0000000"] = "Minimalist"
         }
     },
+
+
+
+
+
+    
     
        ["wellison marcelo"] = {
-        vence = "10/11/2026",
+        vence = "13/11/2026",
         servidores = {
             ["CELESTIAL-HWID-21528834"] = "Ilusion",
             ["CELESTIAL-HWID-0000000"] = "Brutal",
             ["CELESTIAL-HWID-0000000"] = "Minimalist"
         }
     },
-        
+
+
+
+
+    
+    
        ["Wesley Bigodeira"] = {
         vence = "10/11/2026",
         servidores = {
@@ -111,6 +163,12 @@ BANCO_DADOS_CLIENTES = {
             ["CELESTIAL-HWID-0000000"] = "Minimalist"
         }
     },
+
+
+
+
+
+    
     
     ["Wesley Bigodeira"] = {
         vence = "09/11/2026",
