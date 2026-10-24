@@ -1,3 +1,4 @@
+UI.Separator()
 -- =============================================================================
 -- CENTRAL DE EQUIPAR — BRINQUE SCRIPTS — VERSÃO TOTALMENTE INDEPENDENTE
 -- =============================================================================
@@ -186,7 +187,7 @@ Panel
     height: 17
     text: Equipar
     font: verdana-11px-rounded
-  ]], getTab("main"))
+  ]], getTab("hp"))
 
     uiBotaoEquipar.btnMenuEquiparLivre.onClick = function()
         if configWindow:isVisible() then 
@@ -206,6 +207,9 @@ Panel
 end
 
 schedule(1000, renderizarBotaoEquiparMenuLateral)
+
+
+UI.Separator()
 
 local okR, errR = pcall(reconstrutorGeralDeInterface)
 if not okR then print(">>> [EQUIPAR] erro ao montar a lista: " .. tostring(errR)) end
