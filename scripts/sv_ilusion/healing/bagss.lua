@@ -1,8 +1,8 @@
 -- =============================================================================
 -- CENTRAL DE BACKPACKS — BRINQUE SCRIPTS — VERSÃO TOTALMENTE INDEPENDENTE
 -- =============================================================================
-
-setDefaultTab("Tools")
+UI.Separator()
+setDefaultTab("hp")
 
 -- [INICIALIZAÇÃO DO STORAGE INDEPENDENTE] 
 -- Substituímos o ElfBrinque.get pela storage nativa e única do script
@@ -710,3 +710,5 @@ Panel
 end
 
 schedule(1000, renderizarBotaoBagsMenuLateral)
+
+UI.Separator()
