@@ -31,6 +31,9 @@ local SCRIPTS_DO_REPOSITORIO = {
 		{ nome = "BLESSED BRQ ILUSION",     key = "blessedBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/blessed_ilusion.lua" },
 	    { nome = "BUFF BRQ ILUSION",     key = "buffBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/buff_ilusion.lua" },
         { nome = "STAMINA BRQ ILUSION",     key = "staminBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/stamin_ilusion.lua" },
+        { nome = "NOVO EQUIPAR BRQ ILUSION",     key = "equiparrBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/equiparrr.lua" },
+        { nome = "NOVA CONFG BAGS BRQ ILUSION",     key = "bagssBRQ",       cat = "HEALING",     arquivo = "sv_ilusion/healing/bagss.lua" },
+
 		
 	-- ==========================================
         { nome = "FILTRO BATTLE BRQ ILUSION",   key = "filtroBRQ",        cat = "EXTRAS",      arquivo = "sv_ilusion/extras/filtrobatle_ilusion.lua" },
