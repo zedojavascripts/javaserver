@@ -9,7 +9,7 @@
 --   M = abre minimizada    V = mochila cheia: joga o excedente da grade no chao
 --   X = remove da lista
 -- =============================================================================
-
+setDefaultTab("hp")
 local TITULO = "Central de Backpacks - Brinque Scripts"
 local ID_JANELA = "janelaBagsBrinqueAvulsa"
 local ID_PURSE, ID_LOOTBAG = 23396, 23721
