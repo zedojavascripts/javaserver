@@ -122,7 +122,7 @@ local popSlot = setupUI([[
 MainWindow
   id: popSlotEquiparBrinque
   !text: tr('Escolha o Slot do Corpo')
-  size: 240 170
+  size: 250 380
   @onEscape: self:hide()
 
   Panel
@@ -133,10 +133,8 @@ MainWindow
     anchors.bottom: btnVoltar.top
     margin-bottom: 4
     layout:
-      type: grid
-      cell-size: 68 22
-      cell-spacing: 4
-      num-columns: 3
+      type: verticalBox
+      spacing: 6
 
   Button
     id: btnVoltar
@@ -204,6 +202,28 @@ end
 -- =============================================================================
 local redesenhar
 
+-- icones na tela: um por troca com "icone" marcado, com o nome dela
+local icones = {}
+local function refazerIcones()
+    for _, ic in pairs(icones) do pcall(function() ic:destroy() end) end
+    icones = {}
+    if type(addIcon) ~= "function" then return end
+    for i, a in ipairs(sGlobal.lista) do
+        if a.icone then
+            local item = (tonumber(a.especial) or 0) > 0 and tonumber(a.especial) or tonumber(a.padrao) or 0
+            local ok, ic = pcall(addIcon, "equiparBrinque" .. i, { item = item, text = tostring(a.nome or ("Equipe " .. i)) },
+                function(_, ligado)
+                    a.on = ligado == true
+                    if janela:isVisible() then redesenhar() end
+                end)
+            if ok and ic then
+                icones[i] = ic
+                pcall(function() ic:setOn(a.on == true) end)
+            end
+        end
+    end
+end
+
 local function campo(tipo, pai, x, y, w, h, texto)
     local wdg = setupUI(tipo .. "\n  anchors.top: parent.top\n  anchors.left: parent.left\n  margin-top: " .. y ..
         "\n  margin-left: " .. x .. "\n  width: " .. w .. "\n  height: " .. h .. "\n", pai)
@@ -218,12 +238,12 @@ local function caixa(i, a)
     nome:setColor("#e6bc22")
     local btnX = campo("Button", p, 180, 4, 58, 18, "Remove")
     btnX:setColor("#ff5555")
-    btnX.onClick = function() table.remove(sGlobal.lista, i) redesenhar() end
+    btnX.onClick = function() table.remove(sGlobal.lista, i) redesenhar() refazerIcones() end
 
     local sw = campo("BotSwitch", p, 6, 30, 90, 20)
     sw:setOn(a.on == true)
     sw:setText(a.on and "Macro: ON" or "Macro: OFF")
-    sw.onClick = function() a.on = not a.on redesenhar() end
+    sw.onClick = function() a.on = not a.on redesenhar() refazerIcones() end
     local status = campo("Label", p, 102, 32, 130, 18, a.on and "Status: ativo" or "Status: desligado")
     status:setColor(a.on and "#55ff55" or "#aaaaaa")
 
@@ -237,13 +257,14 @@ local function caixa(i, a)
     itemE:setTooltip("Item ESPECIAL (arraste o item aqui).")
     -- so grava quando muda de verdade (evita laco ao redesenhar)
     itemP.onItemChange = function(w) if w:getItemId() ~= tonumber(a.padrao) then a.padrao = w:getItemId() end end
-    itemE.onItemChange = function(w) if w:getItemId() ~= tonumber(a.especial) then a.especial = w:getItemId() end end
+    itemE.onItemChange = function(w) if w:getItemId() ~= tonumber(a.especial) then a.especial = w:getItemId() refazerIcones() end end
 
     local btnSlot = campo("Button", p, 6, 116, 228, 22, "SLOT: " .. nomeSlot(a.slot))
     btnSlot.onClick = function()
         popSlot.grade:destroyChildren()
         for _, s in ipairs(SLOTS) do
             local b = g_ui.createWidget("Button", popSlot.grade)
+            b:setHeight(26)
             b:setText(s.nome)
             b:setFont("verdana-11px-rounded")
             if s.id == a.slot then b:setColor("#55ff55") end
@@ -260,8 +281,12 @@ local function caixa(i, a)
     btnInj:setTooltip("Com a barra igual ou abaixo disso, coloca o item ESPECIAL.")
     btnInj.onClick = function() editar("INJETAR: colocar o especial com % igual ou abaixo de", a.injetar, function(n) a.injetar = n redesenhar() end) end
 
-    local chkHP = campo("CheckBox", p, 50, 178, 50, 20, "HP")
-    local chkMP = campo("CheckBox", p, 140, 178, 50, 20, "MP")
+    local chkHP = campo("CheckBox", p, 10, 178, 50, 20, "HP")
+    local chkMP = campo("CheckBox", p, 70, 178, 50, 20, "MP")
+    local chkIcone = campo("CheckBox", p, 140, 178, 90, 20, "icone")
+    chkIcone:setChecked(a.icone == true)
+    chkIcone:setTooltip("Mostra um icone na tela com o nome desta troca. Clicar no icone liga/desliga.")
+    chkIcone.onClick = function() a.icone = not a.icone refazerIcones() redesenhar() end
     chkHP:setChecked(a.barra ~= "MP")
     chkMP:setChecked(a.barra == "MP")
     chkHP.onClick = function() a.barra = "HP" redesenhar() end
@@ -282,6 +307,7 @@ end
 janela.btnFechar.onClick = function() janela:hide() end
 
 redesenhar()
+refazerIcones()
 
 -- botao na aba Main do bot
 setDefaultTab("Main")
