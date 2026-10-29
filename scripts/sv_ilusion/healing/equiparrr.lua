@@ -1,794 +1,332 @@
 -- =============================================================================
--- CENTRAL DE BACKPACKS — BRINQUE SCRIPTS — VERSÃO MASTER COMPACTA 930x340 FINAL
+-- CENTRAL DE EQUIPAR - BRINQUE SCRIPTS (versao avulsa, sem o ElfBrinque)
+-- Funciona sozinha em qualquer vBot 4.x: coloque este arquivo na pasta da config do
+-- bot (ou cole no Ingame script editor). Abre pelo botao "Central de Equipar" na aba Main.
+-- Cada caixa troca um item por HP/MP:
+--   INJETAR <= X%  coloca o item ESPECIAL      STOP >= Y%  volta o item PADRAO
+--   entre os dois nao mexe (nao fica trocando sem parar)
+-- Corrigido da versao do Elf: PEITORAL ia para o slot da mochila e BOTA para o do peitoral.
 -- =============================================================================
--- 📌 NOVIDADE: Botão [V] calibrado para chutar itens de sobra direto para o CHÃO.
--- 📌 VISUAL: Bloco de botões recuado 3 pixels para a esquerda.
--- =============================================================================
 
-setDefaultTab("Tools")
+local raiz = g_ui.getRootWidget()
+local ID_JANELA = "janelaEquiparBrinqueAvulsa"
 
--- Variável que define a chave onde as configurações do usuário serão salvas no boneco
-local containersbrinque = "renameContainers_Brqq"
-
--- [INICIALIZAÇÃO DO STORAGE] Se o usuário nunca abriu o script, carrega os valores padrão
-if not ElfBrinque then print(">>> [BAGS] nucleo ElfBrinque nao carregado (profiles.lua). Modulo cancelado.") return end
-
--- Config do modulo = parte do PERFIL ativo
-local config = ElfBrinque.get("bags", {
-    enabled = false,
-    height = 340,
-    purse = true,
-    sort = false,
-    forceOpen = false,
-    lootBag = false,
-    list = {
-        { value = "Main Backpack", enabled = true, item = 9601, min = false, emptySlot = true, items = { 3081, 3048 } },
-        { value = "Runes", enabled = true, item = 2866, min = true, emptySlot = false, items = { 3161, 3180 } },
-        { value = "Money", enabled = true, item = 2871, min = true, emptySlot = false, items = { 3031, 3035, 3043 } },
-        { value = "Purse", enabled = true, item = 23396, min = true, emptySlot = false, items = {} },
+-- [CONFIG] fica no storage do bot
+if type(storage.equiparBrinque) ~= "table" or type(storage.equiparBrinque.lista) ~= "table" then
+    storage.equiparBrinque = {
+        lista = {
+            { nome = "Equipe Item 1", on = false, padrao = 3048, especial = 3051, slot = 2,
+              injetar = 50, stop = 80, barra = "HP" }
+        }
     }
-})
--- Pausa global: o Casa (casa.lua) liga BRQ_BAGS_PAUSA enquanto escaneia/guarda itens.
--- Com a pausa ligada este modulo NAO abre, NAO move e NAO minimiza nada.
-if BRQ_BAGS_PAUSA == nil then BRQ_BAGS_PAUSA = false end
-local function pausado() return BRQ_BAGS_PAUSA == true end
-config.height = 340 -- Força o travamento da altura da janela em 340 pixels para evitar distorções
+end
+local sGlobal = storage.equiparBrinque
 
--- =============================================================================
--- [LIMPEZA DE RESÍDUOS DA RAM]
--- =============================================================================
-local rootWidget = g_ui.getRootWidget()
-if rootWidget then
-    local todosOsFilhosDoJogo = rootWidget:getChildren()
-    for _, childWidget in ipairs(todosOsFilhosDoJogo) do
-        local textoDaBarra = childWidget:getText() or ""
-        if textoDaBarra == "Central de Backpacks & Organizador Master" or childWidget:getId() == "janelaBagsMestrePuraOriginalDeEstudo" then
-            childWidget:destroy()
-        end
+-- slots do corpo (numeros do Tibia)
+local SLOTS = {
+    { id = 1, nome = "CAPACETE" }, { id = 2, nome = "COLAR" }, { id = 4, nome = "PEITORAL" },
+    { id = 6, nome = "MAO DIREITA" }, { id = 5, nome = "MAO ESQUERDA" }, { id = 9, nome = "ANEL" },
+    { id = 7, nome = "CALCA" }, { id = 8, nome = "BOTA" }, { id = 10, nome = "FLECHA" },
+}
+local function nomeSlot(id)
+    for _, s in ipairs(SLOTS) do if s.id == id then return s.nome end end
+    return "SLOT " .. tostring(id)
+end
+
+-- funcoes do vBot com reserva (para funcionar em config sem a biblioteca do vBot)
+local function slotDoCorpo(slot)
+    if type(getSlot) == "function" then return getSlot(slot) end
+    local p = g_game.getLocalPlayer()
+    return p and p:getInventoryItem(slot) or nil
+end
+local function porcento(barra)
+    local p = g_game.getLocalPlayer()
+    if not p then return 100 end
+    if barra == "MP" then
+        local max = p:getMaxMana()
+        return max > 0 and math.floor(100 * p:getMana() / max) or 100
+    end
+    return p:getHealthPercent()
+end
+
+-- limpa janelas de um reload anterior
+for _, id in ipairs({ ID_JANELA, "popSlotEquiparBrinque", "popTextoEquiparBrinque" }) do
+    for _ = 1, 20 do
+        local velho = raiz:recursiveGetChildById(id)
+        if not velho then break end
+        pcall(function() velho:destroy() end)
     end
 end
 
--- Usa a sua variável master de clique que resolveu o conflito dos botões!
-if conttListWindow then pcall(function() conttListWindow:destroy() end) conttListWindow = nil end
-
 -- =============================================================================
--- [ESTILOS VISUAIS DA INTERFACE]
+-- [JANELAS]
 -- =============================================================================
-g_ui.loadUIFromString([[
-BackpackName < Label
-  background-color: alpha
-  text-offset: 18 2
-  focusable: true
-  height: 17
-  font: verdana-11px-rounded
+local janela = setupUI([[
+MainWindow
+  id: janelaEquiparBrinqueAvulsa
+  !text: tr('Central de Equipar - Brinque Scripts')
+  size: 550 550
+  padding: 10
+  @onEscape: self:hide()
 
-  CheckBox
-    id: enabled
+  ScrollablePanel
+    id: lista
+    anchors.top: parent.top
     anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
-    width: 15
-    height: 15
-    margin-top: 1
-    margin-left: 3
+    anchors.right: rolagem.left
+    anchors.bottom: separador.top
+    margin-top: 10
+    margin-bottom: 6
+    vertical-scrollbar: rolagem
+    layout:
+      type: grid
+      cell-size: 245 215
+      cell-spacing: 10
+      num-columns: 2
 
-  $focus:
-    background-color: #00000055
-
-  Button
-    id: remove
-    !text: tr('X')
-    !tooltip: tr('Remover mochila da lista')
+  VerticalScrollBar
+    id: rolagem
+    anchors.top: parent.top
     anchors.right: parent.right
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 18
-    width: 15
-    height: 15
+    anchors.bottom: separador.top
+    margin-top: 10
+    margin-bottom: 6
+    step: 30
+    pixels-scroll: true
+
+  HorizontalSeparator
+    id: separador
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: btnFechar.top
+    margin-bottom: 6
 
   Button
-    id: emptySlotBtn
-    !text: tr('V')
-    !tooltip: tr('Manter sempre 1 slot vazio jogando o item excedente direto no CHAO')
-    anchors.right: remove.left
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 2
-    width: 15
-    height: 15
+    id: btnFechar
+    text: Fechar
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    size: 110 22
 
   Button
-    id: state
-    !text: tr('M')
-    !tooltip: tr('Abrir minimizada')
-    anchors.right: emptySlotBtn.left
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 2
-    width: 15
-    height: 15
+    id: btnAdicionar
+    text: [+] Adicionar
+    color: #55ff55
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    size: 120 22
+]], raiz)
+janela:hide()
 
-  Button
-    id: openNext
-    !text: tr('N')
-    !tooltip: tr('Abrir proxima mochila de mesmo ID de forma sequencial')
-    anchors.right: state.left
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 2
-    width: 15
-    height: 15
+local popSlot = setupUI([[
+MainWindow
+  id: popSlotEquiparBrinque
+  !text: tr('Escolha o Slot do Corpo')
+  size: 240 170
+  @onEscape: self:hide()
 
-  Button
-    id: refill
-    !text: tr('R')
-    !tooltip: tr('Proxima BP: quando sobrar so 1 bag dentro desta mochila, abre ela na mesma janela (bps de guerra)')
-    anchors.right: openNext.left
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 2
-    width: 15
-    height: 15
-]])
-
--- Design estrutural completo da janela principal de 930x340 dividida em 3 colunas
-local designJanelaPuraOTUI = 
-"MainWindow\n" ..
-"  id: janelaBagsMestrePuraOriginalDeEstudo\n" ..
-"  !text: tr('Central de Backpacks & Organizador Master')\n" ..
-"  size: 930 340\n" ..
-"  layout: anchor\n" ..
-"  @onEscape: self:hide()\n" ..
-
--- COLUNA 1 (ESQUERDA): CAIXAS DE SELEÇÃO TÁTICAS
-"  Label\n" ..
-"    id: lblTituloEsquerda\n" ..
-"    text: CONTROLE E MARCACOES:\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #55ffff\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-top: 5\n" ..
-"    margin-left: 10\n" ..
-
-"  CheckBox\n" ..
-"    id: forceOpen\n" ..
-"    text: Manter Mochila Principal Sempre Aberta\n" ..
-"    tooltip: Forca a abertura reativa imediata das mochilas ativas em caso de lag ou bug.\n" ..
-"    width: 280\n" ..
-"    height: 15\n" ..
-"    anchors.top: lblTituloEsquerda.bottom\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-top: 15\n" ..
-"    margin-left: 15\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  CheckBox\n" ..
-"    id: sort\n" ..
-"    text: Organizar/Triagem Automatica de Itens\n" ..
-"    tooltip: Habilita o motor de organizacao automatica de runas e supplies para as mochilas corretas.\n" ..
-"    width: 280\n" ..
-"    height: 15\n" ..
-"    anchors.top: forceOpen.bottom\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-top: 12\n" ..
-"    margin-left: 15\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  CheckBox\n" ..
-"    id: purse\n" ..
-"    text: Abrir Store Purse Automaticamente\n" ..
-"    tooltip: Abre automaticamente a Charm/Store Purse pelas costas do inventario.\n" ..
-"    width: 280\n" ..
-"    height: 15\n" ..
-"    anchors.top: sort.bottom\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-top: 12\n" ..
-"    margin-left: 15\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  CheckBox\n" ..
-"    id: lootBag\n" ..
-"    text: Monitorar Abertura de Loot Bags\n" ..
-"    tooltip: Habilita o rastreamento tatico de contêineres de drops.\n" ..
-"    width: 280\n" ..
-"    height: 15\n" ..
-"    anchors.top: purse.bottom\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-top: 12\n" ..
-"    margin-left: 15\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  VerticalSeparator\n" ..
-"    id: sepEsquerdaCentro\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.bottom: separator.top\n" ..
-"    anchors.left: parent.left\n" ..
-"    margin-left: 310\n" ..
-"    margin-top: 5\n" ..
-"    margin-bottom: 5\n" ..
-
--- COLUNA 2 (CENTRO): LISTA DAS MOCHILAS
-"  Label\n" ..
-"    id: lblTituloCentro\n" ..
-"    text: LISTA DE BACKPACKS ATIVAS:\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #55ff55\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: sepEsquerdaCentro.right\n" ..
-"    margin-top: 5\n" ..
-"    margin-left: 15\n" ..
-
-"  TextList\n" ..
-"    id: itemList\n" ..
-"    anchors.top: lblTituloCentro.bottom\n" ..
-"    anchors.left: sepEsquerdaCentro.right\n" ..
-"    anchors.bottom: separator.top\n" ..
-"    width: 270\n" ..
-"    margin-top: 15\n" ..
-"    margin-left: 10\n" ..
-"    margin-bottom: 5\n" ..
-"    vertical-scrollbar: itemListScrollBar\n" ..
-
-"  VerticalScrollBar\n" ..
-"    id: itemListScrollBar\n" ..
-"    anchors.top: itemList.top\n" ..
-"    anchors.bottom: itemList.bottom\n" ..
-"    anchors.right: itemList.right\n" ..
-"    step: 14\n" ..
-"    pixels-scroll: true\n" ..
-
-"  VerticalSeparator\n" ..
-"    id: sepCentroDireita\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.bottom: separator.top\n" ..
-"    anchors.left: itemList.right\n" ..
-"    margin-left: 15\n" ..
-"    margin-top: 5\n" ..
-"    margin-bottom: 5\n" ..
-
--- COLUNA 3 (DIREITA): CADASTRO DE ID, NOME E GRADE ORIGINAL DE SUPPLIES
-"  Label\n" ..
-"    id: lblTituloDireita\n" ..
-"    text: CONFIGURACAO E SUPPLIES DA BAG:\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #ffaa55\n" ..
-"    anchors.top: parent.top\n" ..
-"    anchors.left: sepCentroDireita.right\n" ..
-"    margin-top: 5\n" ..
-"    margin-left: 15\n" ..
-
-"  Label\n" ..
-"    id: lblName\n" ..
-"    anchors.left: sepCentroDireita.right\n" ..
-"    anchors.top: lblTituloDireita.bottom\n" ..
-"    width: 50\n" ..
-"    text: Mochila:\n" ..
-"    margin-left: 15\n" ..
-"    margin-top: 15\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  TextEdit\n" ..
-"    id: contName\n" ..
-"    anchors.left: lblName.right\n" ..
-"    anchors.top: lblName.top\n" ..
-"    width: 140\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  Label\n" ..
-"    id: lblCont\n" ..
-"    anchors.left: lblName.left\n" ..
-"    anchors.verticalCenter: contId.verticalCenter\n" ..
-"    width: 50\n" ..
-"    text: ID Bag:\n" ..
-"    font: verdana-11px-rounded\n" ..
-
-"  BotItem\n" ..
-"    id: contId\n" ..
-"    anchors.left: contName.left\n" ..
-"    anchors.top: contName.bottom\n" ..
-"    margin-top: 3\n" ..
-
-"  BotContainer\n" ..
-"    id: sortList\n" ..
-"    anchors.left: lblName.left\n" ..
-"    anchors.top: contId.bottom\n" ..
-"    anchors.bottom: separator.top\n" ..
-"    width: 240\n" ..
-"    margin-bottom: 5\n" ..
-"    margin-top: 25\n" ..
-
-"  Label\n" ..
-"    id: lblTextoGradeOriginal\n" ..
-"    anchors.left: lblName.left\n" ..
-"    anchors.bottom: sortList.top\n" ..
-"    text: Grade de sub-itens vinculados:\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #aeaeae\n" ..
-"    margin-bottom: 4\n" ..
-
-"  Button\n" ..
-"    id: addItem\n" ..
-"    anchors.right: contName.right\n" ..
-"    anchors.top: contName.bottom\n" ..
-"    margin-top: 5\n" ..
-"    text: Salvar\n" ..
-"    width: 50\n" ..
-"    font: verdana-11px-rounded\n" ..
-
--- RODAPÉ AJUSTADO NAS EXTREMIDADES
-"  HorizontalSeparator\n" ..
-"    id: separator\n" ..
-"    anchors.right: parent.right\n" ..
-"    anchors.left: parent.left\n" ..
-"    anchors.bottom: closeButton.top\n" ..
-"    margin-bottom: 8\n" ..
-
-"  Button\n" ..
-"    id: closeButton\n" ..
-"    !text: tr('Fechar')\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #ff5555\n" ..
-"    anchors.left: parent.left\n" ..
-"    anchors.bottom: parent.bottom\n" ..
-"    size: 140 24\n" ..
-"    margin-left: 5\n" ..
-"    margin-bottom: 5\n" ..
-"  Button\n" ..
-"    id: btnReopenAllNasPontas\n" ..
-"    !text: tr('Reopen All')\n" ..
-"    font: verdana-11px-rounded\n" ..
-"    color: #55ff55\n" ..
-"    anchors.right: parent.right\n" ..
-"    anchors.bottom: parent.bottom\n" ..
-"    size: 140 24\n" ..
-"    margin-right: 5\n" ..
-"    margin-bottom: 5\n"
-
-local function findItemsInArray_Brq(t, tfind)
-local tArray = {}
-for x,v in pairs(t) do
-if type(v) == "table" then
-local aItem = t[x].item
-local aEnabled = t[x].enabled
-if aItem then
-if tfind and aItem == tfind then
-return x
-elseif not tfind then
-if aEnabled then
-table.insert(tArray, aItem)
-end
-end
-end
-end
-end
-if not tfind then return tArray end
-end
-
-local openContainer_Brq = function(id)
-local t = {getRight(), getLeft(), getAmmo()}
-for i=1,#t do
-local slotItem = t[i]
-if slotItem and slotItem:getId() == id then
-return g_game.open(slotItem, nil)
-end
-end
-for i, container in pairs(g_game.getContainers()) do
-for i, item in ipairs(container:getItems()) do
-if item:isContainer() and item:getId() == id then
-return g_game.open(item, nil)
-end
-end
-end
-end
-
-local function reopenBackpacks_Brq()
-local lstBPs_Brq = findItemsInArray_Brq(config.list)
-for _, container in pairs(g_game.getContainers()) do g_game.close(container) end
-local bpItem = getBack()
-if bpItem ~= nil then
-g_game.open(bpItem)
-end
-schedule(500, function()
-local delay = 200
-if config.purse then
-local item = getPurse()
-if item then use(item) end
-end
-for i=1,#lstBPs_Brq do
-schedule(delay, function()
-openContainer_Brq(lstBPs_Brq[i])
-end)
-delay = delay + 250
-end
-end)
-end
-
-local function openFromEmpty_Brq()
-local containers = g_game.getContainers() or getContainers()
-if #containers < 1 and containers == nil then
-local bpItem = getBack()
-if bpItem ~= nil then
-g_game.open(bpItem)
-end
-end
-end
-
--- =============================================================================
--- [MONTAGEM DO MOTOR DE EVENTOS DA INTERFACE (CONTTLISTWINDOW)]
--- =============================================================================
-if rootWidget then
-conttListWindow = setupUI(designJanelaPuraOTUI, rootWidget)
-conttListWindow:hide()
-conttListWindow.closeButton.onClick = function(widget)
-conttListWindow:hide()
-end
-conttListWindow.btnReopenAllNasPontas.onClick = function(widget)
-if pausado() then return end
-reopenBackpacks_Brq()
-end
-conttListWindow.purse.onClick = function(widget)
-config.purse = not config.purse
-conttListWindow.purse:setChecked(config.purse)
-end
-conttListWindow.purse:setChecked(config.purse)
-conttListWindow.sort.onClick = function(widget)
-config.sort = not config.sort
-conttListWindow.sort:setChecked(config.sort)
-end
-conttListWindow.sort:setChecked(config.sort)
-conttListWindow.forceOpen.onClick = function(widget)
-config.forceOpen = not config.forceOpen
-conttListWindow.forceOpen:setChecked(config.forceOpen)
-end
-conttListWindow.forceOpen:setChecked(config.forceOpen)
-if conttListWindow.lootBag then
-conttListWindow.lootBag.onClick = function(widget)
-config.lootBag = not config.lootBag
-conttListWindow.lootBag:setChecked(config.lootBag)
-end
-conttListWindow.lootBag:setChecked(config.lootBag)
-end
-local function refreshSortList_Brq(k, t)
-t = t or {}
-if conttListWindow and conttListWindow.sortList then
-UI.Container(function()
-if conttListWindow and conttListWindow.sortList then
-t = conttListWindow.sortList:getItems()
-if config.list[k] then config.list[k].items = t end
-end
-end, true, nil, conttListWindow.sortList)
-if conttListWindow and conttListWindow.sortList and conttListWindow.sortList.setItems then
-conttListWindow.sortList:setItems(t)
-end
-end
-end
-local refreshContNames_Brq = function(tFocus)
-local storageVal = config.list
-if storageVal and #storageVal > 0 then
-for i, child in pairs(conttListWindow.itemList:getChildren()) do
-child:destroy()
-end
-for k, entry in pairs(storageVal) do
-local label = g_ui.createWidget("BackpackName", conttListWindow.itemList)
-label.onMouseRelease = function()
-conttListWindow.contId:setItemId(entry.item)
-conttListWindow.contName:setText(entry.value)
-if not entry.items then entry.items = {} end
-if conttListWindow.sortList and conttListWindow.sortList.setItems then
-conttListWindow.sortList:setItems(entry.items)
-end
-refreshSortList_Brq(k, entry.items)
-end
-label.enabled.onClick = function(widget)
-entry.enabled = not entry.enabled
-label.enabled:setChecked(entry.enabled)
-label.enabled:setImageColor(entry.enabled and '#00FF00' or '#FF0000')
-end
-label.remove.onClick = function(widget)
-table.removevalue(config.list, entry)
-label:destroy()
-refreshContNames_Brq()
-end
-label.state:setChecked(entry.min)
-label.state.onClick = function(widget)
-entry.min = not entry.min
-label.state:setChecked(entry.min)
-label.state:setColor(entry.min and '#00FF00' or '#FF0000')
-end
-label.openNext.onClick = function(widget)
-entry.openNext = not entry.openNext
-label.openNext:setChecked(entry.openNext)
-label.openNext:setColor(entry.openNext and '#00FF00' or '#FF0000')
-end
-if not entry.emptySlot then entry.emptySlot = false end
-label.refill.onClick = function(widget)
-entry.refill = not entry.refill
-label.refill:setChecked(entry.refill)
-label.refill:setColor(entry.refill and '#00FF00' or '#FF0000')
-end
-label.refill:setColor(entry.refill and '#00FF00' or '#FF0000')
-label.emptySlotBtn:setChecked(entry.emptySlot)
-label.emptySlotBtn:setColor(entry.emptySlot and '#00FF00' or '#FF0000')
-label.emptySlotBtn.onClick = function(widget)
-entry.emptySlot = not entry.emptySlot
-label.emptySlotBtn:setChecked(entry.emptySlot)
-label.emptySlotBtn:setColor(entry.emptySlot and '#00FF00' or '#FF0000')
-end
-label:setText(entry.value .. " (ID: " .. entry.item .. ")")
-label.enabled:setChecked(entry.enabled)
-label.enabled:setImageColor(entry.enabled and '#00FF00' or '#FF0000')
-label.state:setColor(entry.min and '#00FF00' or '#FF0000')
-label.openNext:setColor(entry.openNext and '#00FF00' or '#FF0000')
-if tFocus and entry.item == tFocus then tFocus = label end
-end
-if tFocus then conttListWindow.itemList:focusChild(tFocus) end
-end
-end
-conttListWindow.addItem.onClick = function(widget)
-local id = conttListWindow.contId:getItemId()
-local trigger = conttListWindow.contName:getText()
-if id > 100 and trigger:len() > 0 then
-local ifind = findItemsInArray_Brq(config.list, id)
-if ifind then
-config.list[ifind] = { item = id, value = trigger, enabled = config.list[ifind].enabled, min = config.list[ifind].min, emptySlot = config.list[ifind].emptySlot or false, openNext = config.list[ifind].openNext, refill = config.list[ifind].refill, items = config.list[ifind].items}
-else
-table.insert(config.list, { item = id, value = trigger, enabled = true, min = false, emptySlot = false, items = {} })
-end
-conttListWindow.contId:setItemId(0)
-conttListWindow.contName:setText('')
-refreshContNames_Brq(id)
-else
-conttListWindow.contId:setItemId(0)
-conttListWindow.contId:setImageColor('red')
-conttListWindow.contName:setImageColor('red')
-end
-end
-refreshContNames_Brq()
--- Quando o perfil troca, a janela se redesenha com os valores novos
-ElfBrinque.aoTrocar("bags", function()
-config.height = 340
-conttListWindow.purse:setChecked(config.purse == true)
-conttListWindow.sort:setChecked(config.sort == true)
-conttListWindow.forceOpen:setChecked(config.forceOpen == true)
-if conttListWindow.lootBag then conttListWindow.lootBag:setChecked(config.lootBag == true) end
-refreshContNames_Brq()
-end)
-end
-if config.forceOpen then openFromEmpty_Brq() end
--- =============================================================================
--- [GATILHOS MECÂNICOS DO MUNDO DO JOGO (SEGUNDO PLANO)]
--- =============================================================================
-onContainerOpen(function(container, previousContainer)
-if pausado() then return end
-if not container.window then return end
-local containerWindow = container.window
-if not previousContainer then
-containerWindow:setContentHeight(34)
-end
-local storageVal = config.list
-if storageVal and #storageVal > 0 then
-for _, entry in pairs(storageVal) do
-if entry.enabled and string.find(container:getContainerItem():getId(), entry.item) then
-if entry.min then
-containerWindow:minimize()
-end
-if entry.openNext then
-for i, item in ipairs(container:getItems()) do
-if item:getId() == entry.item then
-local time = #storageVal * 250
-schedule(time, function()
-time = time + 250
-g_game.open(item)
-end)
-end
-end
-end
-end
-end
-end
-end)
-local function moveItem_BagsBrq(item, destination)
-return g_game.move(item, destination:getSlotPosition(destination:getItemsCount()), item:getCount())
-end
-local function properTable_BagsBrq(t)
-local r = {}
-for _, entry in pairs(t) do
-if type(entry) == "number" then
-table.insert(r, entry)
-else
-table.insert(r, entry.id)
-end
-end
-return r
-end
--- =============================================================================
--- [PROXIMA BP] botao R (logica das bps de guerra)
--- =============================================================================
-local proxBp_Brq = {}
-local function ehDaEntrada_Brq(ct, entry)
-local ok, r = pcall(function()
-local ci = ct:getContainerItem()
-if ci and ci:getId() == entry.item then return true end
-local nome = tostring(entry.value or ""):lower()
-if nome ~= "" and ct:getName():lower():find(nome, 1, true) then return true end
-return false
-end)
-return ok and r
-end
-macro(500, function()
-if pausado() then return end
-for _, entry in pairs(config.list) do
-if entry.enabled and entry.refill then
-for _, ct in pairs(getContainers()) do
-if ehDaEntrada_Brq(ct, entry) then
-local itens = ct:getItems()
-local alvos = properTable_BagsBrq(entry.items or {})
-local proxima = nil
-if #alvos > 0 then
-local tem = false
-for _, it in ipairs(itens) do
-if table.find(alvos, it:getId()) then tem = true break end
-end
-if not tem then
-for _, it in ipairs(itens) do
-local ehC = false
-pcall(function() ehC = it:isContainer() end)
-if ehC and (not proxima or it:getId() == entry.item) then proxima = it end
-end
-end
-elseif #itens == 1 then
-local ehC = false
-pcall(function() ehC = itens[1]:isContainer() end)
-if ehC then proxima = itens[1] end
-end
-if proxima then
-local k = ct:getId() .. ":" .. proxima:getId()
-if not proxBp_Brq[k] or now - proxBp_Brq[k] > 1500 then
-proxBp_Brq[k] = now
-print(">>> [BAGS] R: abrindo a proxima bp (id " .. proxima:getId() .. ") na mesma janela de '" .. tostring(entry.value) .. "'")
-g_game.open(proxima, ct)
-return
-end
-end
-end
-end
-end
-end
-end)
-
-macro(1000, function()
-if pausado() then return end
-if not config.forceOpen then return end
-local bpItem = getBack()
-local bp = getContainer(0)
-if not bp and bpItem ~= nil then
-g_game.open(bpItem)
-schedule(350, function()
-local delayAcumulado = 10
-for _, entry in pairs(config.list) do
-if entry.enabled then
-schedule(delayAcumulado, function() openContainer_Brq(entry.item) end)
-delayAcumulado = delayAcumulado + 250
-end
-end
-end)
-end
-end)
-macro(8000, function()
-if pausado() then return end
-if not config.forceOpen then return end
-local containers = g_game.getContainers() or getContainers()
-if #containers < 1 and containers == nil then
-openFromEmpty_Brq()
-end
-end)
--- Motor principal de triagem e sub-bags originais
-local mainLoop_BagsBrq = macro(150, function(macroObjeto)
-if pausado() then macroObjeto:setOff() return end
-if not config.sort and not config.purse then return end
-local storageVal = config.list
-for indexA, entryA in pairs(storageVal) do
-if entryA.enabled and entryA.emptySlot then
-local currentContainer = getContainerByItem(entryA.item)
-if currentContainer and containerIsFull(currentContainer) then
-local itensMochila = currentContainer:getItems()
-local permitidos = properTable_BagsBrq(entryA.items or {})
-local ultimoItem = nil
-for iItem = #itensMochila, 1, -1 do
-if table.find(permitidos, itensMochila[iItem]:getId()) then
-ultimoItem = itensMochila[iItem]
-break
-end
-end
-if ultimoItem then
-local posicaoDoBoneco = pos()
-if posicaoDoBoneco then
-g_game.move(ultimoItem, posicaoDoBoneco, ultimoItem:getCount())
-delay(100)
-return
-end
-end
-end
-end
-end
-for _, entry in pairs(storageVal) do
-local dId = entry.item
-local items = properTable_BagsBrq(entry.items)
-if config.sort then
-for _, container in pairs(getContainers()) do
-local cName = container:getName():lower()
-if not cName:find("depot") and not cName:find("quiver") then
-local cId = container:getContainerItem():getId()
-for __, item in ipairs(container:getItems()) do
-local id = item:getId()
-if table.find(items, id) and cId ~= dId then
-local destination = getContainerByItem(dId, true)
-if destination and not containerIsFull(destination) then
-return moveItem_BagsBrq(item, destination)
-end
-end
-end
-end
-end
-end
-if config.forceOpen and entry.enabled then
-local container = getContainerByItem(dId)
-if not container then
-local cItem = findItem(dId)
-if cItem then return g_game.open(cItem) end
-end
-end
-end
-if config.purse and config.forceOpen and not getContainerByItem(23396) then
-return use(getPurse())
-end
-if config.lootBag and config.forceOpen and not getContainerByItem(23721) then
-if findItem(23721) then
-g_game.open(findItem(23721), getContainerByItem(23396))
-else
-return use(getPurse())
-end
-end
-macroObjeto:setOff()
-end)
-onContainerOpen(function(container, previousContainer) mainLoop_BagsBrq:setOn() end)
-onAddItem(function(container, slot, item, oldItem) mainLoop_BagsBrq:setOn() end)
-onPlayerInventoryChange(function(slot, item, oldItem) mainLoop_BagsBrq:setOn() end)
-onContainerClose(function(container) if not container.lootContainer then mainLoop_BagsBrq:setOn() end end)
-
--- =============================================================================
--- CONSTRUTOR DO BOTÃO NA ABA LATERAL "hp"
--- =============================================================================
-local uiBotaoBags = nil
-local function renderizarBotaoBagsMenuLateral()
-    if uiBotaoBags then uiBotaoBags:destroy() end
-    
-    -- Injetado na aba HP (mesma lógica do botão de Equipar)
-    local abaAlvo = getTab("hp") or getTab("healing")
-    if not abaAlvo then return end
-    
-    uiBotaoBags = setupUI([[
-Panel
-  height: 20
-  Button
-    id: btnMenuBagsLivre
+  Panel
+    id: grade
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    height: 17
-    text: Backpacks
-    font: verdana-11px-rounded
-  ]], abaAlvo)
+    anchors.bottom: btnVoltar.top
+    margin-bottom: 4
+    layout:
+      type: grid
+      cell-size: 68 22
+      cell-spacing: 4
+      num-columns: 3
 
-    uiBotaoBags.btnMenuBagsLivre.onClick = function()
-        if conttListWindow:isVisible() then 
-            conttListWindow:hide() 
-        else
-            local painelBot = g_ui.getRootWidget():getChildById("botPanel")
-            if painelBot then
-                local posMestre = painelBot:getPosition()
-                conttListWindow:setPosition({x = posMestre.x + 300, y = posMestre.y})
-            end
-            conttListWindow:show() 
-            conttListWindow:raise() 
-            conttListWindow:focus()
+  Button
+    id: btnVoltar
+    text: Voltar
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    size: 80 20
+]], raiz)
+popSlot:hide()
+
+local popTexto = setupUI([[
+MainWindow
+  id: popTextoEquiparBrinque
+  !text: tr('Editar valor')
+  size: 260 130
+  @onEscape: self:hide()
+
+  Label
+    id: info
+    text: Digite o novo valor:
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 15
+
+  TextEdit
+    id: entrada
+    anchors.top: info.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    height: 22
+
+  Button
+    id: btnOk
+    text: Confirmar
+    color: #55ff55
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    size: 100 22
+
+  Button
+    id: btnCancelar
+    text: Cancelar
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    size: 100 22
+]], raiz)
+popTexto:hide()
+
+local function editar(titulo, valor, aoConfirmar)
+    popTexto:setText(titulo)
+    popTexto.entrada:setText(tostring(valor or ""))
+    popTexto.btnOk.onClick = function()
+        local n = tonumber(popTexto.entrada:getText())
+        popTexto:hide()
+        if n then aoConfirmar(n) end
+    end
+    popTexto.btnCancelar.onClick = function() popTexto:hide() end
+    popTexto:show() popTexto:raise() popTexto:focus() popTexto.entrada:focus()
+end
+
+-- =============================================================================
+-- [CAIXAS] uma por troca
+-- =============================================================================
+local redesenhar
+
+local function campo(tipo, pai, x, y, w, h, texto)
+    local wdg = setupUI(tipo .. "\n  anchors.top: parent.top\n  anchors.left: parent.left\n  margin-top: " .. y ..
+        "\n  margin-left: " .. x .. "\n  width: " .. w .. "\n  height: " .. h .. "\n", pai)
+    if texto then wdg:setText(texto) end
+    return wdg
+end
+
+local function caixa(i, a)
+    local p = setupUI("Panel\n  background-color: #141414\n  border: 1 #252525\n", janela.lista)
+
+    local nome = campo("Label", p, 6, 4, 150, 18, a.nome or ("Equipe Item " .. i))
+    nome:setColor("#e6bc22")
+    local btnX = campo("Button", p, 180, 4, 58, 18, "Remove")
+    btnX:setColor("#ff5555")
+    btnX.onClick = function() table.remove(sGlobal.lista, i) redesenhar() end
+
+    local sw = campo("BotSwitch", p, 6, 30, 90, 20)
+    sw:setOn(a.on == true)
+    sw:setText(a.on and "Macro: ON" or "Macro: OFF")
+    sw.onClick = function() a.on = not a.on redesenhar() end
+    local status = campo("Label", p, 102, 32, 130, 18, a.on and "Status: ativo" or "Status: desligado")
+    status:setColor(a.on and "#55ff55" or "#aaaaaa")
+
+    campo("Label", p, 6, 58, 110, 16, "PADRAO"):setTextAlign(AlignCenter or 3)
+    campo("Label", p, 124, 58, 110, 16, "ESPECIAL"):setTextAlign(AlignCenter or 3)
+    local itemP = campo("BotItem", p, 44, 74, 34, 34)
+    local itemE = campo("BotItem", p, 162, 74, 34, 34)
+    itemP:setItemId(tonumber(a.padrao) or 0)
+    itemE:setItemId(tonumber(a.especial) or 0)
+    itemP:setTooltip("Item PADRAO (arraste o item aqui).")
+    itemE:setTooltip("Item ESPECIAL (arraste o item aqui).")
+    -- so grava quando muda de verdade (evita laco ao redesenhar)
+    itemP.onItemChange = function(w) if w:getItemId() ~= tonumber(a.padrao) then a.padrao = w:getItemId() end end
+    itemE.onItemChange = function(w) if w:getItemId() ~= tonumber(a.especial) then a.especial = w:getItemId() end end
+
+    local btnSlot = campo("Button", p, 6, 116, 228, 22, "SLOT: " .. nomeSlot(a.slot))
+    btnSlot.onClick = function()
+        popSlot.grade:destroyChildren()
+        for _, s in ipairs(SLOTS) do
+            local b = g_ui.createWidget("Button", popSlot.grade)
+            b:setText(s.nome)
+            b:setFont("verdana-11px-rounded")
+            if s.id == a.slot then b:setColor("#55ff55") end
+            b.onClick = function() a.slot = s.id popSlot:hide() redesenhar() end
+        end
+        popSlot.btnVoltar.onClick = function() popSlot:hide() end
+        popSlot:show() popSlot:raise() popSlot:focus()
+    end
+
+    local btnStop = campo("Button", p, 6, 146, 110, 22, "STOP >= " .. (a.stop or 80) .. "%")
+    btnStop:setTooltip("Com a barra igual ou acima disso, volta o item PADRAO.")
+    btnStop.onClick = function() editar("STOP: voltar o padrao com % igual ou acima de", a.stop, function(n) a.stop = n redesenhar() end) end
+    local btnInj = campo("Button", p, 124, 146, 110, 22, "INJETAR <= " .. (a.injetar or 50) .. "%")
+    btnInj:setTooltip("Com a barra igual ou abaixo disso, coloca o item ESPECIAL.")
+    btnInj.onClick = function() editar("INJETAR: colocar o especial com % igual ou abaixo de", a.injetar, function(n) a.injetar = n redesenhar() end) end
+
+    local chkHP = campo("CheckBox", p, 50, 178, 50, 20, "HP")
+    local chkMP = campo("CheckBox", p, 140, 178, 50, 20, "MP")
+    chkHP:setChecked(a.barra ~= "MP")
+    chkMP:setChecked(a.barra == "MP")
+    chkHP.onClick = function() a.barra = "HP" redesenhar() end
+    chkMP.onClick = function() a.barra = "MP" redesenhar() end
+end
+
+redesenhar = function()
+    janela.lista:destroyChildren()
+    for i, a in ipairs(sGlobal.lista) do caixa(i, a) end
+end
+
+janela.btnAdicionar.onClick = function()
+    local n = #sGlobal.lista + 1
+    table.insert(sGlobal.lista, { nome = "Equipe Item " .. n, on = false, padrao = 0, especial = 0, slot = 9,
+        injetar = 50, stop = 80, barra = "HP" })
+    redesenhar()
+end
+janela.btnFechar.onClick = function() janela:hide() end
+
+redesenhar()
+
+-- botao na aba Main do bot
+setDefaultTab("Main")
+UI.Button("Central de Equipar", function()
+    if janela:isVisible() then
+        janela:hide()
+    else
+        redesenhar()
+        janela:show() janela:raise() janela:focus()
+    end
+end)
+
+-- =============================================================================
+-- [FUNCIONAMENTO] injetar <= X% coloca o especial; stop >= Y% volta o padrao; no meio nao mexe
+-- =============================================================================
+local function acharNasBags(id)
+    if id <= 0 then return nil end
+    for _, ct in pairs(g_game.getContainers()) do
+        for _, item in ipairs(ct:getItems()) do
+            if item:getId() == id then return item end
         end
     end
 end
 
-schedule(1000, renderizarBotaoBagsMenuLateral)
+macro(100, function()
+    if not g_game.isOnline() then return end
+    for _, a in ipairs(sGlobal.lista) do
+        if a.on then
+            local pct = porcento(a.barra)
+            local slot = tonumber(a.slot) or 9
+            local noCorpo = slotDoCorpo(slot)
+            local quer
+            if pct <= (tonumber(a.injetar) or 50) then
+                quer = tonumber(a.especial) or 0
+            elseif pct >= (tonumber(a.stop) or 80) then
+                quer = tonumber(a.padrao) or 0
+            end
+            if quer and quer > 0 and (not noCorpo or noCorpo:getId() ~= quer) then
+                local item = acharNasBags(quer)
+                if item then
+                    g_game.move(item, { x = 65535, y = slot, z = 0 }, 1)
+                    delay(150)
+                    return
+                end
+            end
+        end
+    end
+end)
